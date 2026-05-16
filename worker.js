@@ -1,1 +1,543 @@
-/tmp/worker_b64.txt
+// worker.js
+const GITHUB_API = 'https://api.github.com'
+const ANTHROPIC_API = 'https://api.anthropic.com/v1/messages'
+
+const CORS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+}
+
+function json(data, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { ...CORS, 'Content-Type': 'application/json' },
+  })
+}
+
+function err(msg, status = 400) {
+  return json({ error: msg }, status)
+}
+
+function ghHeaders(env) {
+  const headers = {
+    Accept: 'application/vnd.github+json',
+    'User-Agent': 'claude-library-worker',
+    'X-GitHub-Api-Version': '2022-11-28',
+  }
+  if (env.GITHUB_TOKEN) headers.Authorization = `token ${env.GITHUB_TOKEN}`
+  return headers
+}
+
+function ghGet(path, env) {
+  return fetch(`${GITHUB_API}${path}`, { headers: ghHeaders(env) })
+}
+
+function ghPost(path, env, body) {
+  return fetch(`${GITHUB_API}${path}`, {
+    method: 'POST',
+    headers: { ...ghHeaders(env), 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  })
+}
+
+function ghPut(path, env, body) {
+  return fetch(`${GITHUB_API}${path}`, {
+    method: 'PUT',
+    headers: { ...ghHeaders(env), 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  })
+}
+
+function checkAuth(request, env) {
+  const auth = request.headers.get('Authorization') || ''
+  const token = auth.startsWith('Bearer ') ? auth.slice(7) : ''
+  return token === env.LIBRARY_TOKEN
+}
+
+async function handleComponents(env) {
+  const repo = env.LIBRARY_REPO || 'mrtimberme-bot/claude-library'
+  let resp = await ghGet(`/repos/${repo}/contents/components.json`, env)
+  if (resp.status === 401) {
+    // retry without auth (public repo fallback)
+    resp = await fetch(`${GITHUB_API}/repos/${repo}/contents/components.json`, {
+      headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'claude-library-worker' },
+    })
+  }
+  if (!resp.ok) return err('Failed to fetch components', 502)
+  const data = await resp.json()
+  const content = JSON.parse(atob(data.content.replace(/\n/g, '')))
+  return json(content)
+}
+
+async function handleChat(request, env) {
+  const body = await request.json().catch(() => null)
+  if (!body?.messages) return err('messages required')
+
+  const resp = await fetch(ANTHROPIC_API, {
+    method: 'POST',
+    headers: {
+      'x-api-key': env.ANTHROPIC_API_KEY,
+      'anthropic-version': '2023-06-01',
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: body.model || 'claude-haiku-4-5-20251001',
+      max_tokens: Math.min(body.max_tokens || 1024, 4096),
+      messages: body.messages,
+      system: body.system || 'Je bent een assistent voor de Claude Library — een persoonlijke component library voor Claude Code.',
+    }),
+  })
+
+  if (!resp.ok) {
+    const e = await resp.json().catch(() => ({}))
+    return err(e.error?.message || 'Anthropic API error', resp.status)
+  }
+  return json(await resp.json())
+}
+
+async function handleImportRepo(request, env) {
+  const body = await request.json().catch(() => null)
+  if (!body?.repo) return err('"repo" required — format: "owner/repo"')
+
+  if (!/^[a-zA-Z0-9._-]+\/[a-zA-Z0-9._-]+$/.test(body.repo))
+    return err('Invalid repo format. Use "owner/repo"')
+
+  const lib = env.LIBRARY_REPO || 'mrtimberme-bot/claude-library'
+  const src = body.repo
+
+  const compResp = await ghGet(`/repos/${src}/contents/components.json`, env)
+  if (!compResp.ok) return err(`components.json not found in ${src}`, 404)
+
+  let components
+  try {
+    const raw = await compResp.json()
+    components = JSON.parse(atob(raw.content.replace(/\n/g, '')))
+    if (!Array.isArray(components)) throw new Error()
+  } catch {
+    return err('components.json in source repo is not a valid JSON array')
+  }
+
+  const required = ['id', 'name', 'type', 'desc', 'path']
+  const invalid = components.filter(c => required.some(f => !c[f]))
+  if (invalid.length)
+    return err(`Components missing required fields: ${invalid.map(c => c.id || '?').join(', ')}`)
+
+  if (components.length > 50)
+    return err('Too many components in source repo (max 50)')
+
+  const prefix = `imported/${src.replace('/', '_')}`
+  const files = [
+    { path: `${prefix}/components.json`, content: JSON.stringify(components, null, 2) },
+  ]
+
+  for (const comp of components) {
+    if (!comp.path.endsWith('.md')) continue
+    if (!/^[a-zA-Z0-9._\-\/]+\.md$/.test(comp.path)) continue  // skip unsafe paths
+    const r = await ghGet(`/repos/${src}/contents/${comp.path}`, env)
+    if (!r.ok) continue
+    const d = await r.json()
+    files.push({
+      path: `${prefix}/${comp.path}`,
+      content: atob(d.content.replace(/\n/g, '')),
+    })
+  }
+
+  const refResp = await ghGet(`/repos/${lib}/git/refs/heads/main`, env)
+  if (!refResp.ok) return err('Failed to read main branch', 502)
+  const mainSha = (await refResp.json()).object.sha
+
+  const branch = `import/${src.replace('/', '-')}-${Date.now()}`
+  const branchResp = await ghPost(`/repos/${lib}/git/refs`, env, {
+    ref: `refs/heads/${branch}`,
+    sha: mainSha,
+  })
+  if (!branchResp.ok) return err('Failed to create branch', 502)
+
+  const commitErrors = []
+  for (const file of files) {
+    const encoded = btoa(unescape(encodeURIComponent(file.content)))
+    const payload = { message: `feat: import ${file.path} from ${src}`, content: encoded, branch }
+    const existing = await ghGet(`/repos/${lib}/contents/${file.path}?ref=${branch}`, env)
+    if (existing.ok) payload.sha = (await existing.json()).sha
+    const putResp = await ghPut(`/repos/${lib}/contents/${file.path}`, env, payload)
+    if (!putResp.ok) commitErrors.push(file.path)
+  }
+
+  if (commitErrors.length) {
+    return err(`Failed to commit ${commitErrors.length} file(s): ${commitErrors.join(', ')}`, 502)
+  }
+
+  const prResp = await ghPost(`/repos/${lib}/pulls`, env, {
+    title: `Import: ${src} (${components.length} component${components.length !== 1 ? 's' : ''})`,
+    body: `## Geïmporteerd van \`${src}\`\n\n${components.map(c => `- **${c.name}** (\`${c.type}\`) — ${c.desc}`).join('\n')}\n\n---\n_Automatisch aangemaakt door Claude Library Worker_`,
+    head: branch,
+    base: 'main',
+  })
+
+  if (!prResp.ok) {
+    const e = await prResp.json().catch(() => ({}))
+    return err(`PR creation failed: ${e.message || prResp.status}`, 502)
+  }
+
+  const pr = await prResp.json()
+  return json({
+    success: true,
+    pr_url: pr.html_url,
+    pr_number: pr.number,
+    components_imported: components.length,
+    files_committed: files.length,
+    branch,
+  })
+}
+
+async function callAnthropic(env, { model, system, userContent, maxTokens }) {
+  const resp = await fetch(ANTHROPIC_API, {
+    method: 'POST',
+    headers: {
+      'x-api-key': env.ANTHROPIC_API_KEY,
+      'anthropic-version': '2023-06-01',
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      model,
+      max_tokens: maxTokens || 1024,
+      system,
+      messages: [{ role: 'user', content: userContent }],
+    }),
+  })
+  if (!resp.ok) {
+    const text = await resp.text().catch(() => '')
+    let msg = 'Anthropic ' + resp.status
+    try { msg = JSON.parse(text).error?.message || msg } catch {}
+    throw new Error(msg + (text && !text.includes(msg) ? ': ' + text.slice(0, 200) : ''))
+  }
+  const data = await resp.json()
+  return data.content?.[0]?.text || ''
+}
+
+async function readSkillMd(path, repo, env) {
+  const r = await ghGet(`/repos/${repo}/contents/${path}`, env)
+  if (!r.ok) return null
+  const d = await r.json()
+  return atob(d.content.replace(/\n/g, ''))
+}
+
+async function readComponentsJson(repo, env) {
+  const r = await ghGet(`/repos/${repo}/contents/components.json`, env)
+  if (!r.ok) throw new Error('Kon components.json niet ophalen')
+  const d = await r.json()
+  const components = JSON.parse(atob(d.content.replace(/\n/g, '')))
+  return { components, sha: d.sha }
+}
+
+async function handleAnalyzeSkill(request, env) {
+  try {
+  const body = await request.json().catch(() => null)
+  if (!body?.id) return err('"id" required')
+
+  const repo = env.LIBRARY_REPO || 'mrtimberme-bot/claude-library'
+  const { components } = await readComponentsJson(repo, env)
+  const comp = components.find(c => c.id === body.id)
+  if (!comp) return err('Component not found', 404)
+  if (comp.type !== 'skill') return err('Only skills can be analyzed')
+
+  const skillMd = comp.path ? await readSkillMd(comp.path, repo, env) : null
+
+  const otherSkills = components
+    .filter(c => c.type === 'skill' && c.id !== comp.id)
+    .map(c => `- ${c.name}: ${c.desc} | usage: ${c.usage}`)
+    .join('\n')
+
+  const system = `Je bent een expert in het beoordelen van Claude Code skill files.
+Je analyseert een skill op 4 dimensies en geeft een score van 0-100 per dimensie plus concrete verbeterpunten.
+Geef altijd een JSON response in dit exacte formaat:
+{
+  "scores": {
+    "volledigheid": <0-100>,
+    "triggers": <0-100>,
+    "overlap": <0-100>,
+    "kwaliteit": <0-100>
+  },
+  "issues": ["...", "..."],
+  "summary": "..."
+}
+Scores betekenis:
+- volledigheid: zijn alle velden (desc, usage, tags, path) ingevuld en niet triviaal?
+- triggers: zijn trigger-zinnen specifiek, actionable en niet te breed?
+- overlap: is de skill duidelijk gedifferentieerd van andere skills?
+- kwaliteit: algehele schrijfkwaliteit van desc en usage.
+Geef maximaal 5 issues. Wees specifiek en actionable.`
+
+  const userContent = `Skill om te analyseren:
+Naam: ${comp.name}
+ID: ${comp.id}
+Desc: ${comp.desc}
+Usage: ${comp.usage || '(leeg)'}
+Tags: ${(comp.tags || []).join(', ')}
+Path: ${comp.path}
+
+${skillMd ? `SKILL.md inhoud:\n${skillMd.slice(0, 3000)}` : '(SKILL.md niet beschikbaar)'}
+
+Andere skills in de library (voor overlap-check):
+${otherSkills.slice(0, 2000)}`
+
+  const raw = await callAnthropic(env, {
+    model: 'claude-sonnet-4-6',
+    system,
+    userContent,
+    maxTokens: 1024,
+  })
+
+  const jsonMatch = raw.match(/\{[\s\S]*\}/)
+  if (!jsonMatch) return err('Kon analyse niet parsen')
+  const result = JSON.parse(jsonMatch[0])
+  return json(result)
+  } catch (e) { return err('analyze-skill: ' + (e?.message || String(e)), 500) }
+}
+
+async function handleAnalyzeAll(request, env) {
+  try {
+  const repo = env.LIBRARY_REPO || 'mrtimberme-bot/claude-library'
+  const { components } = await readComponentsJson(repo, env)
+  const skills = components.filter(c => c.type === 'skill')
+
+  if (!skills.length) return json({ skills: [], overall: 0 })
+
+  const system = `Je analyseert meerdere Claude Code skills tegelijk. Voor elke skill geef je een JSON object.
+Geef een JSON array terug met voor elke skill:
+{ "id": "...", "scores": { "volledigheid": 0-100, "triggers": 0-100, "overlap": 0-100, "kwaliteit": 0-100 }, "top_issue": "..." }
+Analyseer op: volledigheid (velden ingevuld), triggers (specifiek en actionable), overlap (uniek t.o.v. anderen), kwaliteit (schrijfstijl).`
+
+  const userContent = `Analyseer deze ${skills.length} skills:\n\n` + skills.map(s =>
+    `ID: ${s.id}\nNaam: ${s.name}\nDesc: ${s.desc}\nUsage: ${s.usage || '(leeg)'}\nTags: ${(s.tags || []).join(', ')}`
+  ).join('\n\n---\n\n')
+
+  const raw = await callAnthropic(env, {
+    model: 'claude-haiku-4-5-20251001',
+    system,
+    userContent,
+    maxTokens: 4096,
+  })
+
+  const arrMatch = raw.match(/\[[\s\S]*\]/)
+  if (!arrMatch) return err('Kon bulk analyse niet parsen')
+  const items = JSON.parse(arrMatch[0])
+
+  const enriched = items.map(item => {
+    const avg = Math.round(Object.values(item.scores).reduce((a, b) => a + b, 0) / 4)
+    const comp = skills.find(s => s.id === item.id)
+    return { ...item, name: comp?.name || item.id, avg }
+  })
+
+  const overall = enriched.length
+    ? Math.round(enriched.reduce((s, i) => s + i.avg, 0) / enriched.length)
+    : 0
+
+  return json({ skills: enriched, overall })
+  } catch (e) { return err('analyze-all: ' + (e?.message || String(e)), 500) }
+}
+
+async function handleEnrichUsage(request, env) {
+  try {
+  const body = await request.json().catch(() => null)
+  if (!body?.id) return err('"id" required')
+
+  const repo = env.LIBRARY_REPO || 'mrtimberme-bot/claude-library'
+  const { components } = await readComponentsJson(repo, env)
+  const comp = components.find(c => c.id === body.id)
+  if (!comp) return err('Component not found', 404)
+  if (comp.type !== 'skill') return err('Only skills can be enriched')
+
+  const skillMd = comp.path ? await readSkillMd(comp.path, repo, env) : null
+
+  const system = `Je schrijft verbeterde usage-beschrijvingen voor Claude Code skills.
+Een goede usage-tekst bevat:
+1. Een concrete zin die uitlegt wanneer de skill te gebruiken
+2. 5 specifieke trigger-zinnen die een gebruiker zou typen om de skill te activeren
+
+Geef JSON terug in dit exacte formaat:
+{
+  "proposed_usage": "één zin die uitlegt wanneer en waarom je deze skill activeert",
+  "triggers": ["trigger zin 1", "trigger zin 2", "trigger zin 3", "trigger zin 4", "trigger zin 5"]
+}
+Triggers moeten realistisch zijn — zinnen die een developer daadwerkelijk zou typen.`
+
+  const userContent = `Skill:
+Naam: ${comp.name}
+Huidige usage: ${comp.usage || '(leeg)'}
+Desc: ${comp.desc}
+Tags: ${(comp.tags || []).join(', ')}
+
+${skillMd ? `SKILL.md:\n${skillMd.slice(0, 2000)}` : ''}`
+
+  const raw = await callAnthropic(env, {
+    model: 'claude-sonnet-4-6',
+    system,
+    userContent,
+    maxTokens: 512,
+  })
+
+  const jsonMatch = raw.match(/\{[\s\S]*\}/)
+  if (!jsonMatch) return err('Kon verrijking niet parsen')
+  const result = JSON.parse(jsonMatch[0])
+  return json({ current_usage: comp.usage || '', ...result })
+  } catch (e) { return err('enrich-usage: ' + (e?.message || String(e)), 500) }
+}
+
+async function handleSaveEnrichment(request, env) {
+  const body = await request.json().catch(() => null)
+  if (!body?.id || body.usage === undefined) return err('"id" and "usage" required')
+
+  const repo = env.LIBRARY_REPO || 'mrtimberme-bot/claude-library'
+  const { components, sha } = await readComponentsJson(repo, env)
+
+  const idx = components.findIndex(c => c.id === body.id)
+  if (idx < 0) return err('Component not found', 404)
+
+  const today = new Date().toISOString().slice(0, 10)
+  components[idx] = { ...components[idx], usage: body.usage, updated: today }
+
+  const putResp = await ghPut(`/repos/${repo}/contents/components.json`, env, {
+    message: `chore: usage verrijkt voor ${body.id}`,
+    content: btoa(unescape(encodeURIComponent(JSON.stringify(components, null, 2)))),
+    sha,
+  })
+
+  if (!putResp.ok) {
+    const e = await putResp.json().catch(() => ({}))
+    return err(`Kon niet opslaan: ${e.message || putResp.status}`, 502)
+  }
+  return json({ ok: true })
+}
+
+async function handleUploadSkill(request, env) {
+  const body = await request.json().catch(() => null)
+  if (!body) return err('Invalid JSON body')
+
+  const { name, desc, content, tags, version, status } = body
+
+  if (!name) return err('"name" is required')
+  if (!/^[a-z0-9-]+$/.test(name)) return err('"name" mag alleen a-z, 0-9 en hyphens bevatten')
+  if (!content) return err('"content" is required')
+
+  const repo = env.LIBRARY_REPO || 'mrtimberme-bot/claude-library'
+  const today = new Date().toISOString().slice(0, 10)
+  const ver = version || '1.0.0'
+  const st = status || 'active'
+  const tagsArr = Array.isArray(tags) ? tags : (typeof tags === 'string' ? tags.split(',').map(t => t.trim()).filter(Boolean) : [])
+
+  // Build SKILL.md content
+  const skillMd = [
+    `# ${name}`,
+    '',
+    desc ? `${desc}` : '',
+    '',
+    `**Versie:** ${ver}`,
+    `**Status:** ${st}`,
+    `**Auteur:** Timothy Stekkinger`,
+    `**Bijgewerkt:** ${today}`,
+    tagsArr.length ? `**Tags:** ${tagsArr.join(', ')}` : '',
+    '',
+    '---',
+    '',
+    content,
+  ].filter(line => line !== null).join('\n')
+
+  const skillPath = `skills/${name}/SKILL.md`
+
+  // Check if SKILL.md already exists (for sha)
+  const existingSkill = await ghGet(`/repos/${repo}/contents/${skillPath}`, env)
+  const skillPayload = {
+    message: `feat: skill ${name} toegevoegd via cockpit`,
+    content: btoa(unescape(encodeURIComponent(skillMd))),
+  }
+  if (existingSkill.ok) {
+    const existingData = await existingSkill.json()
+    skillPayload.sha = existingData.sha
+  }
+
+  const putResp = await ghPut(`/repos/${repo}/contents/${skillPath}`, env, skillPayload)
+  if (!putResp.ok) {
+    const e = await putResp.json().catch(() => ({}))
+    return err(`Kon SKILL.md niet opslaan: ${e.message || putResp.status}`, 502)
+  }
+
+  // Update components.json
+  const compResp = await ghGet(`/repos/${repo}/contents/components.json`, env)
+  if (!compResp.ok) return err('Kon components.json niet ophalen', 502)
+
+  const compData = await compResp.json()
+  let components
+  try {
+    components = JSON.parse(atob(compData.content.replace(/\n/g, '')))
+    if (!Array.isArray(components)) throw new Error()
+  } catch {
+    return err('components.json is geen geldige JSON array', 502)
+  }
+
+  const newEntry = {
+    id: name,
+    name,
+    type: 'skill',
+    version: ver,
+    status: st,
+    desc: desc || '',
+    usage: '',
+    author: 'Timothy Stekkinger',
+    updated: today,
+    path: skillPath,
+    tags: tagsArr,
+  }
+
+  const idx = components.findIndex(c => c.id === name)
+  if (idx >= 0) {
+    components[idx] = newEntry
+  } else {
+    components.push(newEntry)
+  }
+
+  const compPutResp = await ghPut(`/repos/${repo}/contents/components.json`, env, {
+    message: `chore: components.json bijgewerkt voor skill ${name}`,
+    content: btoa(unescape(encodeURIComponent(JSON.stringify(components, null, 2)))),
+    sha: compData.sha,
+  })
+
+  if (!compPutResp.ok) {
+    const e = await compPutResp.json().catch(() => ({}))
+    return err(`Kon components.json niet bijwerken: ${e.message || compPutResp.status}`, 502)
+  }
+
+  return json({ success: true, path: skillPath })
+}
+
+export default {
+  async fetch(request, env) {
+    if (request.method === 'OPTIONS')
+      return new Response(null, { status: 204, headers: CORS })
+
+    const { pathname } = new URL(request.url)
+
+    try {
+      if (pathname === '/components' && request.method === 'GET')
+        return handleComponents(env)
+
+      const authPaths = ['/chat','/import-repo','/upload-skill','/analyze-skill','/analyze-all','/enrich-usage','/save-enrichment']
+      if (authPaths.includes(pathname)) {
+        if (request.method !== 'POST') return err('POST required', 405)
+        if (!checkAuth(request, env)) return err('Unauthorized', 401)
+        if (pathname === '/chat') return handleChat(request, env)
+        if (pathname === '/import-repo') return handleImportRepo(request, env)
+        if (pathname === '/upload-skill') return handleUploadSkill(request, env)
+        if (pathname === '/analyze-skill') return handleAnalyzeSkill(request, env)
+        if (pathname === '/analyze-all') return handleAnalyzeAll(request, env)
+        if (pathname === '/enrich-usage') return handleEnrichUsage(request, env)
+        if (pathname === '/save-enrichment') return handleSaveEnrichment(request, env)
+      }
+
+      return err('Not found', 404)
+    } catch (e) {
+      return err('Internal server error: ' + (e?.message || String(e)), 500)
+    }
+  },
+}
