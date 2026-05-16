@@ -20,12 +20,13 @@ function err(msg, status = 400) {
 }
 
 function ghHeaders(env) {
-  return {
-    Authorization: `token ${env.GITHUB_TOKEN}`,
+  const headers = {
     Accept: 'application/vnd.github+json',
     'User-Agent': 'claude-library-worker',
     'X-GitHub-Api-Version': '2022-11-28',
   }
+  if (env.GITHUB_TOKEN) headers.Authorization = `token ${env.GITHUB_TOKEN}`
+  return headers
 }
 
 function ghGet(path, env) {
@@ -56,7 +57,13 @@ function checkAuth(request, env) {
 
 async function handleComponents(env) {
   const repo = env.LIBRARY_REPO || 'mrtimberme-bot/claude-library'
-  const resp = await ghGet(`/repos/${repo}/contents/components.json`, env)
+  let resp = await ghGet(`/repos/${repo}/contents/components.json`, env)
+  if (resp.status === 401) {
+    // retry without auth (public repo fallback)
+    resp = await fetch(`${GITHUB_API}/repos/${repo}/contents/components.json`, {
+      headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'claude-library-worker' },
+    })
+  }
   if (!resp.ok) return err('Failed to fetch components', 502)
   const data = await resp.json()
   const content = JSON.parse(atob(data.content.replace(/\n/g, '')))
