@@ -805,6 +805,118 @@
     transition: all .15s;
   }
   .cockpit-settings-btn:hover { border-color: var(--blue); color: var(--blue); }
+
+  /* ── TYPE TABS ── */
+  .type-tabs { display: flex; gap: 2px; flex-wrap: wrap; }
+  .type-tab {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em;
+    text-transform: uppercase; padding: 5px 10px;
+    border: 1px solid var(--border); background: transparent;
+    color: var(--text4); cursor: pointer; transition: all .15s;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .type-tab:hover { border-color: var(--border2); color: var(--text2); }
+  .type-tab.active { border-color: var(--blue); color: var(--blue); background: rgba(33,150,243,0.08); }
+  .tab-badge {
+    background: var(--border); color: var(--text4);
+    font-size: 9px; padding: 1px 5px;
+  }
+  .type-tab.active .tab-badge { background: rgba(33,150,243,0.2); color: var(--blue); }
+
+  /* ── CARD GRID ── */
+  .card-grid-wrap { flex: 1; overflow-y: auto; padding: 16px 28px 24px; }
+  .type-group-label {
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.18em;
+    color: var(--text4); text-transform: uppercase;
+    padding: 12px 0 8px; display: flex; align-items: center; gap: 10px;
+  }
+  .type-group-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
+    gap: 6px; margin-bottom: 4px;
+  }
+  .lib-card {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-left: 3px solid var(--border2);
+    padding: 11px 13px 9px; cursor: pointer; position: relative;
+    transition: background .1s, border-color .1s;
+  }
+  .lib-card:hover { background: var(--surface3); border-color: var(--border2); }
+  .lib-card.selected { border-right-color: var(--blue); border-top-color: var(--blue); border-bottom-color: var(--blue); background: rgba(33,150,243,0.06); }
+  .lib-card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 5px; gap: 8px; }
+  .lib-card-name { font-family: var(--head); font-size: 13px; font-weight: 600; color: var(--text); letter-spacing: 0.04em; line-height: 1.2; }
+  .lib-card-desc {
+    font-family: var(--head); font-size: 12px; color: var(--text3);
+    line-height: 1.4; margin-bottom: 8px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .lib-card-footer { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+  .lib-card-tags { display: flex; gap: 3px; flex-wrap: wrap; flex: 1; min-width: 0; }
+  .lib-card-copy {
+    opacity: 0; background: var(--surface3); border: 1px solid var(--border2);
+    color: var(--text3); cursor: pointer; font-family: var(--mono);
+    font-size: 9px; padding: 2px 6px; letter-spacing: 0.08em;
+    transition: opacity .15s, color .1s; white-space: nowrap; flex-shrink: 0;
+  }
+  .lib-card:hover .lib-card-copy { opacity: 1; }
+  .lib-card-copy:hover { color: var(--cyan); border-color: var(--cyan); }
+
+  /* Type accent border colors */
+  .bl-skill   { border-left-color: var(--cyan); }
+  .bl-plugin  { border-left-color: #B085F5; }
+  .bl-agent   { border-left-color: var(--orange); }
+  .bl-memory  { border-left-color: var(--amber); }
+  .bl-mcp     { border-left-color: var(--blue); }
+  .bl-api     { border-left-color: #64B5F6; }
+  .bl-arch    { border-left-color: #F48FB1; }
+  .bl-infra   { border-left-color: #78909C; }
+  .bl-orch    { border-left-color: #A5D6A7; }
+
+  /* Search highlight */
+  mark.hl { background: rgba(255,184,53,0.2); color: var(--amber); font-style: normal; }
+
+  /* ── DRAWER ── */
+  .drawer-backdrop {
+    display: none; position: fixed; inset: 52px 0 0 0;
+    background: rgba(0,0,0,0.35); z-index: 199;
+  }
+  .drawer-backdrop.open { display: block; }
+  .drawer {
+    position: fixed; top: 52px; right: 0;
+    width: 400px; height: calc(100vh - 52px);
+    background: var(--surface); border-left: 1px solid var(--border2);
+    transform: translateX(100%); transition: transform .25s cubic-bezier(0.4,0,0.2,1);
+    z-index: 200; display: flex; flex-direction: column; overflow: hidden;
+  }
+  .drawer.open { transform: translateX(0); }
+  .drawer::before {
+    content: ''; display: block; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--blue), transparent);
+    flex-shrink: 0;
+  }
+  .drawer-header {
+    padding: 14px 18px 12px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-shrink: 0;
+  }
+  .drawer-name { font-family: var(--head); font-size: 15px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text); line-height: 1.2; }
+  .drawer-close {
+    background: transparent; border: 1px solid var(--border2);
+    color: var(--text3); cursor: pointer; font-family: var(--mono);
+    font-size: 11px; padding: 3px 9px; transition: all .15s; flex-shrink: 0;
+  }
+  .drawer-close:hover { border-color: var(--blue); color: var(--blue); }
+  .drawer-body { flex: 1; overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+  .dr-section { display: flex; flex-direction: column; gap: 5px; }
+  .dr-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text4); }
+  .dr-value { font-family: var(--head); font-size: 13px; color: var(--text2); line-height: 1.6; }
+  .dr-code { background: var(--bg); border: 1px solid var(--border2); padding: 10px 12px; font-family: var(--mono); font-size: 11px; color: var(--cyan); line-height: 1.7; white-space: pre-wrap; letter-spacing: 0.04em; }
+  .dr-meta { display: flex; gap: 16px; flex-wrap: wrap; }
+  .dr-kv { display: flex; flex-direction: column; gap: 2px; }
+  .dr-kv .k { font-family: var(--mono); font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text4); }
+  .dr-kv .v { font-family: var(--head); font-size: 13px; color: var(--text2); }
+  .dr-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .dr-path { font-family: var(--mono); font-size: 11px; color: var(--text4); letter-spacing: 0.04em; word-break: break-all; }
 </style>
 </head>
 <body>
@@ -850,16 +962,7 @@
     <div class="search-wrap">
       <input type="text" id="search" placeholder="module naam, tag..." autocomplete="off">
     </div>
-    <div class="filter-group" id="filter-group">
-      <button class="filter-btn active" data-type="all">All</button>
-      <button class="filter-btn" data-type="skill">Skill</button>
-      <button class="filter-btn" data-type="agent">Agent</button>
-      <button class="filter-btn" data-type="mcp">MCP</button>
-      <button class="filter-btn" data-type="memory">Memory</button>
-      <button class="filter-btn" data-type="infra">Infra</button>
-      <button class="filter-btn" data-type="plugin">Plugin</button>
-      <button class="filter-btn" data-type="arch">Arch</button>
-    </div>
+    <div class="type-tabs" id="type-tabs"></div>
     <div class="sort-wrap">
       SORT //
       <select id="sort-select">
@@ -871,59 +974,43 @@
     </div>
   </div>
 
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th class="col-name" data-col="name">Module naam <span class="si">↕</span></th>
-          <th class="col-type" data-col="type">Type <span class="si">↕</span></th>
-          <th class="col-version" data-col="version">Build <span class="si">↕</span></th>
-          <th class="col-status" data-col="status">Status <span class="si">↕</span></th>
-          <th class="col-updated" data-col="updated">Bijgewerkt <span class="si">↕</span></th>
-          <th class="col-tags">Tags</th>
-        </tr>
-      </thead>
-      <tbody id="lib-tbody"></tbody>
-    </table>
+  <div class="card-grid-wrap">
+    <div id="lib-cards"></div>
     <div class="empty-state" id="lib-empty" style="display:none">
       <div class="empty-state-icon">◌</div>
       <div>// NO MODULES FOUND</div>
     </div>
   </div>
 
-  <div class="detail-panel" id="lib-detail">
-    <div class="hud-line"></div>
-    <div class="detail-top">
-      <div class="detail-title-wrap">
-        <div class="detail-title" id="detail-title"></div>
-        <div id="detail-badge"></div>
+  <div class="drawer-backdrop" id="drawer-backdrop"></div>
+  <div class="drawer" id="lib-drawer">
+    <div class="drawer-header">
+      <div>
+        <div class="drawer-name" id="drawer-name"></div>
+        <div id="drawer-badge" style="margin-top:5px"></div>
       </div>
-      <button class="detail-close" id="detail-close">[ CLOSE ]</button>
+      <button class="drawer-close" id="drawer-close">[ ✕ ]</button>
     </div>
-    <div class="detail-grid">
-      <div class="detail-section">
-        <div>
-          <div class="detail-label">Module beschrijving</div>
-          <div class="detail-value" id="detail-desc"></div>
-        </div>
-        <div>
-          <div class="detail-label">Activatie protocol</div>
-          <div class="detail-code" id="detail-usage"></div>
-        </div>
+    <div class="drawer-body">
+      <div class="dr-section">
+        <div class="dr-label">Beschrijving</div>
+        <div class="dr-value" id="drawer-desc"></div>
       </div>
-      <div class="detail-section">
-        <div>
-          <div class="detail-label">Systeemdata</div>
-          <div class="detail-meta-row" id="detail-meta"></div>
-        </div>
-        <div>
-          <div class="detail-label">Tags</div>
-          <div class="detail-tags" id="detail-tags"></div>
-        </div>
-        <div>
-          <div class="detail-label">Pad</div>
-          <div style="font-family:var(--mono);font-size:11px;color:var(--text4);letter-spacing:0.05em" id="detail-path"></div>
-        </div>
+      <div class="dr-section">
+        <div class="dr-label">Activatie</div>
+        <div class="dr-code" id="drawer-usage"></div>
+      </div>
+      <div class="dr-section">
+        <div class="dr-label">Systeemdata</div>
+        <div class="dr-meta" id="drawer-meta"></div>
+      </div>
+      <div class="dr-section">
+        <div class="dr-label">Tags</div>
+        <div class="dr-tags" id="drawer-tags"></div>
+      </div>
+      <div class="dr-section">
+        <div class="dr-label">Pad</div>
+        <div class="dr-path" id="drawer-path"></div>
       </div>
     </div>
   </div>
@@ -1158,6 +1245,13 @@ if (window.location.hash === '#cockpit') { switchMode('cockpit'); }
 /* ── LIBRARY ── */
 var libFilter = 'all', libSearch = '', libSort = 'name', libSortDir = 1, libSelected = null;
 
+function mkEl(tag, cls, text) {
+  var el = document.createElement(tag);
+  if (cls) el.className = cls;
+  if (text !== undefined) el.textContent = text;
+  return el;
+}
+
 function libFiltered() {
   return COMPONENTS
     .filter(function(c){ return libFilter==='all' || c.type===libFilter; })
@@ -1173,126 +1267,181 @@ function libFiltered() {
     });
 }
 
+var TYPE_ORDER = ['skill','agent','mcp','memory','plugin','api','arch','infra','orch'];
+
+function hlNode(text, q) {
+  var frag = document.createDocumentFragment();
+  if (!q) { frag.appendChild(document.createTextNode(text)); return frag; }
+  var safe = q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  var parts = text.split(new RegExp(safe,'gi'));
+  var hits  = text.match(new RegExp(safe,'gi')) || [];
+  parts.forEach(function(p,i){
+    if (p) frag.appendChild(document.createTextNode(p));
+    if (i < hits.length) {
+      var m = document.createElement('mark'); m.className='hl'; m.textContent=hits[i];
+      frag.appendChild(m);
+    }
+  });
+  return frag;
+}
+
+function renderTypeTabs() {
+  var tabs = $('type-tabs'); tabs.textContent='';
+  var types = ['all'].concat(TYPE_ORDER.filter(function(t){
+    return COMPONENTS.some(function(c){ return c.type===t; });
+  }));
+  types.forEach(function(t){
+    var n = t==='all' ? COMPONENTS.length : COMPONENTS.filter(function(c){ return c.type===t; }).length;
+    var btn = document.createElement('button');
+    btn.className = 'type-tab'+(libFilter===t?' active':'');
+    btn.dataset.type = t;
+    btn.appendChild(document.createTextNode((t==='all'?'ALL':(TYPE_LABEL[t]||t.toUpperCase()))+' '));
+    var badge = document.createElement('span'); badge.className='tab-badge'; badge.textContent=String(n);
+    btn.appendChild(badge);
+    btn.addEventListener('click', function(){
+      libFilter=t;
+      document.querySelectorAll('.type-tab').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active'); renderLib();
+    });
+    tabs.appendChild(btn);
+  });
+}
+
 function renderLib() {
-  var rows = libFiltered();
-  var tbody = $('lib-tbody');
-  tbody.innerHTML = '';
-  $('lib-empty').style.display = rows.length?'none':'block';
-  rows.forEach(function(c){ tbody.appendChild(buildRow(c, false)); });
+  var items = libFiltered();
+  var container = $('lib-cards'); container.textContent='';
+  $('lib-empty').style.display = items.length?'none':'block';
+
+  function makeGrid(list) {
+    var g = document.createElement('div'); g.className='card-grid';
+    list.forEach(function(c){ g.appendChild(buildCard(c)); });
+    return g;
+  }
+
+  if (libFilter==='all' && !libSearch) {
+    var byType={};
+    items.forEach(function(c){ (byType[c.type]=byType[c.type]||[]).push(c); });
+    TYPE_ORDER.filter(function(t){ return byType[t]&&byType[t].length; }).forEach(function(t){
+      var lbl=document.createElement('div'); lbl.className='type-group-label';
+      lbl.textContent='// '+(TYPE_LABEL[t]||t.toUpperCase())+' ('+byType[t].length+')';
+      container.appendChild(lbl); container.appendChild(makeGrid(byType[t]));
+    });
+  } else {
+    container.appendChild(makeGrid(items));
+  }
+
   $('total-count').textContent = COMPONENTS.length;
   $('active-count').textContent = COMPONENTS.filter(function(c){ return c.status==='active'; }).length;
   $('type-count').textContent = (new Set(COMPONENTS.map(function(c){ return c.type; }))).size;
   $('last-sync').textContent = new Date().toLocaleDateString('nl-NL');
-  updateSortHeaders('lib');
 }
 
-function buildRow(c, skillsMode) {
-  var tr = document.createElement('tr');
-  if (c.id===libSelected) tr.classList.add('selected');
-  var tags = (c.tags||[]).slice(0,3).map(function(t){ return '<span class="tag-chip">'+t+'</span>'; }).join('');
-  var statusDot = '<span class="status-dot '+(DOT_CLASS[c.status]||'dot-draft')+'"></span>';
-  var statusTxt = '<span class="status-text '+(STATUS_CLASS[c.status]||'st-draft')+'">'+(STATUS_LABEL[c.status]||c.status)+'</span>';
-  var typeB = '<span class="type-badge type-'+(c.type||'')+'">'+(TYPE_LABEL[c.type]||c.type)+'</span>';
+function buildCard(c) {
+  var card = document.createElement('div');
+  card.className = 'lib-card bl-'+(c.type||'');
+  if (c.id===libSelected) card.classList.add('selected');
 
-  if (skillsMode) {
-    tr.innerHTML =
-      '<td><div class="td-name">'+c.name+'</div><div class="td-path">'+c.path+'</div></td>'+
-      '<td class="version-cell">'+c.version+'</td>'+
-      '<td><div class="status-wrap">'+statusDot+statusTxt+'</div></td>'+
-      '<td class="updated-cell">'+c.updated+'</td>'+
-      '<td>'+tags+'</td>';
-  } else {
-    tr.innerHTML =
-      '<td><div class="td-name">'+c.name+'</div><div class="td-path">'+c.path+'</div></td>'+
-      '<td>'+typeB+'</td>'+
-      '<td class="version-cell">'+c.version+'</td>'+
-      '<td><div class="status-wrap">'+statusDot+statusTxt+'</div></td>'+
-      '<td class="updated-cell">'+c.updated+'</td>'+
-      '<td>'+tags+'</td>';
-  }
+  var top = document.createElement('div'); top.className='lib-card-top';
+  var nameEl = document.createElement('div'); nameEl.className='lib-card-name';
+  nameEl.appendChild(hlNode(c.name, libSearch));
+  var badge = document.createElement('span'); badge.className='type-badge type-'+(c.type||'');
+  badge.style.cssText='font-size:9px;padding:1px 5px'; badge.textContent=TYPE_LABEL[c.type]||c.type;
+  top.appendChild(nameEl); top.appendChild(badge);
 
-  tr.addEventListener('click', function(){ libSelectRow(c.id); });
-  return tr;
+  var desc = document.createElement('div'); desc.className='lib-card-desc';
+  desc.appendChild(hlNode(c.desc, libSearch));
+
+  var footer = document.createElement('div'); footer.className='lib-card-footer';
+  var tagsEl = document.createElement('div'); tagsEl.className='lib-card-tags';
+  (c.tags||[]).slice(0,3).forEach(function(t){
+    var chip=document.createElement('span'); chip.className='tag-chip';
+    chip.style.cssText='font-size:9px;padding:1px 5px'; chip.textContent=t; tagsEl.appendChild(chip);
+  });
+  var right=document.createElement('div'); right.style.cssText='display:flex;align-items:center;gap:6px;flex-shrink:0';
+  var dot=document.createElement('span'); dot.className='status-dot '+(DOT_CLASS[c.status]||'dot-draft');
+  dot.style.cssText='width:6px;height:6px;border-radius:50%;display:inline-block';
+  var copyBtn=document.createElement('button'); copyBtn.className='lib-card-copy';
+  copyBtn.title='Pad kopiëren'; copyBtn.textContent='⎘ PAD';
+  right.appendChild(dot); right.appendChild(copyBtn);
+  footer.appendChild(tagsEl); footer.appendChild(right);
+  card.appendChild(top); card.appendChild(desc); card.appendChild(footer);
+
+  card.addEventListener('click', function(e){ if (!e.target.closest('.lib-card-copy')) libSelectRow(c.id); });
+  copyBtn.addEventListener('click', function(e){
+    e.stopPropagation();
+    navigator.clipboard.writeText(c.path).catch(function(){});
+    var orig=copyBtn.textContent; copyBtn.textContent='✓ GEKOPIEERD';
+    copyBtn.style.color='var(--cyan)'; copyBtn.style.borderColor='var(--cyan)';
+    setTimeout(function(){ copyBtn.textContent=orig; copyBtn.style.color=''; copyBtn.style.borderColor=''; },1500);
+  });
+  return card;
 }
 
 function libSelectRow(id) {
-  if (libSelected===id) {
-    libSelected=null;
-    $('lib-detail').classList.remove('open');
-    renderLib(); renderSkills();
-    return;
-  }
-  libSelected = id;
-  var c = COMPONENTS.find(function(x){ return x.id===id; });
+  if (libSelected===id) { libSelected=null; drawerClose(); return; }
+  libSelected=id;
+  var c=COMPONENTS.find(function(x){ return x.id===id; });
   if (!c) return;
 
-  $('detail-title').textContent = c.name.toUpperCase();
-  $('detail-badge').innerHTML = '<span class="type-badge type-'+c.type+'">'+TYPE_LABEL[c.type]+'</span>';
-  $('detail-desc').textContent = c.desc;
-  $('detail-usage').textContent = c.usage||'—';
-  $('detail-path').textContent = c.path;
+  $('drawer-name').textContent=c.name.toUpperCase();
+  var db=$('drawer-badge'); db.textContent='';
+  var dbBadge=document.createElement('span'); dbBadge.className='type-badge type-'+c.type;
+  dbBadge.textContent=TYPE_LABEL[c.type]||c.type; db.appendChild(dbBadge);
 
-  $('detail-meta').innerHTML = [
-    ['auteur', c.author||'—'],
-    ['versie', c.version||'—'],
-    ['bijgewerkt', c.updated||'—'],
-    ['status', STATUS_LABEL[c.status]||c.status]
-  ].map(function(kv){
-    return '<div class="detail-kv"><div class="k">'+kv[0]+'</div><div class="v">'+kv[1]+'</div></div>';
-  }).join('');
+  $('drawer-desc').textContent=c.desc;
+  $('drawer-usage').textContent=c.usage||'—';
 
-  $('detail-tags').innerHTML = (c.tags||[]).map(function(t){
-    return '<span class="tag-chip">'+t+'</span>';
-  }).join('');
+  var meta=$('drawer-meta'); meta.textContent='';
+  [['auteur',c.author||'—'],['versie',c.version||'—'],['bijgewerkt',c.updated||'—'],['status',STATUS_LABEL[c.status]||c.status]]
+    .forEach(function(kv){
+      var kvel=document.createElement('div'); kvel.className='dr-kv';
+      var k=document.createElement('div'); k.className='k'; k.textContent=kv[0];
+      var v=document.createElement('div'); v.className='v'; v.textContent=kv[1];
+      kvel.appendChild(k); kvel.appendChild(v); meta.appendChild(kvel);
+    });
 
-  $('lib-detail').classList.add('open');
+  var dt=$('drawer-tags'); dt.textContent='';
+  (c.tags||[]).forEach(function(t){
+    var chip=document.createElement('span'); chip.className='tag-chip'; chip.textContent=t; dt.appendChild(chip);
+  });
+  $('drawer-path').textContent=c.path;
+  $('lib-drawer').classList.add('open');
+  $('drawer-backdrop').classList.add('open');
   renderLib(); renderSkills();
 }
 
-$('detail-close').addEventListener('click', function(){
+function drawerClose() {
   libSelected=null;
-  $('lib-detail').classList.remove('open');
+  $('lib-drawer').classList.remove('open');
+  $('drawer-backdrop').classList.remove('open');
   renderLib(); renderSkills();
-});
+}
+
+$('drawer-close').addEventListener('click', drawerClose);
+$('drawer-backdrop').addEventListener('click', drawerClose);
 
 $('search').addEventListener('input', function(e){ libSearch=e.target.value; renderLib(); });
 $('sort-select').addEventListener('change', function(e){ libSort=e.target.value; libSortDir=1; renderLib(); });
 
-$('filter-group').addEventListener('click', function(e){
-  var btn = e.target.closest('.filter-btn');
-  if (!btn) return;
-  libFilter = btn.dataset.type;
-  document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
-  btn.classList.add('active');
-  renderLib();
-});
-
 document.querySelectorAll('thead th[data-col]').forEach(function(th){
   th.addEventListener('click', function(){
-    var col = th.dataset.col;
-    var view = th.dataset.view;
+    var col=th.dataset.col, view=th.dataset.view;
     if (view==='skills') {
       if (skillsSort===col) skillsSortDir*=-1; else { skillsSort=col; skillsSortDir=1; }
-      $('skills-sort').value=skillsSort;
-      renderSkills();
+      $('skills-sort').value=skillsSort; renderSkills();
     } else {
       if (libSort===col) libSortDir*=-1; else { libSort=col; libSortDir=1; }
-      $('sort-select').value=libSort;
-      renderLib();
+      $('sort-select').value=libSort; renderLib();
     }
   });
 });
 
 function updateSortHeaders(view) {
-  var col = view==='skills'?skillsSort:libSort;
-  var dir = view==='skills'?skillsSortDir:libSortDir;
-  var attr = view==='skills'?'[data-view="skills"]':'[data-col]:not([data-view])';
-  document.querySelectorAll('thead th'+attr+', thead th[data-col]:not([data-view])').forEach(function(th){
-    if ((view==='skills'&&th.dataset.view==='skills')||(view==='lib'&&!th.dataset.view)) {
-      th.classList.toggle('sorted', th.dataset.col===col);
-      var si = th.querySelector('.si');
-      if (si) si.textContent = th.dataset.col===col?(dir===1?'↑':'↓'):'↕';
-    }
+  var col=view==='skills'?skillsSort:libSort, dir=view==='skills'?skillsSortDir:libSortDir;
+  document.querySelectorAll('thead th[data-view="skills"]').forEach(function(th){
+    th.classList.toggle('sorted', th.dataset.col===col);
+    var si=th.querySelector('.si');
+    if (si) si.textContent=th.dataset.col===col?(dir===1?'↑':'↓'):'↕';
   });
 }
 
@@ -1313,14 +1462,45 @@ function skillsFiltered() {
     });
 }
 
+function buildSkillsRow(c) {
+  var tr = document.createElement('tr');
+  if (c.id===libSelected) tr.classList.add('selected');
+
+  var nameCell = document.createElement('td');
+  var nameDiv = document.createElement('div'); nameDiv.className='td-name'; nameDiv.textContent=c.name;
+  var pathDiv = document.createElement('div'); pathDiv.className='td-path'; pathDiv.textContent=c.path;
+  nameCell.appendChild(nameDiv); nameCell.appendChild(pathDiv);
+
+  var verCell = document.createElement('td'); verCell.className='version-cell'; verCell.textContent=c.version;
+
+  var statusCell = document.createElement('td');
+  var wrap = document.createElement('div'); wrap.className='status-wrap';
+  var dot = document.createElement('span'); dot.className='status-dot '+(DOT_CLASS[c.status]||'dot-draft');
+  var txt = document.createElement('span'); txt.className='status-text '+(STATUS_CLASS[c.status]||'st-draft');
+  txt.textContent=STATUS_LABEL[c.status]||c.status;
+  wrap.appendChild(dot); wrap.appendChild(txt); statusCell.appendChild(wrap);
+
+  var updCell = document.createElement('td'); updCell.className='updated-cell'; updCell.textContent=c.updated;
+  var tagsCell = document.createElement('td');
+  (c.tags||[]).slice(0,3).forEach(function(t){
+    var chip=document.createElement('span'); chip.className='tag-chip'; chip.textContent=t; tagsCell.appendChild(chip);
+  });
+
+  tr.appendChild(nameCell); tr.appendChild(verCell); tr.appendChild(statusCell);
+  tr.appendChild(updCell); tr.appendChild(tagsCell);
+  tr.addEventListener('click', function(){ libSelectRow(c.id); });
+  return tr;
+}
+
 function renderSkills() {
   var rows = skillsFiltered();
   var tbody = $('skills-tbody');
-  tbody.innerHTML = '';
+  tbody.textContent = '';
   $('skills-empty').style.display = rows.length?'none':'block';
-  rows.forEach(function(c){ tbody.appendChild(buildRow(c, true)); });
+  rows.forEach(function(c){ tbody.appendChild(buildSkillsRow(c)); });
   $('skills-count').textContent = rows.length;
   $('skills-active').textContent = rows.filter(function(c){ return c.status==='active'; }).length;
+  updateSortHeaders('skills');
 }
 
 $('skills-search').addEventListener('input', function(e){ skillsSearch=e.target.value; renderSkills(); });
@@ -1329,8 +1509,8 @@ $('skills-sort').addEventListener('change', function(e){ skillsSort=e.target.val
 /* ── DATA ── */
 fetch('components.json')
   .then(function(r){ return r.json(); })
-  .then(function(data){ COMPONENTS=data; renderLib(); renderSkills(); })
-  .catch(function(){ renderLib(); renderSkills(); });
+  .then(function(data){ COMPONENTS=data; renderTypeTabs(); renderLib(); renderSkills(); })
+  .catch(function(){ renderTypeTabs(); renderLib(); renderSkills(); });
 
 /* ── COCKPIT ── */
 var WORKER_URL_DEFAULT = 'https://claude-library-worker.mrtimberme.workers.dev';
