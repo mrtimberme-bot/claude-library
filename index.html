@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a26;
+    --border: #ffffff0f;
+    --border2: #ffffff1a;
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+    --accent: #7b6ef6;
+    --accent2: #4ecdc4;
+    --accent3: #f7c948;
+
+    --skill:   #5dcaa5;
+    --plugin:  #7b6ef6;
+    --agent:   #f0997b;
+    --memory:  #f7c948;
+    --mcp:     #4ecdc4;
+    --api:     #85b7eb;
+    --arch:    #d4537e;
+    --infra:   #888780;
+    --orch:    #c0dd97;
+
+    --font-head: 'Syne', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* grid texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: relative;
+    z-index: 10;
+    padding: 40px 40px 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .logo-block h1 {
+    font-family: var(--font-head);
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .logo-block h1 span { color: var(--accent); }
+
+  .logo-block p {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .header-stats {
+    display: flex;
+    gap: 24px;
+    padding-top: 4px;
+  }
+
+  .stat {
+    text-align: right;
+  }
+
+  .stat-num {
+    font-family: var(--font-head);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .stat-label {
+    color: var(--muted);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 2px;
+  }
+
+  /* ── TOOLBAR ── */
+  .toolbar {
+    position: relative;
+    z-index: 10;
+    padding: 28px 40px 0;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+    max-width: 340px;
+  }
+
+  .search-wrap input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 8px 12px 8px 32px;
+    outline: none;
+    transition: border-color .2s;
+  }
+
+  .search-wrap input:focus { border-color: var(--accent); }
+  .search-wrap input::placeholder { color: var(--muted); }
+
+  .search-wrap::before {
+    content: '⌕';
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 15px;
+    pointer-events: none;
+  }
+
+  .filter-pills {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .pill {
+    padding: 5px 11px;
+    border-radius: 20px;
+    border: 1px solid var(--border2);
+    background: transparent;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    cursor: pointer;
+    transition: all .15s;
+    white-space: nowrap;
+  }
+
+  .pill:hover { border-color: var(--border2); color: var(--text); background: var(--surface); }
+  .pill.active { color: var(--bg); border-color: transparent; font-weight: 500; }
+
+  .pill[data-type="all"].active    { background: var(--text); }
+  .pill[data-type="skill"].active  { background: var(--skill); }
+  .pill[data-type="plugin"].active { background: var(--plugin); }
+  .pill[data-type="agent"].active  { background: var(--agent); }
+  .pill[data-type="memory"].active { background: var(--memory); color: #1a1a00; }
+  .pill[data-type="mcp"].active    { background: var(--mcp); color: #001a1a; }
+  .pill[data-type="api"].active    { background: var(--api); color: #001020; }
+  .pill[data-type="arch"].active   { background: var(--arch); }
+  .pill[data-type="infra"].active  { background: var(--infra); color: #0a0a0a; }
+  .pill[data-type="orch"].active   { background: var(--orch); color: #0a1200; }
+
+  .sort-select {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 7px 10px;
+    outline: none;
+    cursor: pointer;
+    margin-left: auto;
+  }
+
+  /* ── GRID ── */
+  .grid {
+    position: relative;
+    z-index: 10;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    padding: 28px 40px 60px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    cursor: pointer;
+    transition: border-color .2s, transform .15s, background .2s;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    animation: fadeIn .3s ease both;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card:hover {
+    background: var(--surface2);
+    transform: translateY(-2px);
+  }
+
+  .card.hidden { display: none; }
+
+  /* Accent top bar per type */
+  .card::before {
+    content: '';
+    display: block;
+    height: 2px;
+    border-radius: 2px;
+    margin: -20px -20px 0;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .card[data-type="skill"]::before  { background: var(--skill); }
+  .card[data-type="plugin"]::before { background: var(--plugin); }
+  .card[data-type="agent"]::before  { background: var(--agent); }
+  .card[data-type="memory"]::before { background: var(--memory); }
+  .card[data-type="mcp"]::before    { background: var(--mcp); }
+  .card[data-type="api"]::before    { background: var(--api); }
+  .card[data-type="arch"]::before   { background: var(--arch); }
+  .card[data-type="infra"]::before  { background: var(--infra); }
+  .card[data-type="orch"]::before   { background: var(--orch); }
+
+  .card:hover { border-color: var(--border2); }
+  .card[data-type="skill"]:hover  { border-color: #5dcaa540; }
+  .card[data-type="plugin"]:hover { border-color: #7b6ef640; }
+  .card[data-type="agent"]:hover  { border-color: #f0997b40; }
+  .card[data-type="memory"]:hover { border-color: #f7c94840; }
+  .card[data-type="mcp"]:hover    { border-color: #4ecdc440; }
+  .card[data-type="api"]:hover    { border-color: #85b7eb40; }
+  .card[data-type="arch"]:hover   { border-color: #d4537e40; }
+  .card[data-type="infra"]:hover  { border-color: #88878040; }
+  .card[data-type="orch"]:hover   { border-color: #c0dd9740; }
+
+  .card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .card-title {
+    font-family: var(--font-head);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .badge {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 10px;
+    white-space: nowrap;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .badge-skill  { background: #5dcaa520; color: var(--skill); border: 1px solid #5dcaa530; }
+  .badge-plugin { background: #7b6ef620; color: var(--plugin); border: 1px solid #7b6ef630; }
+  .badge-agent  { background: #f0997b20; color: var(--agent); border: 1px solid #f0997b30; }
+  .badge-memory { background: #f7c94820; color: var(--memory); border: 1px solid #f7c94830; }
+  .badge-mcp    { background: #4ecdc420; color: var(--mcp); border: 1px solid #4ecdc430; }
+  .badge-api    { background: #85b7eb20; color: var(--api); border: 1px solid #85b7eb30; }
+  .badge-arch   { background: #d4537e20; color: var(--arch); border: 1px solid #d4537e30; }
+  .badge-infra  { background: #88878020; color: var(--infra); border: 1px solid #88878030; }
+  .badge-orch   { background: #c0dd9720; color: var(--orch); border: 1px solid #c0dd9730; }
+
+  .card-desc {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.6;
+    flex: 1;
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+    margin-top: 0;
+  }
+
+  .card-status {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot-active   { background: #5dcaa5; box-shadow: 0 0 6px #5dcaa580; }
+  .dot-wip      { background: var(--accent3); }
+  .dot-draft    { background: var(--muted); }
+  .dot-deprecated { background: #e24b4a; }
+
+  .card-version {
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  .card-tags {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+
+  /* ── MODAL ── */
+  .modal-bg {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #000000b0;
+    z-index: 100;
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-bg.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 14px;
+    width: 100%;
+    max-width: 580px;
+    max-height: 85vh;
+    overflow-y: auto;
+    animation: slideUp .2s ease;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .modal-header {
+    padding: 24px 24px 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .modal-title {
+    font-family: var(--font-head);
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .modal-close {
+    background: none;
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 16px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all .15s;
+  }
+  .modal-close:hover { background: var(--surface2); color: var(--text); }
+
+  .modal-body { padding: 20px 24px 24px; display: flex; flex-direction: column; gap: 16px; }
+
+  .modal-section-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .modal-desc { color: var(--text); font-size: 13px; line-height: 1.7; }
+
+  .modal-code {
+    background: var(--bg);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent2);
+    line-height: 1.6;
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  .modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .modal-kv { display: flex; flex-direction: column; gap: 3px; }
+  .modal-kv .k { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .modal-kv .v { font-size: 12px; color: var(--text); }
+
+  .modal-actions {
+    display: flex;
+    gap: 8px;
+    padding-top: 4px;
+  }
+
+  .btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .15s;
+    border: none;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: #6a5ee0; }
+  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border2); }
+  .btn-secondary:hover { border-color: var(--border2); background: #22223a; }
+
+  /* ── EMPTY STATE ── */
+  .empty {
+    display: none;
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+  .empty.show { display: block; }
+  .empty-icon { font-size: 32px; margin-bottom: 12px; }
+  .empty p { font-size: 13px; }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative;
+    z-index: 10;
+    border-top: 1px solid var(--border);
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  footer a { color: var(--muted); text-decoration: none; }
+  footer a:hover { color: var(--text); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-block">
+    <h1>Claude <span>Library</span></h1>
+    <p>Skills · Plugins · Agents · Memory · Tools · Architecture</p>
+  </div>
+  <div class="header-stats">
+    <div class="stat">
+      <div class="stat-num" id="total-count">0</div>
+      <div class="stat-label">Components</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="active-count">0</div>
+      <div class="stat-label">Active</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="type-count">0</div>
+      <div class="stat-label">Types</div>
+    </div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="search-wrap">
+    <input type="text" id="search" placeholder="Zoek component..." autocomplete="off">
+  </div>
+  <div class="filter-pills">
+    <button class="pill active" data-type="all">Alles</button>
+    <button class="pill" data-type="skill">Skill</button>
+    <button class="pill" data-type="plugin">Plugin</button>
+    <button class="pill" data-type="agent">Agent</button>
+    <button class="pill" data-type="memory">Memory</button>
+    <button class="pill" data-type="mcp">MCP</button>
+    <button class="pill" data-type="api">API tool</button>
+    <button class="pill" data-type="arch">Architectuur</button>
+    <button class="pill" data-type="orch">Orchestratie</button>
+    <button class="pill" data-type="infra">Infra</button>
+  </div>
+  <select class="sort-select" id="sort-select">
+    <option value="name">Naam A–Z</option>
+    <option value="updated">Recentst bijgewerkt</option>
+    <option value="status">Status</option>
+    <option value="type">Type</option>
+  </select>
+</div>
+
+<div class="grid" id="grid">
+  <div class="empty" id="empty">
+    <div class="empty-icon">◌</div>
+    <p>Geen componenten gevonden.</p>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modal-title"></div>
+        <div style="margin-top:6px;display:flex;gap:6px;align-items:center;" id="modal-badges"></div>
+      </div>
+      <button class="modal-close" id="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <div class="modal-section-label">Beschrijving</div>
+        <div class="modal-desc" id="modal-desc"></div>
+      </div>
+      <div id="modal-usage-wrap">
+        <div class="modal-section-label">Gebruik in Claude</div>
+        <div class="modal-code" id="modal-usage"></div>
+      </div>
+      <div>
+        <div class="modal-section-label">Details</div>
+        <div class="modal-grid" id="modal-grid"></div>
+      </div>
+      <div id="modal-tags-wrap">
+        <div class="modal-section-label">Tags</div>
+        <div class="card-tags" id="modal-tags"></div>
+      </div>
+      <div class="modal-actions" id="modal-actions"></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>Claude Library — lokale component registry</span>
+  <span>Laatste sync: <span id="last-sync">—</span></span>
+</footer>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+// Geladen vanuit components.json — bewerk dat bestand om componenten toe te voegen
+let COMPONENTS = [
+  {
+    id: "docx-skill",
+    name: "Word document skill",
+    type: "skill",
+    status: "active",
+    version: "v1.2",
+    desc: "Maakt, leest en bewerkt .docx bestanden. Ondersteunt tabellen, inhoudsopgave, paginanummers en letterhoofden.",
+    usage: `# Gebruik in claude.ai project
+# Upload SKILL.md als project bestand
+
+# Trigger zinnen:
+- "maak een Word document van..."
+- "exporteer als .docx"
+- "voeg toe aan Word rapport"`,
+    tags: ["documenten", "word", "export", "office"],
+    author: "jij",
+    updated: "2026-05-14",
+    path: "skills/docx/SKILL.md",
+    docs: "#"
+  },
+  {
+    id: "pdf-skill",
+    name: "PDF skill",
+    type: "skill",
+    status: "active",
+    version: "v1.1",
+    desc: "Alles rondom PDF bestanden: lezen, samenvoegen, splitsen, formulieren invullen, watermerken en OCR.",
+    usage: `# Trigger zinnen:
+- "lees dit PDF bestand"
+- "combineer deze PDFs"
+- "vul dit formulier in"`,
+    tags: ["pdf", "formulieren", "ocr", "merge"],
+    author: "jij",
+    updated: "2026-05-10",
+    path: "skills/pdf/SKILL.md",
+    docs: "#"
+  },
+  {
+    id: "pptx-skill",
+    name: "Presentatie skill",
+    type: "skill",
+    status: "active",
+    version: "v1.0",
+    desc: "Aanmaken en bewerken van .pptx presentaties. Ondersteunt dia-layouts, speaker notes en templates.",
+    usage: `# Trigger zinnen:
+- "maak een presentatie over..."
+- "voeg een dia toe"
+- "exporteer als PowerPoint"`,
+    tags: ["presentatie", "slides", "pptx", "office"],
+    author: "jij",
+    updated: "2026-05-08",
+    path: "skills/pptx/SKILL.md",
+    docs: "#"
+  },
+  {
+    id: "frontend-skill",
+    name: "Frontend design skill",
+    type: "skill",
+    status: "active",
+    version: "v2.0",
+    desc: "Bouwt productie-klare interfaces in HTML, CSS, JS en React. Vermijdt generieke AI-esthetiek en kiest altijd een bewuste designrichting.",
+    usage: `# Trigger zinnen:
+- "bouw een dashboard voor..."
+- "maak een React component"
+- "ontwerp een landingspagina"`,
+    tags: ["html", "css", "react", "design", "ui"],
+    author: "jij",
+    updated: "2026-05-15",
+    path: "skills/frontend-design/SKILL.md",
+    docs: "#"
+  },
+  {
+    id: "internal-comms-skill",
+    name: "Interne communicatie skill",
+    type: "skill",
+    status: "active",
+    version: "v1.0",
+    desc: "Schrijft statusrapportages, leadership updates, nieuwsbrieven, FAQs en incidentrapporten in het juiste formaat.",
+    usage: `# Trigger zinnen:
+- "schrijf een status update"
+- "stel een incident rapport op"
+- "maak een team nieuwsbrief"`,
+    tags: ["communicatie", "rapportage", "intern", "schrijven"],
+    author: "jij",
+    updated: "2026-05-01",
+    path: "skills/internal-comms/SKILL.md",
+    docs: "#"
+  },
+  {
+    id: "gdrive-mcp",
+    name: "Google Drive MCP",
+    type: "mcp",
+    status: "active",
+    version: "v1.0",
+    desc: "Koppeling met Google Drive via MCP. Claude kan bestanden zoeken, lezen en uploaden naar Drive.",
+    usage: `# Ingesteld als MCP server:
+mcp_servers:
+  - url: https://drivemcp.googleapis.com/mcp/v1
+    name: google-drive
+
+# Trigger:
+- "zoek mijn Q3 rapport in Drive"
+- "upload dit naar Drive"`,
+    tags: ["google", "drive", "bestanden", "cloud"],
+    author: "anthropic",
+    updated: "2026-05-01",
+    path: "mcp/gdrive/config.yml",
+    docs: "https://docs.claude.ai"
+  },
+  {
+    id: "web-search-api",
+    name: "Web search tool",
+    type: "api",
+    status: "active",
+    version: "v1.0",
+    desc: "Geeft Claude toegang tot actuele webzoekopdrachten. Nuttig voor nieuws, recente feiten en verificatie.",
+    usage: `# API configuratie:
+tools: [{
+  "type": "web_search_20250305",
+  "name": "web_search"
+}]
+
+# Automatisch getriggerd bij:
+- vragen over actuele gebeurtenissen
+- prijzen, posities, recent nieuws`,
+    tags: ["search", "internet", "actueel", "api"],
+    author: "anthropic",
+    updated: "2026-04-20",
+    path: "tools/web-search/config.json",
+    docs: "https://docs.anthropic.com"
+  },
+  {
+    id: "research-agent",
+    name: "Research agent",
+    type: "agent",
+    status: "active",
+    version: "v0.3",
+    desc: "Autonome agent die webonderzoek uitvoert, bronnen vergelijkt en een gestructureerd rapport oplevert. Gebruikt web search + document skill.",
+    usage: `# Roept aan:
+- web_search tool
+- docx skill (voor rapport)
+
+# Trigger:
+- "onderzoek [onderwerp] en
+   maak een rapport"`,
+    tags: ["research", "autonome", "rapport", "multi-step"],
+    author: "jij",
+    updated: "2026-05-12",
+    path: "agents/research/agent.md",
+    docs: "#"
+  },
+  {
+    id: "code-review-agent",
+    name: "Code review agent",
+    type: "agent",
+    status: "wip",
+    version: "v0.1",
+    desc: "Reviewt pull requests op kwaliteit, veiligheid en conventies. Geeft gestructureerde feedback per bestand.",
+    usage: `# In ontwikkeling — koppelt aan:
+- GitHub MCP (nog te bouwen)
+- Code execution tool
+
+# Trigger (toekomstig):
+- "review PR #42"`,
+    tags: ["code", "review", "github", "kwaliteit"],
+    author: "jij",
+    updated: "2026-05-16",
+    path: "agents/code-review/agent.md",
+    docs: "#"
+  },
+  {
+    id: "claude-md-memory",
+    name: "CLAUDE.md memory",
+    type: "memory",
+    status: "active",
+    version: "v1.0",
+    desc: "Persistent geheugen via CLAUDE.md bestanden in je project. Slaat voorkeuren, werkwijze, actieve skills en projectcontext op.",
+    usage: `# Bestandslocatie:
+/project-root/CLAUDE.md
+
+# Bevat:
+- Jouw naam en stijlvoorkeuren
+- Actieve skills (lijst)
+- Projectspecifieke context
+- Werkwijze en conventies`,
+    tags: ["memory", "persistent", "claude.md", "context"],
+    author: "jij",
+    updated: "2026-05-15",
+    path: "memory/CLAUDE.md",
+    docs: "#"
+  },
+  {
+    id: "prompt-chain-orch",
+    name: "Prompt chain orchestratie",
+    type: "orch",
+    status: "active",
+    version: "v0.2",
+    desc: "Sjabloon voor prompt chaining: output van stap N wordt input van stap N+1. Met conditionals en error handling.",
+    usage: `# Patroon:
+stap1 = claude(prompt_1)
+stap2 = claude(prompt_2 + stap1)
+stap3 = claude(prompt_3 + stap2)
+
+# Gebruik voor:
+- Meerstaps transformaties
+- Samenvatting → structuur → rapport`,
+    tags: ["chaining", "pipeline", "orchestratie", "patroon"],
+    author: "jij",
+    updated: "2026-05-10",
+    path: "orchestration/prompt-chain.md",
+    docs: "#"
+  },
+  {
+    id: "system-arch",
+    name: "Systeem architectuur ADR",
+    type: "arch",
+    status: "active",
+    version: "v1.0",
+    desc: "Architecture Decision Records voor je Claude systeem. Legt vast waarom componenten zijn gekozen en hoe ze samenwerken.",
+    usage: `# Bestandsformaat:
+/architecture/
+  ADR-001-skill-structure.md
+  ADR-002-memory-strategy.md
+  ADR-003-agent-design.md
+
+# Gebruik:
+- Beslissingen vastleggen
+- Onboarding van nieuwe leden`,
+    tags: ["adr", "beslissingen", "documentatie", "systeem"],
+    author: "jij",
+    updated: "2026-05-05",
+    path: "architecture/README.md",
+    docs: "#"
+  },
+  {
+    id: "github-infra",
+    name: "GitHub repo infra",
+    type: "infra",
+    status: "active",
+    version: "v1.0",
+    desc: "Fundament van de library: folderstructuur, GitHub Actions voor CI, PR-review workflow en changelog generatie.",
+    usage: `# Folderstructuur:
+/skills/     — skill bestanden
+/agents/     — agent configs
+/memory/     — CLAUDE.md files
+/tools/      — API tool configs
+/mcp/        — MCP server configs
+/arch/       — ADRs
+/.github/    — Actions workflows`,
+    tags: ["github", "ci", "structuur", "workflow"],
+    author: "jij",
+    updated: "2026-05-01",
+    path: ".github/workflows/",
+    docs: "#"
+  },
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let activeType = 'all';
+let searchQuery = '';
+let sortBy = 'name';
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+const typeLabel = {
+  skill:'Skill', plugin:'Plugin', agent:'Agent', memory:'Memory',
+  mcp:'MCP', api:'API tool', arch:'Architectuur', infra:'Infra', orch:'Orchestratie'
+};
+
+const statusLabel = {
+  active:'Actief', wip:'In ontwikkeling', draft:'Concept', deprecated:'Verouderd'
+};
+
+const dotClass = {
+  active:'dot-active', wip:'dot-wip', draft:'dot-draft', deprecated:'dot-deprecated'
+};
+
+function filtered() {
+  return COMPONENTS
+    .filter(c => activeType === 'all' || c.type === activeType)
+    .filter(c => {
+      if (!searchQuery) return true;
+      const q = searchQuery.toLowerCase();
+      return c.name.toLowerCase().includes(q)
+          || c.desc.toLowerCase().includes(q)
+          || c.tags.some(t => t.includes(q));
+    })
+    .sort((a, b) => {
+      if (sortBy === 'name')    return a.name.localeCompare(b.name);
+      if (sortBy === 'updated') return b.updated.localeCompare(a.updated);
+      if (sortBy === 'status')  return a.status.localeCompare(b.status);
+      if (sortBy === 'type')    return a.type.localeCompare(b.type);
+    });
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function render() {
+  const grid = document.getElementById('grid');
+  const empty = document.getElementById('empty');
+  const items = filtered();
+
+  // remove old cards
+  grid.querySelectorAll('.card').forEach(el => el.remove());
+  empty.classList.toggle('show', items.length === 0);
+
+  items.forEach((c, i) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.type = c.type;
+    card.style.animationDelay = `${i * 30}ms`;
+    card.innerHTML = `
+      <div class="card-head">
+        <div class="card-title">${c.name}</div>
+        <span class="badge badge-${c.type}">${typeLabel[c.type] || c.type}</span>
+      </div>
+      <div class="card-desc">${c.desc}</div>
+      <div class="card-tags">${c.tags.slice(0,4).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+      <div class="card-meta">
+        <div class="card-status">
+          <span class="dot ${dotClass[c.status] || 'dot-draft'}"></span>
+          ${statusLabel[c.status] || c.status}
+        </div>
+        <div class="card-version">${c.version}</div>
+      </div>`;
+    card.addEventListener('click', () => openModal(c));
+    grid.appendChild(card);
+  });
+
+  // update stats
+  document.getElementById('total-count').textContent = COMPONENTS.length;
+  document.getElementById('active-count').textContent = COMPONENTS.filter(c=>c.status==='active').length;
+  document.getElementById('type-count').textContent = [...new Set(COMPONENTS.map(c=>c.type))].length;
+  document.getElementById('last-sync').textContent = new Date().toLocaleDateString('nl-NL');
+}
+
+// ── MODAL ─────────────────────────────────────────────────────────────────────
+function openModal(c) {
+  document.getElementById('modal-title').textContent = c.name;
+
+  const badges = document.getElementById('modal-badges');
+  badges.innerHTML = `
+    <span class="badge badge-${c.type}">${typeLabel[c.type] || c.type}</span>
+    <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted)">
+      <span class="dot ${dotClass[c.status]}"></span>${statusLabel[c.status]}
+    </span>`;
+
+  document.getElementById('modal-desc').textContent = c.desc;
+  document.getElementById('modal-usage').textContent = c.usage;
+
+  const grid = document.getElementById('modal-grid');
+  grid.innerHTML = [
+    ['Versie', c.version],
+    ['Auteur', c.author],
+    ['Bijgewerkt', c.updated],
+    ['Pad', c.path],
+  ].map(([k,v])=>`<div class="modal-kv"><span class="k">${k}</span><span class="v">${v}</span></div>`).join('');
+
+  const tagsEl = document.getElementById('modal-tags');
+  tagsEl.innerHTML = c.tags.map(t=>`<span class="tag">${t}</span>`).join('');
+
+  const actions = document.getElementById('modal-actions');
+  actions.innerHTML = `
+    <a href="${c.docs}" class="btn btn-primary" target="_blank">Documentatie</a>
+    <button class="btn btn-secondary" onclick="copyPath('${c.path}')">Kopieer pad</button>`;
+
+  document.getElementById('modal-bg').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal-bg').classList.remove('open');
+}
+
+function copyPath(path) {
+  navigator.clipboard.writeText(path).catch(()=>{});
+  const btn = document.querySelector('.btn-secondary');
+  if (btn) { btn.textContent = 'Gekopieerd!'; setTimeout(()=>btn.textContent='Kopieer pad',1500); }
+}
+
+// ── EVENTS ────────────────────────────────────────────────────────────────────
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-bg').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-bg')) closeModal();
+});
+
+document.querySelectorAll('.pill').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    activeType = btn.dataset.type;
+    render();
+  });
+});
+
+document.getElementById('search').addEventListener('input', e => {
+  searchQuery = e.target.value;
+  render();
+});
+
+document.getElementById('sort-select').addEventListener('change', e => {
+  sortBy = e.target.value;
+  render();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+fetch('components.json')
+  .then(r => r.json())
+  .then(data => { COMPONENTS = data; render(); })
+  .catch(() => render()); // fallback: gebruik hardcoded array als fetch faalt
+</script>
+</body>
+</html>
