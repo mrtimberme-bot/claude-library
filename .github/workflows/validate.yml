@@ -1,0 +1,167 @@
+name: Validate Components & Secrets Scan
+
+on:
+  pull_request:
+    paths:
+      - "**.json"
+      - "**.md"
+      - "components.json"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  validate:
+    name: Validate components
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests PyGithub
+
+      - name: Get changed JSON and MD files
+        id: changed
+        run: |
+          FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD -- '*.json' '*.md' | tr '\n' ' ')
+          echo "files=$FILES" >> "$GITHUB_OUTPUT"
+
+      - name: Run validate_component.py on changed files
+        id: validate
+        env:
+          CHANGED_FILES: ${{ steps.changed.outputs.files }}
+        run: |
+          set +e
+          OUTPUT=""
+          STATUS="success"
+          for FILE in $CHANGED_FILES; do
+            if [ -f "$FILE" ]; then
+              RESULT=$(python3 validate_component.py "$FILE" 2>&1)
+              EXIT=$?
+              OUTPUT="${OUTPUT}\n### \`${FILE}\`\n\`\`\`\n${RESULT}\n\`\`\`"
+              if [ $EXIT -ne 0 ]; then
+                STATUS="failure"
+              fi
+            fi
+          done
+          {
+            echo "output<<EOF"
+            printf "%b" "$OUTPUT"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+          echo "status=$STATUS" >> "$GITHUB_OUTPUT"
+
+      - name: Post validation result as PR comment
+        uses: actions/github-script@v7
+        env:
+          VALIDATE_OUTPUT: ${{ steps.validate.outputs.output }}
+          VALIDATE_STATUS: ${{ steps.validate.outputs.status }}
+        with:
+          script: |
+            const status = process.env.VALIDATE_STATUS;
+            const output = process.env.VALIDATE_OUTPUT;
+            const icon = status === 'success' ? '✅' : '❌';
+            const body = [
+              `## ${icon} Component Validation — ${status}`,
+              '',
+              output || '_No JSON or MD files changed._',
+            ].join('\n');
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const existing = comments.find(c =>
+              c.user.login === 'github-actions[bot]' &&
+              c.body.includes('Component Validation')
+            );
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
+
+            if (status === 'failure') {
+              core.setFailed('Component validation failed — see PR comment for details.');
+            }
+
+  secrets-scan:
+    name: Secrets scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Gitleaks secrets scan
+        id: gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+
+      - name: Post secrets scan result as PR comment
+        if: always()
+        uses: actions/github-script@v7
+        env:
+          GITLEAKS_OUTCOME: ${{ steps.gitleaks.outcome }}
+        with:
+          script: |
+            const outcome = process.env.GITLEAKS_OUTCOME;
+            const icon = outcome === 'success' ? '✅' : '⚠️';
+            const body = [
+              `## ${icon} Secrets Scan — ${outcome === 'success' ? 'no secrets detected' : 'potential secrets found'}`,
+              '',
+              outcome !== 'success'
+                ? '_Gitleaks flagged one or more potential secrets. Review the Actions log and rotate any exposed credentials._'
+                : '_No secrets or credentials detected in changed files._',
+            ].join('\n');
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const existing = comments.find(c =>
+              c.user.login === 'github-actions[bot]' &&
+              c.body.includes('Secrets Scan')
+            );
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
