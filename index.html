@@ -1017,6 +1017,7 @@
         <div class="ck-tab active" data-tab="detail">Detail</div>
         <div class="ck-tab" data-tab="import">Import repo</div>
         <div class="ck-tab" data-tab="chat">Chat</div>
+        <div class="ck-tab" data-tab="upload">Upload skill</div>
       </div>
       <div class="ck-tab-content active" id="ck-tab-detail">
         <div id="ck-detail-empty" class="ck-detail-empty">// Selecteer een module voor details.</div>
@@ -1051,6 +1052,52 @@
           <textarea id="ck-chat-input" placeholder="Query... (Enter = verstuur, Shift+Enter = nieuwe regel)"></textarea>
           <button class="ck-btn" id="ck-chat-send">Send //</button>
         </div>
+      </div>
+      <div class="ck-tab-content" id="ck-tab-upload">
+        <div>
+          <div class="ck-section-title">// Nieuwe skill uploaden</div>
+          <p style="font-family:var(--head);font-size:13px;color:var(--text3);margin-bottom:16px;line-height:1.5">
+            Upload een nieuwe skill naar de library. Het bestand wordt opgeslagen als
+            <code style="font-family:var(--mono);color:var(--cyan)">skills/&lt;naam&gt;/SKILL.md</code>
+            en toegevoegd aan <code style="font-family:var(--mono);color:var(--cyan)">components.json</code>.
+          </p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:grid;grid-template-columns:1fr 120px 140px;gap:8px">
+            <div class="ck-field">
+              <label>Skill naam *</label>
+              <input type="text" id="ck-upload-name" placeholder="mijn-skill-naam" style="background:var(--surface3);border:1px solid var(--border2);color:var(--text2);font-family:var(--mono);font-size:12px;padding:8px 10px;outline:none;transition:border-color .1s;letter-spacing:0.04em">
+            </div>
+            <div class="ck-field">
+              <label>Versie</label>
+              <input type="text" id="ck-upload-version" value="1.0.0" style="background:var(--surface3);border:1px solid var(--border2);color:var(--text2);font-family:var(--mono);font-size:12px;padding:8px 10px;outline:none;transition:border-color .1s;letter-spacing:0.04em">
+            </div>
+            <div class="ck-field">
+              <label>Status</label>
+              <select id="ck-upload-status" style="background:var(--surface3);border:1px solid var(--border2);color:var(--text2);font-family:var(--mono);font-size:12px;padding:8px 10px;outline:none;width:100%;cursor:pointer">
+                <option value="active">active</option>
+                <option value="wip">wip</option>
+                <option value="draft">draft</option>
+              </select>
+            </div>
+          </div>
+          <div class="ck-field">
+            <label>Beschrijving *</label>
+            <input type="text" id="ck-upload-desc" placeholder="Korte beschrijving van de skill" style="background:var(--surface3);border:1px solid var(--border2);color:var(--text2);font-family:var(--mono);font-size:12px;padding:8px 10px;outline:none;transition:border-color .1s;letter-spacing:0.04em">
+          </div>
+          <div class="ck-field">
+            <label>Tags (komma-gescheiden)</label>
+            <input type="text" id="ck-upload-tags" placeholder="ios, swift, testing" style="background:var(--surface3);border:1px solid var(--border2);color:var(--text2);font-family:var(--mono);font-size:12px;padding:8px 10px;outline:none;transition:border-color .1s;letter-spacing:0.04em">
+          </div>
+          <div class="ck-field">
+            <label>Inhoud *</label>
+            <textarea id="ck-upload-content" placeholder="# Skill instructies&#10;&#10;Schrijf hier de skill inhoud..." rows="10" style="background:var(--surface3);border:1px solid var(--border2);color:var(--text2);font-family:var(--mono);font-size:12px;padding:8px 10px;outline:none;transition:border-color .1s;letter-spacing:0.04em;resize:vertical;width:100%"></textarea>
+          </div>
+          <div>
+            <button class="ck-btn" id="ck-upload-btn">Upload //</button>
+          </div>
+        </div>
+        <div id="ck-upload-result" style="display:none" class="ck-result"></div>
       </div>
     </div>
   </div>
@@ -1469,6 +1516,47 @@ $('ck-chat-send').addEventListener('click', ckSendChat);
 $('ck-chat-input').addEventListener('keydown', function(e){
   if (e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); ckSendChat(); }
 });
+
+$('ck-upload-btn').addEventListener('click', function(){
+  var name=$('ck-upload-name').value.trim();
+  var desc=$('ck-upload-desc').value.trim();
+  var content=$('ck-upload-content').value.trim();
+  var version=$('ck-upload-version').value.trim()||'1.0.0';
+  var status=$('ck-upload-status').value;
+  var tagsRaw=$('ck-upload-tags').value.trim();
+  var tags=tagsRaw?tagsRaw.split(',').map(function(t){return t.trim();}).filter(Boolean):[];
+
+  if (!name){ ckShowUploadResult(false,'Skill naam is verplicht.'); return; }
+  if (!/^[a-z0-9-]+$/.test(name)){ ckShowUploadResult(false,'Naam mag alleen a-z, 0-9 en hyphens bevatten.'); return; }
+  if (!desc){ ckShowUploadResult(false,'Beschrijving is verplicht.'); return; }
+  if (!content){ ckShowUploadResult(false,'Inhoud is verplicht.'); return; }
+
+  var btn=$('ck-upload-btn');
+  btn.disabled=true;
+  btn.textContent='// UPLOADEN...';
+  $('ck-upload-result').style.display='none';
+
+  ckApiFetch('/upload-skill',{method:'POST',body:JSON.stringify({name,desc,content,tags,version,status})})
+    .then(function(r){
+      ckShowUploadResult(true,'Skill opgeslagen: '+r.path);
+      $('ck-upload-name').value='';
+      $('ck-upload-desc').value='';
+      $('ck-upload-content').value='';
+      $('ck-upload-tags').value='';
+      $('ck-upload-version').value='1.0.0';
+      $('ck-upload-status').value='active';
+      ckLoadComponents();
+    })
+    .catch(function(e){ ckShowUploadResult(false,e.message); })
+    .finally(function(){ btn.disabled=false; btn.textContent='Upload //'; });
+});
+
+function ckShowUploadResult(ok,text){
+  var el=$('ck-upload-result');
+  el.style.display='block';
+  el.className='ck-result '+(ok?'success':'error');
+  el.textContent='// '+text;
+}
 </script>
 </body>
 </html>
