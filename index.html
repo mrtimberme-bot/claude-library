@@ -18,6 +18,9 @@
     --accent: #7b6ef6;
     --accent2: #4ecdc4;
     --accent3: #f7c948;
+    --accent-dim: #16132e;
+    --green: #5dcaa5;
+    --red: #f87171;
 
     --skill:   #5dcaa5;
     --plugin:  #7b6ef6;
@@ -34,21 +37,85 @@
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
 
   body {
     background: var(--bg);
     color: var(--text);
     font-family: var(--font-mono);
     font-size: 13px;
-    min-height: 100vh;
-    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
   }
 
-  /* grid texture */
-  body::before {
+  /* ── TOPBAR ── */
+  .topbar {
+    position: relative;
+    z-index: 20;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border2);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 44px;
+    flex-shrink: 0;
+  }
+
+  .topbar-logo {
+    font-family: var(--font-head);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    white-space: nowrap;
+  }
+  .topbar-logo span { color: var(--accent); }
+
+  .topbar-nav {
+    display: flex;
+    gap: 2px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 7px;
+    padding: 3px;
+  }
+
+  .nav-btn {
+    padding: 4px 14px;
+    border-radius: 5px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    cursor: pointer;
+    transition: all .15s;
+    white-space: nowrap;
+  }
+  .nav-btn:hover  { color: var(--text); }
+  .nav-btn.active { background: var(--accent); color: #fff; }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    color: var(--muted);
+    min-width: 160px;
+    justify-content: flex-end;
+  }
+
+  /* ── VIEWS ── */
+  .view         { display: none; }
+  .view.active  { display: block; flex: 1; }
+  .cockpit-view.active { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+
+  /* ── LIBRARY/SKILLS: grid texture ── */
+  #view-library.active::before,
+  #view-skills.active::before {
     content: '';
     position: fixed;
-    inset: 0;
+    inset: 44px 0 0 0;
     background-image:
       linear-gradient(var(--border) 1px, transparent 1px),
       linear-gradient(90deg, var(--border) 1px, transparent 1px);
@@ -57,80 +124,32 @@
     z-index: 0;
   }
 
-  /* ── HEADER ── */
-  header {
+  /* ── LIBRARY/SKILLS: header ── */
+  .lib-header {
     position: relative;
     z-index: 10;
-    padding: 40px 40px 0;
+    padding: 32px 40px 0;
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: 24px;
   }
+  .lib-title { font-family: var(--font-head); font-size: 28px; font-weight: 800; letter-spacing: -0.5px; color: var(--text); line-height: 1; }
+  .lib-title span { color: var(--accent); }
+  .lib-subtitle { margin-top: 6px; color: var(--muted); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
 
-  .logo-block h1 {
-    font-family: var(--font-head);
-    font-size: 28px;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    color: var(--text);
-    line-height: 1;
-  }
-
-  .logo-block h1 span { color: var(--accent); }
-
-  .logo-block p {
-    margin-top: 6px;
-    color: var(--muted);
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .header-stats {
-    display: flex;
-    gap: 24px;
-    padding-top: 4px;
-  }
-
-  .stat {
-    text-align: right;
-  }
-
-  .stat-num {
-    font-family: var(--font-head);
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--text);
-    line-height: 1;
-  }
-
-  .stat-label {
-    color: var(--muted);
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-top: 2px;
-  }
+  .header-stats { display: flex; gap: 24px; padding-top: 4px; }
+  .stat { text-align: right; }
+  .stat-num  { font-family: var(--font-head); font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+  .stat-label { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; }
 
   /* ── TOOLBAR ── */
   .toolbar {
-    position: relative;
-    z-index: 10;
+    position: relative; z-index: 10;
     padding: 28px 40px 0;
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    flex-wrap: wrap;
+    display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
   }
-
-  .search-wrap {
-    position: relative;
-    flex: 1;
-    min-width: 200px;
-    max-width: 340px;
-  }
-
+  .search-wrap { position: relative; flex: 1; min-width: 200px; max-width: 340px; }
   .search-wrap input {
     width: 100%;
     background: var(--surface);
@@ -143,43 +162,22 @@
     outline: none;
     transition: border-color .2s;
   }
-
-  .search-wrap input:focus { border-color: var(--accent); }
+  .search-wrap input:focus       { border-color: var(--accent); }
   .search-wrap input::placeholder { color: var(--muted); }
-
   .search-wrap::before {
     content: '⌕';
-    position: absolute;
-    left: 10px;
-    top: 50%;
+    position: absolute; left: 10px; top: 50%;
     transform: translateY(-50%);
-    color: var(--muted);
-    font-size: 15px;
-    pointer-events: none;
+    color: var(--muted); font-size: 15px; pointer-events: none;
   }
-
-  .filter-pills {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-
+  .filter-pills { display: flex; gap: 6px; flex-wrap: wrap; }
   .pill {
-    padding: 5px 11px;
-    border-radius: 20px;
-    border: 1px solid var(--border2);
-    background: transparent;
-    color: var(--muted);
-    font-family: var(--font-mono);
-    font-size: 11px;
-    cursor: pointer;
-    transition: all .15s;
-    white-space: nowrap;
+    padding: 5px 11px; border-radius: 20px;
+    border: 1px solid var(--border2); background: transparent; color: var(--muted);
+    font-family: var(--font-mono); font-size: 11px; cursor: pointer; transition: all .15s; white-space: nowrap;
   }
-
-  .pill:hover { border-color: var(--border2); color: var(--text); background: var(--surface); }
+  .pill:hover { color: var(--text); background: var(--surface); }
   .pill.active { color: var(--bg); border-color: transparent; font-weight: 500; }
-
   .pill[data-type="all"].active    { background: var(--text); }
   .pill[data-type="skill"].active  { background: var(--skill); }
   .pill[data-type="plugin"].active { background: var(--plugin); }
@@ -190,66 +188,32 @@
   .pill[data-type="arch"].active   { background: var(--arch); }
   .pill[data-type="infra"].active  { background: var(--infra); color: #0a0a0a; }
   .pill[data-type="orch"].active   { background: var(--orch); color: #0a1200; }
-
   .sort-select {
-    background: var(--surface);
-    border: 1px solid var(--border2);
-    border-radius: 6px;
-    color: var(--muted);
-    font-family: var(--font-mono);
-    font-size: 11px;
-    padding: 7px 10px;
-    outline: none;
-    cursor: pointer;
-    margin-left: auto;
+    background: var(--surface); border: 1px solid var(--border2); border-radius: 6px;
+    color: var(--muted); font-family: var(--font-mono); font-size: 11px;
+    padding: 7px 10px; outline: none; cursor: pointer; margin-left: auto;
   }
 
   /* ── GRID ── */
   .grid {
-    position: relative;
-    z-index: 10;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px;
-    padding: 28px 40px 60px;
+    position: relative; z-index: 10;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px; padding: 28px 40px 60px;
   }
-
-  /* ── CARD ── */
   .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 20px;
-    cursor: pointer;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 20px; cursor: pointer;
     transition: border-color .2s, transform .15s, background .2s;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+    display: flex; flex-direction: column; gap: 12px;
     animation: fadeIn .3s ease both;
   }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+  .card:hover { background: var(--surface2); transform: translateY(-2px); }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(6px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .card:hover {
-    background: var(--surface2);
-    transform: translateY(-2px);
-  }
-
-  .card.hidden { display: none; }
-
-  /* Accent top bar per type */
   .card::before {
-    content: '';
-    display: block;
-    height: 2px;
-    border-radius: 2px;
-    margin: -20px -20px 0;
-    border-radius: 10px 10px 0 0;
+    content: ''; display: block; height: 2px;
+    margin: -20px -20px 0; border-radius: 10px 10px 0 0;
   }
-
   .card[data-type="skill"]::before  { background: var(--skill); }
   .card[data-type="plugin"]::before { background: var(--plugin); }
   .card[data-type="agent"]::before  { background: var(--agent); }
@@ -260,7 +224,7 @@
   .card[data-type="infra"]::before  { background: var(--infra); }
   .card[data-type="orch"]::before   { background: var(--orch); }
 
-  .card:hover { border-color: var(--border2); }
+  .card:hover                 { border-color: var(--border2); }
   .card[data-type="skill"]:hover  { border-color: #5dcaa540; }
   .card[data-type="plugin"]:hover { border-color: #7b6ef640; }
   .card[data-type="agent"]:hover  { border-color: #f0997b40; }
@@ -271,307 +235,362 @@
   .card[data-type="infra"]:hover  { border-color: #88878040; }
   .card[data-type="orch"]:hover   { border-color: #c0dd9740; }
 
-  .card-head {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 8px;
+  .card-head    { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+  .card-title   { font-family: var(--font-head); font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.2; }
+  .card-desc    { color: var(--muted); font-size: 12px; line-height: 1.6; flex: 1; }
+  .card-meta    { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border); padding-top: 12px; }
+  .card-status  { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .card-version { font-size: 10px; color: var(--muted); }
+  .card-tags    { display: flex; gap: 5px; flex-wrap: wrap; }
+
+  .lib-badge {
+    font-size: 10px; padding: 2px 7px; border-radius: 10px;
+    white-space: nowrap; font-weight: 500; flex-shrink: 0;
+  }
+  .lib-badge-skill  { background: #5dcaa520; color: var(--skill);  border: 1px solid #5dcaa530; }
+  .lib-badge-plugin { background: #7b6ef620; color: var(--plugin); border: 1px solid #7b6ef630; }
+  .lib-badge-agent  { background: #f0997b20; color: var(--agent);  border: 1px solid #f0997b30; }
+  .lib-badge-memory { background: #f7c94820; color: var(--memory); border: 1px solid #f7c94830; }
+  .lib-badge-mcp    { background: #4ecdc420; color: var(--mcp);    border: 1px solid #4ecdc430; }
+  .lib-badge-api    { background: #85b7eb20; color: var(--api);    border: 1px solid #85b7eb30; }
+  .lib-badge-arch   { background: #d4537e20; color: var(--arch);   border: 1px solid #d4537e30; }
+  .lib-badge-infra  { background: #88878020; color: var(--infra);  border: 1px solid #88878030; }
+  .lib-badge-orch   { background: #c0dd9720; color: var(--orch);   border: 1px solid #c0dd9730; }
+
+  .lib-tag {
+    font-size: 10px; padding: 2px 6px; border-radius: 4px;
+    background: var(--surface2); border: 1px solid var(--border); color: var(--muted);
   }
 
-  .card-title {
-    font-family: var(--font-head);
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--text);
-    line-height: 1.2;
-  }
-
-  .badge {
-    font-size: 10px;
-    padding: 2px 7px;
-    border-radius: 10px;
-    white-space: nowrap;
-    font-weight: 500;
-    flex-shrink: 0;
-  }
-
-  .badge-skill  { background: #5dcaa520; color: var(--skill); border: 1px solid #5dcaa530; }
-  .badge-plugin { background: #7b6ef620; color: var(--plugin); border: 1px solid #7b6ef630; }
-  .badge-agent  { background: #f0997b20; color: var(--agent); border: 1px solid #f0997b30; }
-  .badge-memory { background: #f7c94820; color: var(--memory); border: 1px solid #f7c94830; }
-  .badge-mcp    { background: #4ecdc420; color: var(--mcp); border: 1px solid #4ecdc430; }
-  .badge-api    { background: #85b7eb20; color: var(--api); border: 1px solid #85b7eb30; }
-  .badge-arch   { background: #d4537e20; color: var(--arch); border: 1px solid #d4537e30; }
-  .badge-infra  { background: #88878020; color: var(--infra); border: 1px solid #88878030; }
-  .badge-orch   { background: #c0dd9720; color: var(--orch); border: 1px solid #c0dd9730; }
-
-  .card-desc {
-    color: var(--muted);
-    font-size: 12px;
-    line-height: 1.6;
-    flex: 1;
-  }
-
-  .card-meta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-top: 1px solid var(--border);
-    padding-top: 12px;
-    margin-top: 0;
-  }
-
-  .card-status {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 10px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  .dot-active   { background: #5dcaa5; box-shadow: 0 0 6px #5dcaa580; }
-  .dot-wip      { background: var(--accent3); }
-  .dot-draft    { background: var(--muted); }
+  .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .dot-active     { background: #5dcaa5; box-shadow: 0 0 6px #5dcaa580; }
+  .dot-wip        { background: var(--accent3); }
+  .dot-draft      { background: var(--muted); }
   .dot-deprecated { background: #e24b4a; }
 
-  .card-version {
-    font-size: 10px;
-    color: var(--muted);
-  }
+  .empty { display: none; grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--muted); }
+  .empty.show { display: block; }
+  .empty-icon { font-size: 32px; margin-bottom: 12px; }
 
-  .card-tags {
-    display: flex;
-    gap: 5px;
-    flex-wrap: wrap;
-  }
-
-  .tag {
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--muted);
+  /* ── SKILLS VIEW: wide card with usage ── */
+  #view-skills .grid { grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); }
+  #view-skills .skill-card-usage {
+    background: var(--bg);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 11px;
+    color: var(--accent2);
+    line-height: 1.6;
+    overflow: hidden;
+    max-height: 80px;
+    white-space: pre;
+    font-family: var(--font-mono);
   }
 
   /* ── MODAL ── */
   .modal-bg {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: #000000b0;
-    z-index: 100;
+    display: none; position: fixed; inset: 0;
+    background: #000000b0; z-index: 200;
     backdrop-filter: blur(4px);
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
+    align-items: center; justify-content: center; padding: 20px;
   }
-
   .modal-bg.open { display: flex; }
-
-  .modal {
-    background: var(--surface);
-    border: 1px solid var(--border2);
-    border-radius: 14px;
-    width: 100%;
-    max-width: 580px;
-    max-height: 85vh;
-    overflow-y: auto;
-    animation: slideUp .2s ease;
+  .lib-modal {
+    background: var(--surface); border: 1px solid var(--border2);
+    border-radius: 14px; width: 100%; max-width: 580px; max-height: 85vh;
+    overflow-y: auto; animation: slideUp .2s ease;
   }
-
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
+  @keyframes slideUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
   .modal-header {
     padding: 24px 24px 0;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
   }
-
-  .modal-title {
-    font-family: var(--font-head);
-    font-size: 20px;
-    font-weight: 700;
-  }
-
-  .modal-close {
-    background: none;
-    border: 1px solid var(--border2);
-    border-radius: 6px;
-    color: var(--muted);
-    cursor: pointer;
-    font-size: 16px;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: all .15s;
+  .modal-title   { font-family: var(--font-head); font-size: 20px; font-weight: 700; }
+  .modal-close   {
+    background: none; border: 1px solid var(--border2); border-radius: 6px;
+    color: var(--muted); cursor: pointer; font-size: 16px;
+    width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all .15s;
   }
   .modal-close:hover { background: var(--surface2); color: var(--text); }
-
   .modal-body { padding: 20px 24px 24px; display: flex; flex-direction: column; gap: 16px; }
-
-  .modal-section-label {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-    margin-bottom: 6px;
-  }
-
+  .modal-section-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 6px; }
   .modal-desc { color: var(--text); font-size: 13px; line-height: 1.7; }
-
   .modal-code {
-    background: var(--bg);
-    border: 1px solid var(--border2);
-    border-radius: 8px;
-    padding: 14px 16px;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--accent2);
-    line-height: 1.6;
-    overflow-x: auto;
-    white-space: pre;
+    background: var(--bg); border: 1px solid var(--border2); border-radius: 8px;
+    padding: 14px 16px; font-family: var(--font-mono); font-size: 12px;
+    color: var(--accent2); line-height: 1.6; overflow-x: auto; white-space: pre;
   }
-
-  .modal-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-
-  .modal-kv { display: flex; flex-direction: column; gap: 3px; }
+  .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .modal-kv   { display: flex; flex-direction: column; gap: 3px; }
   .modal-kv .k { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
   .modal-kv .v { font-size: 12px; color: var(--text); }
+  .modal-actions { display: flex; gap: 8px; padding-top: 4px; }
 
-  .modal-actions {
-    display: flex;
-    gap: 8px;
-    padding-top: 4px;
+  .lib-btn {
+    padding: 8px 16px; border-radius: 6px; font-family: var(--font-mono);
+    font-size: 11px; font-weight: 500; cursor: pointer; transition: all .15s;
+    border: none; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .lib-btn-primary   { background: var(--accent); color: #fff; }
+  .lib-btn-primary:hover { background: #6a5ee0; }
+  .lib-btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border2); }
+  .lib-btn-secondary:hover { background: #22223a; }
+
+  .lib-footer {
+    position: relative; z-index: 10;
+    border-top: 1px solid var(--border); padding: 20px 40px;
+    display: flex; justify-content: space-between; align-items: center;
+    color: var(--muted); font-size: 11px;
+  }
+  .lib-footer a { color: var(--muted); text-decoration: none; }
+  .lib-footer a:hover { color: var(--text); }
+
+  /* ── COCKPIT ── */
+  .cockpit-view .ck-main {
+    display: grid; grid-template-columns: 340px 1fr;
+    overflow: hidden; flex: 1; min-height: 0;
+  }
+  .cockpit-view .ck-sidebar {
+    border-right: 1px solid var(--border2);
+    display: flex; flex-direction: column; overflow: hidden;
+    background: var(--surface);
+  }
+  .cockpit-view .ck-sidebar-header {
+    padding: 10px 14px; border-bottom: 1px solid var(--border2);
+    display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+  }
+  .cockpit-view .ck-sidebar-title {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted);
+  }
+  .cockpit-view .ck-component-list { overflow-y: auto; flex: 1; padding: 8px; }
+
+  .cockpit-view .ck-card {
+    padding: 10px 12px; border: 1px solid var(--border2); border-radius: 6px;
+    margin-bottom: 6px; cursor: pointer; transition: border-color 0.1s, background 0.1s;
+  }
+  .cockpit-view .ck-card:hover    { border-color: var(--accent); background: var(--surface2); }
+  .cockpit-view .ck-card.selected { border-color: var(--accent); background: var(--accent-dim); }
+  .cockpit-view .ck-card-top  { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+  .cockpit-view .ck-card-name { font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+  .cockpit-view .ck-card-desc { font-size: 12px; color: var(--muted); line-height: 1.4; }
+
+  .cockpit-view .ck-badge {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+    padding: 2px 7px; border-radius: 3px; flex-shrink: 0;
+  }
+  .cockpit-view .ck-badge-skill  { background: color-mix(in srgb, var(--skill)  15%, transparent); color: var(--skill); }
+  .cockpit-view .ck-badge-plugin { background: color-mix(in srgb, var(--plugin) 15%, transparent); color: var(--plugin); }
+  .cockpit-view .ck-badge-agent  { background: color-mix(in srgb, var(--agent)  15%, transparent); color: var(--agent); }
+  .cockpit-view .ck-badge-mcp    { background: color-mix(in srgb, var(--mcp)    15%, transparent); color: var(--mcp); }
+  .cockpit-view .ck-badge-memory { background: color-mix(in srgb, var(--memory) 15%, transparent); color: var(--memory); }
+  .cockpit-view .ck-badge-api    { background: color-mix(in srgb, var(--api)    15%, transparent); color: var(--api); }
+  .cockpit-view .ck-badge-arch   { background: color-mix(in srgb, var(--arch)   15%, transparent); color: var(--arch); }
+  .cockpit-view .ck-badge-infra  { background: color-mix(in srgb, var(--infra)  15%, transparent); color: var(--infra); }
+  .cockpit-view .ck-badge-orch   { background: color-mix(in srgb, var(--orch)   15%, transparent); color: var(--orch); }
+
+  .cockpit-view .ck-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  .cockpit-view .ck-dot-active   { background: var(--green); box-shadow: 0 0 5px #5dcaa580; }
+  .cockpit-view .ck-dot-inactive { background: var(--muted); }
+
+  .cockpit-view .ck-panel { display: flex; flex-direction: column; overflow: hidden; }
+  .cockpit-view .ck-tabs {
+    display: flex; border-bottom: 1px solid var(--border2);
+    padding: 0 20px; flex-shrink: 0; background: var(--surface);
+  }
+  .cockpit-view .ck-tab {
+    padding: 10px 16px; font-size: 13px; cursor: pointer;
+    border-bottom: 2px solid transparent; color: var(--muted);
+    margin-bottom: -1px; transition: color 0.1s; font-family: var(--font-mono);
+  }
+  .cockpit-view .ck-tab:hover { color: var(--text); }
+  .cockpit-view .ck-tab.active { color: var(--text); border-bottom-color: var(--accent); }
+
+  .cockpit-view .ck-tab-content {
+    flex: 1; overflow-y: auto; padding: 20px;
+    display: none; flex-direction: column; gap: 16px;
+  }
+  .cockpit-view .ck-tab-content.active { display: flex; }
+  .cockpit-view .ck-section-title {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
+  }
+  .cockpit-view .ck-input-row { display: flex; gap: 8px; }
+
+  .cockpit-view input[type="text"],
+  .cockpit-view input[type="password"],
+  .cockpit-view textarea {
+    background: var(--surface2); border: 1px solid var(--border2); border-radius: 5px;
+    color: var(--text); font-family: var(--font-mono); font-size: 13px;
+    padding: 8px 10px; outline: none; transition: border-color 0.1s; width: 100%;
+  }
+  .cockpit-view input[type="text"]:focus,
+  .cockpit-view input[type="password"]:focus,
+  .cockpit-view textarea:focus { border-color: var(--accent); }
+
+  .cockpit-view .ck-btn {
+    background: var(--accent); border: none; border-radius: 5px;
+    color: #fff; cursor: pointer; font-size: 13px; font-family: var(--font-mono);
+    font-weight: 500; padding: 8px 16px; white-space: nowrap; transition: opacity 0.1s;
+  }
+  .cockpit-view .ck-btn:hover    { opacity: 0.85; }
+  .cockpit-view .ck-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .cockpit-view .ck-btn.secondary {
+    background: var(--surface2); border: 1px solid var(--border2); color: var(--text);
+  }
+  .cockpit-view .ck-btn.secondary:hover { border-color: var(--accent); opacity: 1; }
+
+  .cockpit-view .ck-result {
+    background: var(--surface2); border: 1px solid var(--border2);
+    border-radius: 5px; padding: 12px; font-size: 12px;
+    font-family: var(--font-mono); line-height: 1.6;
+  }
+  .cockpit-view .ck-result.success { border-color: var(--green); }
+  .cockpit-view .ck-result.error   { border-color: var(--red); }
+  .cockpit-view .ck-result a { color: var(--accent); }
+
+  .cockpit-view .ck-chat-messages {
+    flex: 1; overflow-y: auto; display: flex; flex-direction: column;
+    gap: 12px; padding-bottom: 8px; min-height: 0;
+  }
+  .cockpit-view .ck-message {
+    max-width: 85%; padding: 10px 14px; border-radius: 8px;
+    font-size: 13px; line-height: 1.6;
+  }
+  .cockpit-view .ck-message.user {
+    align-self: flex-end; background: var(--accent-dim);
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+  .cockpit-view .ck-message.assistant {
+    align-self: flex-start; background: var(--surface2); border: 1px solid var(--border2);
+  }
+  .cockpit-view .ck-chat-input-row { display: flex; gap: 8px; flex-shrink: 0; }
+  .cockpit-view .ck-chat-input-row textarea { resize: none; height: 64px; }
+  .cockpit-view .ck-chat-input-row .ck-btn { align-self: flex-end; }
+
+  .cockpit-view .ck-detail-grid { display: grid; grid-template-columns: 100px 1fr; gap: 8px 16px; align-items: start; }
+  .cockpit-view .ck-detail-label { color: var(--muted); font-size: 12px; padding-top: 1px; }
+  .cockpit-view .ck-detail-value { font-size: 13px; font-family: var(--font-mono); word-break: break-all; }
+  .cockpit-view .ck-detail-tags  { display: flex; flex-wrap: wrap; gap: 6px; }
+  .cockpit-view .ck-tag {
+    background: var(--surface2); border: 1px solid var(--border2);
+    border-radius: 3px; padding: 2px 8px; font-size: 11px; color: var(--muted);
   }
 
-  .btn {
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all .15s;
-    border: none;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+  .ck-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+    display: flex; align-items: center; justify-content: center; z-index: 300;
   }
-
-  .btn-primary { background: var(--accent); color: #fff; }
-  .btn-primary:hover { background: #6a5ee0; }
-  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border2); }
-  .btn-secondary:hover { border-color: var(--border2); background: #22223a; }
-
-  /* ── EMPTY STATE ── */
-  .empty {
-    display: none;
-    grid-column: 1/-1;
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--muted);
+  .ck-overlay.hidden { display: none; }
+  .ck-modal {
+    background: var(--surface); border: 1px solid var(--border2);
+    border-radius: 10px; padding: 28px; width: 440px;
+    display: flex; flex-direction: column; gap: 16px;
   }
-  .empty.show { display: block; }
-  .empty-icon { font-size: 32px; margin-bottom: 12px; }
-  .empty p { font-size: 13px; }
+  .ck-modal h2 { font-size: 16px; font-weight: 600; font-family: var(--font-head); }
+  .ck-modal p  { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .ck-field    { display: flex; flex-direction: column; gap: 6px; }
+  .ck-field label { font-size: 12px; color: var(--muted); font-weight: 500; }
 
-  /* ── FOOTER ── */
-  footer {
-    position: relative;
-    z-index: 10;
-    border-top: 1px solid var(--border);
-    padding: 20px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: var(--muted);
-    font-size: 11px;
+  .ck-spinner {
+    width: 14px; height: 14px;
+    border: 2px solid var(--border2); border-top-color: var(--accent);
+    border-radius: 50%; animation: spin 0.6s linear infinite; display: inline-block;
   }
-
-  footer a { color: var(--muted); text-decoration: none; }
-  footer a:hover { color: var(--text); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .ck-empty { color: var(--muted); font-size: 13px; padding: 32px; text-align: center; }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo-block">
-    <h1>Claude <span>Library</span></h1>
-    <p>Skills · Plugins · Agents · Memory · Tools · Architecture</p>
+<!-- TOPBAR -->
+<div class="topbar">
+  <span class="topbar-logo">Claude <span>Library</span></span>
+  <div class="topbar-nav">
+    <button class="nav-btn active" id="nav-library">Library</button>
+    <button class="nav-btn" id="nav-skills">Skills</button>
+    <button class="nav-btn" id="nav-cockpit">Cockpit</button>
   </div>
-  <div class="header-stats">
-    <div class="stat">
-      <div class="stat-num" id="total-count">0</div>
-      <div class="stat-label">Components</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num" id="active-count">0</div>
-      <div class="stat-label">Active</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num" id="type-count">0</div>
-      <div class="stat-label">Types</div>
-    </div>
-  </div>
-</header>
-
-<div class="toolbar">
-  <div class="search-wrap">
-    <input type="text" id="search" placeholder="Zoek component..." autocomplete="off">
-  </div>
-  <div class="filter-pills">
-    <button class="pill active" data-type="all">Alles</button>
-    <button class="pill" data-type="skill">Skill</button>
-    <button class="pill" data-type="plugin">Plugin</button>
-    <button class="pill" data-type="agent">Agent</button>
-    <button class="pill" data-type="memory">Memory</button>
-    <button class="pill" data-type="mcp">MCP</button>
-    <button class="pill" data-type="api">API tool</button>
-    <button class="pill" data-type="arch">Architectuur</button>
-    <button class="pill" data-type="orch">Orchestratie</button>
-    <button class="pill" data-type="infra">Infra</button>
-  </div>
-  <select class="sort-select" id="sort-select">
-    <option value="name">Naam A–Z</option>
-    <option value="updated">Recentst bijgewerkt</option>
-    <option value="status">Status</option>
-    <option value="type">Type</option>
-  </select>
+  <div class="topbar-right" id="topbar-right"></div>
 </div>
 
-<div class="grid" id="grid">
-  <div class="empty" id="empty">
-    <div class="empty-icon">◌</div>
-    <p>Geen componenten gevonden.</p>
+<!-- LIBRARY VIEW -->
+<div class="view library-view active" id="view-library">
+  <div class="lib-header">
+    <div>
+      <h1 class="lib-title">Claude <span>Library</span></h1>
+      <p class="lib-subtitle">Skills · Plugins · Agents · Memory · Tools · Architecture</p>
+    </div>
+    <div class="header-stats">
+      <div class="stat"><div class="stat-num" id="total-count">0</div><div class="stat-label">Components</div></div>
+      <div class="stat"><div class="stat-num" id="active-count">0</div><div class="stat-label">Active</div></div>
+      <div class="stat"><div class="stat-num" id="type-count">0</div><div class="stat-label">Types</div></div>
+    </div>
   </div>
+  <div class="toolbar">
+    <div class="search-wrap"><input type="text" id="search" placeholder="Zoek component..." autocomplete="off"></div>
+    <div class="filter-pills">
+      <button class="pill active" data-type="all">Alles</button>
+      <button class="pill" data-type="skill">Skill</button>
+      <button class="pill" data-type="plugin">Plugin</button>
+      <button class="pill" data-type="agent">Agent</button>
+      <button class="pill" data-type="memory">Memory</button>
+      <button class="pill" data-type="mcp">MCP</button>
+      <button class="pill" data-type="api">API tool</button>
+      <button class="pill" data-type="arch">Architectuur</button>
+      <button class="pill" data-type="orch">Orchestratie</button>
+      <button class="pill" data-type="infra">Infra</button>
+    </div>
+    <select class="sort-select" id="sort-select">
+      <option value="name">Naam A–Z</option>
+      <option value="updated">Recentst bijgewerkt</option>
+      <option value="status">Status</option>
+      <option value="type">Type</option>
+    </select>
+  </div>
+  <div class="grid" id="grid">
+    <div class="empty" id="empty"><div class="empty-icon">◌</div><p>Geen componenten gevonden.</p></div>
+  </div>
+  <footer class="lib-footer">
+    <span>Claude Library — lokale component registry</span>
+    <span>Laatste sync: <span id="last-sync">—</span></span>
+  </footer>
 </div>
 
-<!-- MODAL -->
+<!-- SKILLS VIEW -->
+<div class="view" id="view-skills">
+  <div class="lib-header">
+    <div>
+      <h1 class="lib-title"><span>Skills</span></h1>
+      <p class="lib-subtitle">Actieve skill bestanden voor Claude Code</p>
+    </div>
+    <div class="header-stats">
+      <div class="stat"><div class="stat-num" id="skills-count">0</div><div class="stat-label">Skills</div></div>
+      <div class="stat"><div class="stat-num" id="skills-active-count">0</div><div class="stat-label">Active</div></div>
+    </div>
+  </div>
+  <div class="toolbar">
+    <div class="search-wrap"><input type="text" id="skills-search" placeholder="Zoek skill..." autocomplete="off"></div>
+    <select class="sort-select" id="skills-sort">
+      <option value="name">Naam A–Z</option>
+      <option value="updated">Recentst bijgewerkt</option>
+      <option value="status">Status</option>
+    </select>
+  </div>
+  <div class="grid" id="skills-grid">
+    <div class="empty show" id="skills-empty"><div class="empty-icon">◌</div><p>Geen skills gevonden.</p></div>
+  </div>
+  <footer class="lib-footer">
+    <span>Claude Library — Skills</span>
+    <span>Alle .md bestanden in /skills/</span>
+  </footer>
+</div>
+
+<!-- LIBRARY MODAL (shared by Library + Skills views) -->
 <div class="modal-bg" id="modal-bg">
-  <div class="modal" id="modal">
+  <div class="lib-modal">
     <div class="modal-header">
       <div>
         <div class="modal-title" id="modal-title"></div>
@@ -580,18 +599,12 @@
       <button class="modal-close" id="modal-close">✕</button>
     </div>
     <div class="modal-body">
-      <div>
-        <div class="modal-section-label">Beschrijving</div>
-        <div class="modal-desc" id="modal-desc"></div>
-      </div>
+      <div><div class="modal-section-label">Beschrijving</div><div class="modal-desc" id="modal-desc"></div></div>
       <div id="modal-usage-wrap">
         <div class="modal-section-label">Gebruik in Claude</div>
         <div class="modal-code" id="modal-usage"></div>
       </div>
-      <div>
-        <div class="modal-section-label">Details</div>
-        <div class="modal-grid" id="modal-grid"></div>
-      </div>
+      <div><div class="modal-section-label">Details</div><div class="modal-grid" id="modal-grid"></div></div>
       <div id="modal-tags-wrap">
         <div class="modal-section-label">Tags</div>
         <div class="card-tags" id="modal-tags"></div>
@@ -601,426 +614,620 @@
   </div>
 </div>
 
-<footer>
-  <span>Claude Library — lokale component registry</span>
-  <span>Laatste sync: <span id="last-sync">—</span></span>
-</footer>
+<!-- COCKPIT VIEW -->
+<div class="view cockpit-view" id="view-cockpit">
+  <div id="ck-settings-overlay" class="ck-overlay hidden">
+    <div class="ck-modal">
+      <h2>Claude Library Cockpit</h2>
+      <p>Vul de Worker URL en Library Token in om te verbinden. Deze worden opgeslagen in je browser (localStorage).</p>
+      <div class="ck-field">
+        <label>Worker URL</label>
+        <input type="text" id="ck-cfg-url" placeholder="https://claude-library-worker.YOUR.workers.dev">
+      </div>
+      <div class="ck-field">
+        <label>Library Token</label>
+        <input type="password" id="ck-cfg-token" placeholder="••••••••">
+      </div>
+      <button class="ck-btn" id="ck-cfg-save">Verbinden</button>
+    </div>
+  </div>
+  <div class="ck-main">
+    <div class="ck-sidebar">
+      <div class="ck-sidebar-header">
+        <span class="ck-sidebar-title">Componenten</span>
+        <button class="ck-btn secondary" id="ck-btn-refresh" style="font-size:11px;padding:4px 10px">&#8635;</button>
+      </div>
+      <div class="ck-component-list" id="ck-component-list">
+        <div class="ck-empty">Laden...</div>
+      </div>
+    </div>
+    <div class="ck-panel">
+      <div class="ck-tabs">
+        <div class="ck-tab active" data-tab="detail">Detail</div>
+        <div class="ck-tab" data-tab="import">Importeer repo</div>
+        <div class="ck-tab" data-tab="chat">Chat</div>
+      </div>
+      <div class="ck-tab-content active" id="ck-tab-detail">
+        <div id="ck-detail-empty" class="ck-empty">Selecteer een component om details te zien.</div>
+        <div id="ck-detail-view" style="display:none;flex-direction:column;gap:16px">
+          <div class="ck-section-title" id="ck-detail-name"></div>
+          <div class="ck-detail-grid" id="ck-detail-grid"></div>
+          <div>
+            <div class="ck-section-title">Tags</div>
+            <div class="ck-detail-tags" id="ck-detail-tags"></div>
+          </div>
+        </div>
+      </div>
+      <div class="ck-tab-content" id="ck-tab-import">
+        <div>
+          <div class="ck-section-title">Externe repo importeren</div>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:12px">
+            Voer een GitHub repo in met een <code style="font-family:monospace">components.json</code>.
+            De Worker valideert de componenten en maakt automatisch een PR aan in claude-library.
+          </p>
+          <div class="ck-input-row">
+            <input type="text" id="ck-import-input" placeholder="owner/repo-naam">
+            <button class="ck-btn" id="ck-import-btn">Importeer &#8594;</button>
+          </div>
+        </div>
+        <div id="ck-import-result" style="display:none" class="ck-result"></div>
+      </div>
+      <div class="ck-tab-content" id="ck-tab-chat">
+        <div class="ck-chat-messages" id="ck-chat-messages">
+          <div class="ck-empty">Stel een vraag over je library...</div>
+        </div>
+        <div class="ck-chat-input-row">
+          <textarea id="ck-chat-input" placeholder="Typ je vraag... (Enter = verstuur, Shift+Enter = nieuwe regel)"></textarea>
+          <button class="ck-btn" id="ck-chat-send">Verstuur</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
+// ── SHARED HELPERS ─────────────────────────────────────────────────────────────
+var $ = function(id) { return document.getElementById(id); };
+
+var TYPE_LABEL   = { skill:'Skill', plugin:'Plugin', agent:'Agent', memory:'Memory', mcp:'MCP', api:'API tool', arch:'Architectuur', infra:'Infra', orch:'Orchestratie' };
+var STATUS_LABEL = { active:'Actief', wip:'In ontwikkeling', draft:'Concept', deprecated:'Verouderd' };
+var DOT_CLASS    = { active:'dot-active', wip:'dot-wip', draft:'dot-draft', deprecated:'dot-deprecated' };
+
+// ── MODE SWITCHING ─────────────────────────────────────────────────────────────
+var currentMode = 'library';
+var cockpitInitialized = false;
+
+function switchMode(mode) {
+  currentMode = mode;
+  ['library', 'skills', 'cockpit'].forEach(function(m) {
+    $(      'view-' + m).classList.toggle('active', m === mode);
+    $('nav-'        + m).classList.toggle('active', m === mode);
+  });
+
+  var right = $('topbar-right');
+  right.textContent = '';
+
+  if (mode === 'cockpit') {
+    var urlSpan = document.createElement('span');
+    urlSpan.id = 'ck-worker-url-display';
+    urlSpan.style.fontFamily = 'monospace';
+    if (CK.url) { try { urlSpan.textContent = new URL(CK.url).hostname; } catch(e) {} }
+
+    var settingsBtn = document.createElement('button');
+    settingsBtn.className = 'nav-btn';
+    settingsBtn.textContent = 'Instellingen';
+    settingsBtn.onclick = function() {
+      $('ck-cfg-url').value   = CK.url;
+      $('ck-cfg-token').value = CK.token;
+      $('ck-settings-overlay').classList.remove('hidden');
+    };
+    right.appendChild(urlSpan);
+    right.appendChild(settingsBtn);
+
+    if (!cockpitInitialized) { cockpitInitialized = true; ckInitConfig(); }
+  }
+}
+
+$('nav-library').addEventListener('click',  function() { switchMode('library'); });
+$('nav-skills').addEventListener('click',   function() { switchMode('skills'); });
+$('nav-cockpit').addEventListener('click',  function() { switchMode('cockpit'); });
+
 // ── DATA ──────────────────────────────────────────────────────────────────────
-// Geladen vanuit components.json — bewerk dat bestand om componenten toe te voegen
-let COMPONENTS = [
-  {
-    id: "docx-skill",
-    name: "Word document skill",
-    type: "skill",
-    status: "active",
-    version: "v1.2",
-    desc: "Maakt, leest en bewerkt .docx bestanden. Ondersteunt tabellen, inhoudsopgave, paginanummers en letterhoofden.",
-    usage: `# Gebruik in claude.ai project
-# Upload SKILL.md als project bestand
+var COMPONENTS = [];
 
-# Trigger zinnen:
-- "maak een Word document van..."
-- "exporteer als .docx"
-- "voeg toe aan Word rapport"`,
-    tags: ["documenten", "word", "export", "office"],
-    author: "jij",
-    updated: "2026-05-14",
-    path: "skills/docx/SKILL.md",
-    docs: "#"
-  },
-  {
-    id: "pdf-skill",
-    name: "PDF skill",
-    type: "skill",
-    status: "active",
-    version: "v1.1",
-    desc: "Alles rondom PDF bestanden: lezen, samenvoegen, splitsen, formulieren invullen, watermerken en OCR.",
-    usage: `# Trigger zinnen:
-- "lees dit PDF bestand"
-- "combineer deze PDFs"
-- "vul dit formulier in"`,
-    tags: ["pdf", "formulieren", "ocr", "merge"],
-    author: "jij",
-    updated: "2026-05-10",
-    path: "skills/pdf/SKILL.md",
-    docs: "#"
-  },
-  {
-    id: "pptx-skill",
-    name: "Presentatie skill",
-    type: "skill",
-    status: "active",
-    version: "v1.0",
-    desc: "Aanmaken en bewerken van .pptx presentaties. Ondersteunt dia-layouts, speaker notes en templates.",
-    usage: `# Trigger zinnen:
-- "maak een presentatie over..."
-- "voeg een dia toe"
-- "exporteer als PowerPoint"`,
-    tags: ["presentatie", "slides", "pptx", "office"],
-    author: "jij",
-    updated: "2026-05-08",
-    path: "skills/pptx/SKILL.md",
-    docs: "#"
-  },
-  {
-    id: "frontend-skill",
-    name: "Frontend design skill",
-    type: "skill",
-    status: "active",
-    version: "v2.0",
-    desc: "Bouwt productie-klare interfaces in HTML, CSS, JS en React. Vermijdt generieke AI-esthetiek en kiest altijd een bewuste designrichting.",
-    usage: `# Trigger zinnen:
-- "bouw een dashboard voor..."
-- "maak een React component"
-- "ontwerp een landingspagina"`,
-    tags: ["html", "css", "react", "design", "ui"],
-    author: "jij",
-    updated: "2026-05-15",
-    path: "skills/frontend-design/SKILL.md",
-    docs: "#"
-  },
-  {
-    id: "internal-comms-skill",
-    name: "Interne communicatie skill",
-    type: "skill",
-    status: "active",
-    version: "v1.0",
-    desc: "Schrijft statusrapportages, leadership updates, nieuwsbrieven, FAQs en incidentrapporten in het juiste formaat.",
-    usage: `# Trigger zinnen:
-- "schrijf een status update"
-- "stel een incident rapport op"
-- "maak een team nieuwsbrief"`,
-    tags: ["communicatie", "rapportage", "intern", "schrijven"],
-    author: "jij",
-    updated: "2026-05-01",
-    path: "skills/internal-comms/SKILL.md",
-    docs: "#"
-  },
-  {
-    id: "gdrive-mcp",
-    name: "Google Drive MCP",
-    type: "mcp",
-    status: "active",
-    version: "v1.0",
-    desc: "Koppeling met Google Drive via MCP. Claude kan bestanden zoeken, lezen en uploaden naar Drive.",
-    usage: `# Ingesteld als MCP server:
-mcp_servers:
-  - url: https://drivemcp.googleapis.com/mcp/v1
-    name: google-drive
+// ── LIBRARY ───────────────────────────────────────────────────────────────────
+var activeType  = 'all';
+var searchQuery = '';
+var sortBy      = 'name';
 
-# Trigger:
-- "zoek mijn Q3 rapport in Drive"
-- "upload dit naar Drive"`,
-    tags: ["google", "drive", "bestanden", "cloud"],
-    author: "anthropic",
-    updated: "2026-05-01",
-    path: "mcp/gdrive/config.yml",
-    docs: "https://docs.claude.ai"
-  },
-  {
-    id: "web-search-api",
-    name: "Web search tool",
-    type: "api",
-    status: "active",
-    version: "v1.0",
-    desc: "Geeft Claude toegang tot actuele webzoekopdrachten. Nuttig voor nieuws, recente feiten en verificatie.",
-    usage: `# API configuratie:
-tools: [{
-  "type": "web_search_20250305",
-  "name": "web_search"
-}]
-
-# Automatisch getriggerd bij:
-- vragen over actuele gebeurtenissen
-- prijzen, posities, recent nieuws`,
-    tags: ["search", "internet", "actueel", "api"],
-    author: "anthropic",
-    updated: "2026-04-20",
-    path: "tools/web-search/config.json",
-    docs: "https://docs.anthropic.com"
-  },
-  {
-    id: "research-agent",
-    name: "Research agent",
-    type: "agent",
-    status: "active",
-    version: "v0.3",
-    desc: "Autonome agent die webonderzoek uitvoert, bronnen vergelijkt en een gestructureerd rapport oplevert. Gebruikt web search + document skill.",
-    usage: `# Roept aan:
-- web_search tool
-- docx skill (voor rapport)
-
-# Trigger:
-- "onderzoek [onderwerp] en
-   maak een rapport"`,
-    tags: ["research", "autonome", "rapport", "multi-step"],
-    author: "jij",
-    updated: "2026-05-12",
-    path: "agents/research/agent.md",
-    docs: "#"
-  },
-  {
-    id: "code-review-agent",
-    name: "Code review agent",
-    type: "agent",
-    status: "wip",
-    version: "v0.1",
-    desc: "Reviewt pull requests op kwaliteit, veiligheid en conventies. Geeft gestructureerde feedback per bestand.",
-    usage: `# In ontwikkeling — koppelt aan:
-- GitHub MCP (nog te bouwen)
-- Code execution tool
-
-# Trigger (toekomstig):
-- "review PR #42"`,
-    tags: ["code", "review", "github", "kwaliteit"],
-    author: "jij",
-    updated: "2026-05-16",
-    path: "agents/code-review/agent.md",
-    docs: "#"
-  },
-  {
-    id: "claude-md-memory",
-    name: "CLAUDE.md memory",
-    type: "memory",
-    status: "active",
-    version: "v1.0",
-    desc: "Persistent geheugen via CLAUDE.md bestanden in je project. Slaat voorkeuren, werkwijze, actieve skills en projectcontext op.",
-    usage: `# Bestandslocatie:
-/project-root/CLAUDE.md
-
-# Bevat:
-- Jouw naam en stijlvoorkeuren
-- Actieve skills (lijst)
-- Projectspecifieke context
-- Werkwijze en conventies`,
-    tags: ["memory", "persistent", "claude.md", "context"],
-    author: "jij",
-    updated: "2026-05-15",
-    path: "memory/CLAUDE.md",
-    docs: "#"
-  },
-  {
-    id: "prompt-chain-orch",
-    name: "Prompt chain orchestratie",
-    type: "orch",
-    status: "active",
-    version: "v0.2",
-    desc: "Sjabloon voor prompt chaining: output van stap N wordt input van stap N+1. Met conditionals en error handling.",
-    usage: `# Patroon:
-stap1 = claude(prompt_1)
-stap2 = claude(prompt_2 + stap1)
-stap3 = claude(prompt_3 + stap2)
-
-# Gebruik voor:
-- Meerstaps transformaties
-- Samenvatting → structuur → rapport`,
-    tags: ["chaining", "pipeline", "orchestratie", "patroon"],
-    author: "jij",
-    updated: "2026-05-10",
-    path: "orchestration/prompt-chain.md",
-    docs: "#"
-  },
-  {
-    id: "system-arch",
-    name: "Systeem architectuur ADR",
-    type: "arch",
-    status: "active",
-    version: "v1.0",
-    desc: "Architecture Decision Records voor je Claude systeem. Legt vast waarom componenten zijn gekozen en hoe ze samenwerken.",
-    usage: `# Bestandsformaat:
-/architecture/
-  ADR-001-skill-structure.md
-  ADR-002-memory-strategy.md
-  ADR-003-agent-design.md
-
-# Gebruik:
-- Beslissingen vastleggen
-- Onboarding van nieuwe leden`,
-    tags: ["adr", "beslissingen", "documentatie", "systeem"],
-    author: "jij",
-    updated: "2026-05-05",
-    path: "architecture/README.md",
-    docs: "#"
-  },
-  {
-    id: "github-infra",
-    name: "GitHub repo infra",
-    type: "infra",
-    status: "active",
-    version: "v1.0",
-    desc: "Fundament van de library: folderstructuur, GitHub Actions voor CI, PR-review workflow en changelog generatie.",
-    usage: `# Folderstructuur:
-/skills/     — skill bestanden
-/agents/     — agent configs
-/memory/     — CLAUDE.md files
-/tools/      — API tool configs
-/mcp/        — MCP server configs
-/arch/       — ADRs
-/.github/    — Actions workflows`,
-    tags: ["github", "ci", "structuur", "workflow"],
-    author: "jij",
-    updated: "2026-05-01",
-    path: ".github/workflows/",
-    docs: "#"
-  },
-];
-
-// ── STATE ─────────────────────────────────────────────────────────────────────
-let activeType = 'all';
-let searchQuery = '';
-let sortBy = 'name';
-
-// ── HELPERS ───────────────────────────────────────────────────────────────────
-const typeLabel = {
-  skill:'Skill', plugin:'Plugin', agent:'Agent', memory:'Memory',
-  mcp:'MCP', api:'API tool', arch:'Architectuur', infra:'Infra', orch:'Orchestratie'
-};
-
-const statusLabel = {
-  active:'Actief', wip:'In ontwikkeling', draft:'Concept', deprecated:'Verouderd'
-};
-
-const dotClass = {
-  active:'dot-active', wip:'dot-wip', draft:'dot-draft', deprecated:'dot-deprecated'
-};
-
-function filtered() {
+function libFiltered() {
   return COMPONENTS
-    .filter(c => activeType === 'all' || c.type === activeType)
-    .filter(c => {
+    .filter(function(c) { return activeType === 'all' || c.type === activeType; })
+    .filter(function(c) {
       if (!searchQuery) return true;
-      const q = searchQuery.toLowerCase();
+      var q = searchQuery.toLowerCase();
       return c.name.toLowerCase().includes(q)
           || c.desc.toLowerCase().includes(q)
-          || c.tags.some(t => t.includes(q));
+          || (c.tags || []).some(function(t) { return t.includes(q); });
     })
-    .sort((a, b) => {
+    .sort(function(a, b) {
       if (sortBy === 'name')    return a.name.localeCompare(b.name);
-      if (sortBy === 'updated') return b.updated.localeCompare(a.updated);
-      if (sortBy === 'status')  return a.status.localeCompare(b.status);
+      if (sortBy === 'updated') return (b.updated||'').localeCompare(a.updated||'');
+      if (sortBy === 'status')  return (a.status||'').localeCompare(b.status||'');
       if (sortBy === 'type')    return a.type.localeCompare(b.type);
     });
 }
 
-// ── RENDER ────────────────────────────────────────────────────────────────────
-function render() {
-  const grid = document.getElementById('grid');
-  const empty = document.getElementById('empty');
-  const items = filtered();
+function renderLibrary() {
+  var grid  = $('grid');
+  var empty = $('empty');
+  var items = libFiltered();
 
-  // remove old cards
-  grid.querySelectorAll('.card').forEach(el => el.remove());
+  grid.querySelectorAll('.card').forEach(function(el) { el.remove(); });
   empty.classList.toggle('show', items.length === 0);
 
-  items.forEach((c, i) => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.dataset.type = c.type;
-    card.style.animationDelay = `${i * 30}ms`;
-    card.innerHTML = `
-      <div class="card-head">
-        <div class="card-title">${c.name}</div>
-        <span class="badge badge-${c.type}">${typeLabel[c.type] || c.type}</span>
-      </div>
-      <div class="card-desc">${c.desc}</div>
-      <div class="card-tags">${c.tags.slice(0,4).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
-      <div class="card-meta">
-        <div class="card-status">
-          <span class="dot ${dotClass[c.status] || 'dot-draft'}"></span>
-          ${statusLabel[c.status] || c.status}
-        </div>
-        <div class="card-version">${c.version}</div>
-      </div>`;
-    card.addEventListener('click', () => openModal(c));
+  items.forEach(function(c, i) {
+    var card = buildCard(c, i, false);
+    card.addEventListener('click', function() { openModal(c); });
     grid.appendChild(card);
   });
 
-  // update stats
-  document.getElementById('total-count').textContent = COMPONENTS.length;
-  document.getElementById('active-count').textContent = COMPONENTS.filter(c=>c.status==='active').length;
-  document.getElementById('type-count').textContent = [...new Set(COMPONENTS.map(c=>c.type))].length;
-  document.getElementById('last-sync').textContent = new Date().toLocaleDateString('nl-NL');
+  $('total-count').textContent  = COMPONENTS.length;
+  $('active-count').textContent = COMPONENTS.filter(function(c) { return c.status === 'active'; }).length;
+  $('type-count').textContent   = (new Set(COMPONENTS.map(function(c) { return c.type; }))).size;
+  $('last-sync').textContent    = new Date().toLocaleDateString('nl-NL');
 }
 
-// ── MODAL ─────────────────────────────────────────────────────────────────────
-function openModal(c) {
-  document.getElementById('modal-title').textContent = c.name;
+function buildCard(c, i, withUsage) {
+  var card = document.createElement('div');
+  card.className = 'card';
+  card.dataset.type = c.type;
+  card.style.animationDelay = (i * 30) + 'ms';
 
-  const badges = document.getElementById('modal-badges');
-  badges.innerHTML = `
-    <span class="badge badge-${c.type}">${typeLabel[c.type] || c.type}</span>
-    <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted)">
-      <span class="dot ${dotClass[c.status]}"></span>${statusLabel[c.status]}
-    </span>`;
+  var head = document.createElement('div');
+  head.className = 'card-head';
+  var title = document.createElement('div');
+  title.className = 'card-title';
+  title.textContent = c.name;
+  var badge = document.createElement('span');
+  badge.className = 'lib-badge lib-badge-' + c.type;
+  badge.textContent = TYPE_LABEL[c.type] || c.type;
+  head.appendChild(title);
+  head.appendChild(badge);
 
-  document.getElementById('modal-desc').textContent = c.desc;
-  document.getElementById('modal-usage').textContent = c.usage;
+  var desc = document.createElement('div');
+  desc.className = 'card-desc';
+  desc.textContent = c.desc;
 
-  const grid = document.getElementById('modal-grid');
-  grid.innerHTML = [
-    ['Versie', c.version],
-    ['Auteur', c.author],
-    ['Bijgewerkt', c.updated],
-    ['Pad', c.path],
-  ].map(([k,v])=>`<div class="modal-kv"><span class="k">${k}</span><span class="v">${v}</span></div>`).join('');
+  var tags = document.createElement('div');
+  tags.className = 'card-tags';
+  (c.tags || []).slice(0, 4).forEach(function(t) {
+    var span = document.createElement('span');
+    span.className = 'lib-tag';
+    span.textContent = t;
+    tags.appendChild(span);
+  });
 
-  const tagsEl = document.getElementById('modal-tags');
-  tagsEl.innerHTML = c.tags.map(t=>`<span class="tag">${t}</span>`).join('');
+  var meta = document.createElement('div');
+  meta.className = 'card-meta';
+  var status = document.createElement('div');
+  status.className = 'card-status';
+  var dot = document.createElement('span');
+  dot.className = 'dot ' + (DOT_CLASS[c.status] || 'dot-draft');
+  status.appendChild(dot);
+  status.appendChild(document.createTextNode(STATUS_LABEL[c.status] || c.status));
+  var ver = document.createElement('div');
+  ver.className = 'card-version';
+  ver.textContent = c.version || '';
+  meta.appendChild(status);
+  meta.appendChild(ver);
 
-  const actions = document.getElementById('modal-actions');
-  actions.innerHTML = `
-    <a href="${c.docs}" class="btn btn-primary" target="_blank">Documentatie</a>
-    <button class="btn btn-secondary" onclick="copyPath('${c.path}')">Kopieer pad</button>`;
+  card.appendChild(head);
+  card.appendChild(desc);
 
-  document.getElementById('modal-bg').classList.add('open');
+  if (withUsage && c.usage) {
+    var usageEl = document.createElement('div');
+    usageEl.className = 'skill-card-usage';
+    usageEl.textContent = c.usage;
+    card.appendChild(usageEl);
+  }
+
+  card.appendChild(tags);
+  card.appendChild(meta);
+  return card;
 }
 
-function closeModal() {
-  document.getElementById('modal-bg').classList.remove('open');
-}
+$('search').addEventListener('input', function(e) { searchQuery = e.target.value; renderLibrary(); });
+$('sort-select').addEventListener('change', function(e) { sortBy = e.target.value; renderLibrary(); });
 
-function copyPath(path) {
-  navigator.clipboard.writeText(path).catch(()=>{});
-  const btn = document.querySelector('.btn-secondary');
-  if (btn) { btn.textContent = 'Gekopieerd!'; setTimeout(()=>btn.textContent='Kopieer pad',1500); }
-}
-
-// ── EVENTS ────────────────────────────────────────────────────────────────────
-document.getElementById('modal-close').addEventListener('click', closeModal);
-document.getElementById('modal-bg').addEventListener('click', e => {
-  if (e.target === document.getElementById('modal-bg')) closeModal();
-});
-
-document.querySelectorAll('.pill').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+document.querySelectorAll('.pill').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.pill').forEach(function(p) { p.classList.remove('active'); });
     btn.classList.add('active');
     activeType = btn.dataset.type;
-    render();
+    renderLibrary();
   });
 });
 
-document.getElementById('search').addEventListener('input', e => {
-  searchQuery = e.target.value;
-  render();
-});
+// ── SKILLS VIEW ───────────────────────────────────────────────────────────────
+var skillsSearch = '';
+var skillsSort   = 'name';
 
-document.getElementById('sort-select').addEventListener('change', e => {
-  sortBy = e.target.value;
-  render();
-});
+function skillsFiltered() {
+  return COMPONENTS
+    .filter(function(c) { return c.type === 'skill'; })
+    .filter(function(c) {
+      if (!skillsSearch) return true;
+      var q = skillsSearch.toLowerCase();
+      return c.name.toLowerCase().includes(q)
+          || c.desc.toLowerCase().includes(q)
+          || (c.tags || []).some(function(t) { return t.includes(q); });
+    })
+    .sort(function(a, b) {
+      if (skillsSort === 'name')    return a.name.localeCompare(b.name);
+      if (skillsSort === 'updated') return (b.updated||'').localeCompare(a.updated||'');
+      if (skillsSort === 'status')  return (a.status||'').localeCompare(b.status||'');
+    });
+}
 
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal();
-});
+function renderSkills() {
+  var grid  = $('skills-grid');
+  var empty = $('skills-empty');
+  var items = skillsFiltered();
 
-// ── INIT ──────────────────────────────────────────────────────────────────────
+  grid.querySelectorAll('.card').forEach(function(el) { el.remove(); });
+  empty.classList.toggle('show', items.length === 0);
+
+  items.forEach(function(c, i) {
+    var card = buildCard(c, i, true);
+    card.addEventListener('click', function() { openModal(c); });
+    grid.appendChild(card);
+  });
+
+  $('skills-count').textContent        = COMPONENTS.filter(function(c) { return c.type === 'skill'; }).length;
+  $('skills-active-count').textContent = COMPONENTS.filter(function(c) { return c.type === 'skill' && c.status === 'active'; }).length;
+}
+
+$('skills-search').addEventListener('input', function(e) { skillsSearch = e.target.value; renderSkills(); });
+$('skills-sort').addEventListener('change',  function(e) { skillsSort = e.target.value; renderSkills(); });
+
+// ── MODAL ─────────────────────────────────────────────────────────────────────
+function openModal(c) {
+  $('modal-title').textContent = c.name;
+
+  var badges = $('modal-badges');
+  badges.textContent = '';
+  var typeBadge = document.createElement('span');
+  typeBadge.className = 'lib-badge lib-badge-' + c.type;
+  typeBadge.textContent = TYPE_LABEL[c.type] || c.type;
+  var statusWrap = document.createElement('span');
+  statusWrap.style.cssText = 'display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted)';
+  var dot = document.createElement('span');
+  dot.className = 'dot ' + (DOT_CLASS[c.status] || 'dot-draft');
+  statusWrap.appendChild(dot);
+  statusWrap.appendChild(document.createTextNode(STATUS_LABEL[c.status] || c.status));
+  badges.appendChild(typeBadge);
+  badges.appendChild(statusWrap);
+
+  $('modal-desc').textContent  = c.desc;
+  $('modal-usage').textContent = c.usage || '';
+
+  var grid = $('modal-grid');
+  grid.textContent = '';
+  [['Versie', c.version], ['Auteur', c.author], ['Bijgewerkt', c.updated], ['Pad', c.path]]
+    .forEach(function(pair) {
+      var k = document.createElement('div'); k.className = 'modal-kv';
+      var kl = document.createElement('span'); kl.className = 'k'; kl.textContent = pair[0];
+      var vl = document.createElement('span'); vl.className = 'v'; vl.textContent = pair[1] || '—';
+      k.appendChild(kl); k.appendChild(vl); grid.appendChild(k);
+    });
+
+  var tagsEl = $('modal-tags');
+  tagsEl.textContent = '';
+  (c.tags || []).forEach(function(t) {
+    var span = document.createElement('span');
+    span.className = 'lib-tag';
+    span.textContent = t;
+    tagsEl.appendChild(span);
+  });
+
+  var actions = $('modal-actions');
+  actions.textContent = '';
+  var docsLink = document.createElement('a');
+  docsLink.href = c.docs || '#';
+  docsLink.className = 'lib-btn lib-btn-primary';
+  docsLink.target = '_blank';
+  docsLink.textContent = 'Documentatie';
+  var copyBtn = document.createElement('button');
+  copyBtn.className = 'lib-btn lib-btn-secondary';
+  copyBtn.textContent = 'Kopieer pad';
+  copyBtn.onclick = function() {
+    navigator.clipboard.writeText(c.path).catch(function(){});
+    copyBtn.textContent = 'Gekopieerd!';
+    setTimeout(function() { copyBtn.textContent = 'Kopieer pad'; }, 1500);
+  };
+  actions.appendChild(docsLink);
+  actions.appendChild(copyBtn);
+
+  $('modal-bg').classList.add('open');
+}
+
+function closeModal() { $('modal-bg').classList.remove('open'); }
+
+$('modal-close').addEventListener('click', closeModal);
+$('modal-bg').addEventListener('click', function(e) { if (e.target === $('modal-bg')) closeModal(); });
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+
+// ── DATA LOAD ─────────────────────────────────────────────────────────────────
 fetch('components.json')
-  .then(r => r.json())
-  .then(data => { COMPONENTS = data; render(); })
-  .catch(() => render()); // fallback: gebruik hardcoded array als fetch faalt
+  .then(function(r) { return r.json(); })
+  .then(function(data) { COMPONENTS = data; renderLibrary(); renderSkills(); })
+  .catch(function() { renderLibrary(); renderSkills(); });
+
+// ── COCKPIT ───────────────────────────────────────────────────────────────────
+var CK = {
+  url:   localStorage.getItem('workerUrl')    || '',
+  token: localStorage.getItem('libraryToken') || ''
+};
+
+function ckSaveConfig() {
+  localStorage.setItem('workerUrl',    CK.url);
+  localStorage.setItem('libraryToken', CK.token);
+}
+
+function ckInitConfig() {
+  if (!CK.url || !CK.token) {
+    $('ck-cfg-url').value   = CK.url;
+    $('ck-cfg-token').value = CK.token;
+    $('ck-settings-overlay').classList.remove('hidden');
+  } else {
+    $('ck-settings-overlay').classList.add('hidden');
+    var disp = $('ck-worker-url-display');
+    if (disp) { try { disp.textContent = new URL(CK.url).hostname; } catch(e) {} }
+    ckLoadComponents();
+  }
+}
+
+$('ck-cfg-save').addEventListener('click', function() {
+  var url   = $('ck-cfg-url').value.trim().replace(/\/$/, '');
+  var token = $('ck-cfg-token').value.trim();
+  if (!url || !token) { alert('Vul beide velden in.'); return; }
+  try { new URL(url); } catch(e) { alert('Ongeldige URL.'); return; }
+  CK = { url: url, token: token };
+  ckSaveConfig();
+  $('ck-settings-overlay').classList.add('hidden');
+  var disp = $('ck-worker-url-display');
+  if (disp) { try { disp.textContent = new URL(url).hostname; } catch(e) {} }
+  ckLoadComponents();
+});
+
+function ckApiFetch(path, opts) {
+  opts = opts || {};
+  var headers = Object.assign({ 'Content-Type': 'application/json' }, opts.headers || {});
+  if (opts.auth !== false) { headers['Authorization'] = 'Bearer ' + CK.token; }
+  return fetch(CK.url + path, Object.assign({}, opts, { headers: headers }))
+    .then(function(resp) {
+      return resp.json()
+        .catch(function() { return { error: 'Ongeldige server response' }; })
+        .then(function(data) {
+          if (!resp.ok) { throw new Error(data.error || 'HTTP ' + resp.status); }
+          return data;
+        });
+    });
+}
+
+var ckComponents = [];
+
+function ckLoadComponents() {
+  var list = $('ck-component-list');
+  list.textContent = '';
+  var spinner = document.createElement('div');
+  spinner.className = 'ck-empty';
+  var s = document.createElement('span');
+  s.className = 'ck-spinner';
+  spinner.appendChild(s);
+  list.appendChild(spinner);
+
+  ckApiFetch('/components', { auth: false })
+    .then(function(data) { ckComponents = data; ckRenderComponents(); })
+    .catch(function(e) {
+      list.textContent = '';
+      var msg = document.createElement('div');
+      msg.className = 'ck-empty';
+      msg.style.color = 'var(--red)';
+      msg.textContent = 'Fout: ' + e.message;
+      list.appendChild(msg);
+    });
+}
+
+function ckRenderComponents() {
+  var list = $('ck-component-list');
+  list.textContent = '';
+  if (!ckComponents.length) {
+    var emp = document.createElement('div');
+    emp.className = 'ck-empty';
+    emp.textContent = 'Geen componenten gevonden.';
+    list.appendChild(emp);
+    return;
+  }
+  ckComponents.forEach(function(c, i) {
+    var card = document.createElement('div');
+    card.className = 'ck-card';
+
+    var top = document.createElement('div');
+    top.className = 'ck-card-top';
+
+    var nameEl = document.createElement('span');
+    nameEl.className = 'ck-card-name';
+    var dot = document.createElement('span');
+    dot.className = 'ck-dot ck-dot-' + (c.status === 'active' ? 'active' : 'inactive');
+    nameEl.appendChild(dot);
+    nameEl.appendChild(document.createTextNode(c.name));
+
+    var badge = document.createElement('span');
+    badge.className = 'ck-badge ck-badge-' + c.type;
+    badge.textContent = c.type;
+
+    top.appendChild(nameEl);
+    top.appendChild(badge);
+
+    var desc = document.createElement('div');
+    desc.className = 'ck-card-desc';
+    desc.textContent = c.desc;
+
+    card.appendChild(top);
+    card.appendChild(desc);
+    card.addEventListener('click', (function(idx) { return function() { ckSelectComponent(idx); }; })(i));
+    list.appendChild(card);
+  });
+}
+
+function ckSelectComponent(i) {
+  var c = ckComponents[i];
+  document.querySelectorAll('.ck-card').forEach(function(card, idx) {
+    card.classList.toggle('selected', idx === i);
+  });
+
+  $('ck-detail-empty').style.display = 'none';
+  var dv = $('ck-detail-view');
+  dv.style.cssText = 'display:flex;flex-direction:column;gap:16px';
+
+  $('ck-detail-name').textContent = c.name;
+
+  var grid = $('ck-detail-grid');
+  grid.textContent = '';
+  [['id',c.id],['type',c.type],['versie',c.version||'—'],
+   ['auteur',c.author||'—'],['status',c.status||'—'],
+   ['bijgewerkt',c.updated||'—'],['pad',c.path]
+  ].forEach(function(row) {
+    var lEl = document.createElement('div'); lEl.className = 'ck-detail-label'; lEl.textContent = row[0];
+    var vEl = document.createElement('div'); vEl.className = 'ck-detail-value'; vEl.textContent = String(row[1]);
+    grid.appendChild(lEl); grid.appendChild(vEl);
+  });
+
+  var tagsEl = $('ck-detail-tags');
+  tagsEl.textContent = '';
+  (c.tags || []).forEach(function(t) {
+    var span = document.createElement('span');
+    span.className = 'ck-tag';
+    span.textContent = t;
+    tagsEl.appendChild(span);
+  });
+
+  ckSwitchTab('detail');
+}
+
+$('ck-btn-refresh').addEventListener('click', ckLoadComponents);
+
+function ckSwitchTab(name) {
+  document.querySelectorAll('.ck-tab').forEach(function(t) {
+    t.classList.toggle('active', t.dataset.tab === name);
+  });
+  document.querySelectorAll('.ck-tab-content').forEach(function(t) {
+    t.classList.toggle('active', t.id === 'ck-tab-' + name);
+  });
+}
+document.querySelectorAll('.ck-tab').forEach(function(tab) {
+  tab.addEventListener('click', function() { ckSwitchTab(tab.dataset.tab); });
+});
+
+$('ck-import-btn').addEventListener('click', function() {
+  var repo = $('ck-import-input').value.trim();
+  if (!repo) return;
+  if (!/^[a-zA-Z0-9._-]+\/[a-zA-Z0-9._-]+$/.test(repo)) {
+    ckShowImportResult(false, 'Ongeldig formaat. Gebruik "owner/repo".');
+    return;
+  }
+  $('ck-import-btn').disabled = true;
+  $('ck-import-btn').textContent = 'Bezig...';
+  $('ck-import-result').style.display = 'none';
+
+  ckApiFetch('/import-repo', { method: 'POST', body: JSON.stringify({ repo: repo }) })
+    .then(function(r) {
+      var result = $('ck-import-result');
+      result.textContent = '';
+      result.style.display = 'block';
+      result.className = 'ck-result success';
+      var summary = document.createElement('div');
+      summary.textContent = '✓ ' + r.components_imported + ' component(s) geïmporteerd, ' + r.files_committed + ' bestanden gecommit.';
+      result.appendChild(summary);
+      if (r.pr_url && r.pr_url.startsWith('https://')) {
+        var link = document.createElement('a');
+        link.href = r.pr_url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = 'PR #' + r.pr_number + ' bekijken →';
+        result.appendChild(document.createTextNode('\n'));
+        result.appendChild(link);
+      }
+      $('ck-import-input').value = '';
+      ckLoadComponents();
+    })
+    .catch(function(e) { ckShowImportResult(false, e.message); })
+    .finally(function() {
+      $('ck-import-btn').disabled = false;
+      $('ck-import-btn').textContent = 'Importeer →';
+    });
+});
+
+$('ck-import-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') { $('ck-import-btn').click(); }
+});
+
+function ckShowImportResult(ok, text) {
+  var el = $('ck-import-result');
+  el.style.display = 'block';
+  el.className = 'ck-result ' + (ok ? 'success' : 'error');
+  el.textContent = text;
+}
+
+var ckChatHistory = [];
+
+function ckSendChat() {
+  var text = $('ck-chat-input').value.trim();
+  if (!text) return;
+  $('ck-chat-input').value = '';
+  $('ck-chat-send').disabled = true;
+  ckChatHistory.push({ role: 'user', content: text });
+  ckRenderChat();
+
+  ckApiFetch('/chat', { method: 'POST', body: JSON.stringify({ messages: ckChatHistory }) })
+    .then(function(r) {
+      ckChatHistory.push({ role: 'assistant', content: (r.content && r.content[0] && r.content[0].text) || '(geen antwoord)' });
+    })
+    .catch(function(e) {
+      ckChatHistory.push({ role: 'assistant', content: '⚠ Fout: ' + e.message });
+    })
+    .finally(function() {
+      ckRenderChat();
+      $('ck-chat-send').disabled = false;
+      $('ck-chat-input').focus();
+    });
+}
+
+function ckRenderChat() {
+  var el = $('ck-chat-messages');
+  el.textContent = '';
+  if (!ckChatHistory.length) {
+    var empty = document.createElement('div');
+    empty.className = 'ck-empty';
+    empty.textContent = 'Stel een vraag over je library...';
+    el.appendChild(empty);
+    return;
+  }
+  ckChatHistory.forEach(function(m) {
+    var div = document.createElement('div');
+    div.className = 'ck-message ' + m.role;
+    div.textContent = m.content;
+    el.appendChild(div);
+  });
+  el.scrollTop = el.scrollHeight;
+}
+
+$('ck-chat-send').addEventListener('click', ckSendChat);
+$('ck-chat-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); ckSendChat(); }
+});
 </script>
 </body>
 </html>
