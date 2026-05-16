@@ -191,6 +191,106 @@ async function handleImportRepo(request, env) {
   })
 }
 
+async function handleUploadSkill(request, env) {
+  const body = await request.json().catch(() => null)
+  if (!body) return err('Invalid JSON body')
+
+  const { name, desc, content, tags, version, status } = body
+
+  if (!name) return err('"name" is required')
+  if (!/^[a-z0-9-]+$/.test(name)) return err('"name" mag alleen a-z, 0-9 en hyphens bevatten')
+  if (!content) return err('"content" is required')
+
+  const repo = env.LIBRARY_REPO || 'mrtimberme-bot/claude-library'
+  const today = new Date().toISOString().slice(0, 10)
+  const ver = version || '1.0.0'
+  const st = status || 'active'
+  const tagsArr = Array.isArray(tags) ? tags : (typeof tags === 'string' ? tags.split(',').map(t => t.trim()).filter(Boolean) : [])
+
+  // Build SKILL.md content
+  const skillMd = [
+    `# ${name}`,
+    '',
+    desc ? `${desc}` : '',
+    '',
+    `**Versie:** ${ver}`,
+    `**Status:** ${st}`,
+    `**Auteur:** Timothy Stekkinger`,
+    `**Bijgewerkt:** ${today}`,
+    tagsArr.length ? `**Tags:** ${tagsArr.join(', ')}` : '',
+    '',
+    '---',
+    '',
+    content,
+  ].filter(line => line !== null).join('\n')
+
+  const skillPath = `skills/${name}/SKILL.md`
+
+  // Check if SKILL.md already exists (for sha)
+  const existingSkill = await ghGet(`/repos/${repo}/contents/${skillPath}`, env)
+  const skillPayload = {
+    message: `feat: skill ${name} toegevoegd via cockpit`,
+    content: btoa(unescape(encodeURIComponent(skillMd))),
+  }
+  if (existingSkill.ok) {
+    const existingData = await existingSkill.json()
+    skillPayload.sha = existingData.sha
+  }
+
+  const putResp = await ghPut(`/repos/${repo}/contents/${skillPath}`, env, skillPayload)
+  if (!putResp.ok) {
+    const e = await putResp.json().catch(() => ({}))
+    return err(`Kon SKILL.md niet opslaan: ${e.message || putResp.status}`, 502)
+  }
+
+  // Update components.json
+  const compResp = await ghGet(`/repos/${repo}/contents/components.json`, env)
+  if (!compResp.ok) return err('Kon components.json niet ophalen', 502)
+
+  const compData = await compResp.json()
+  let components
+  try {
+    components = JSON.parse(atob(compData.content.replace(/\n/g, '')))
+    if (!Array.isArray(components)) throw new Error()
+  } catch {
+    return err('components.json is geen geldige JSON array', 502)
+  }
+
+  const newEntry = {
+    id: name,
+    name,
+    type: 'skill',
+    version: ver,
+    status: st,
+    desc: desc || '',
+    usage: '',
+    author: 'Timothy Stekkinger',
+    updated: today,
+    path: skillPath,
+    tags: tagsArr,
+  }
+
+  const idx = components.findIndex(c => c.id === name)
+  if (idx >= 0) {
+    components[idx] = newEntry
+  } else {
+    components.push(newEntry)
+  }
+
+  const compPutResp = await ghPut(`/repos/${repo}/contents/components.json`, env, {
+    message: `chore: components.json bijgewerkt voor skill ${name}`,
+    content: btoa(unescape(encodeURIComponent(JSON.stringify(components, null, 2)))),
+    sha: compData.sha,
+  })
+
+  if (!compPutResp.ok) {
+    const e = await compPutResp.json().catch(() => ({}))
+    return err(`Kon components.json niet bijwerken: ${e.message || compPutResp.status}`, 502)
+  }
+
+  return json({ success: true, path: skillPath })
+}
+
 export default {
   async fetch(request, env) {
     if (request.method === 'OPTIONS')
@@ -202,11 +302,12 @@ export default {
       if (pathname === '/components' && request.method === 'GET')
         return handleComponents(env)
 
-      if (pathname === '/chat' || pathname === '/import-repo') {
+      if (pathname === '/chat' || pathname === '/import-repo' || pathname === '/upload-skill') {
         if (request.method !== 'POST') return err('POST required', 405)
         if (!checkAuth(request, env)) return err('Unauthorized', 401)
         if (pathname === '/chat') return handleChat(request, env)
-        return handleImportRepo(request, env)
+        if (pathname === '/import-repo') return handleImportRepo(request, env)
+        return handleUploadSkill(request, env)
       }
 
       return err('Not found', 404)
