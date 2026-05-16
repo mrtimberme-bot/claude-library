@@ -941,7 +941,7 @@
   .score-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text4); display: flex; justify-content: space-between; }
   .score-label span { color: var(--text); font-weight: 600; letter-spacing: 0; }
   .score-bar-track { height: 5px; border-radius: 2px; background: var(--border); position: relative; }
-  .score-bar-fill { height: 3px; background: var(--cyan); transition: width .4s ease; position: absolute; top: 0; left: 0; }
+  .score-bar-fill { height: 5px; border-radius: 2px; background: var(--cyan); transition: width .4s ease; position: absolute; top: 0; left: 0; }
   .score-bar-fill.amber { background: var(--amber); }
   .score-bar-fill.red { background: #E53935; }
   .score-summary { font-family: var(--head); font-size: 12px; color: var(--text2); line-height: 1.5; padding: 8px 0 0; border-top: 1px solid var(--border); }
@@ -1538,10 +1538,6 @@ function libSelectRow(id) {
   $('drawer-skill-actions').style.display = isSkill ? 'flex' : 'none';
   $('score-panel').classList.remove('visible');
   $('enrich-panel').classList.remove('visible');
-  $('score-issues').textContent='';
-  $('score-summary').textContent='';
-  $('enrich-row').textContent='';
-  $('enrich-triggers').textContent='';
   drawerCurrentId = c.id;
 
   $('lib-drawer').classList.add('open');
@@ -1895,7 +1891,7 @@ function renderScoreBar(label, score) {
   lbl.appendChild(lt); lbl.appendChild(sv);
   var track = document.createElement('div'); track.className='score-bar-track';
   var fill = document.createElement('div');
-  fill.className='score-bar-fill '+(scoreColor(score));
+  var sc=scoreColor(score); fill.className=('score-bar-fill'+(sc?' '+sc:''));
   fill.style.width=score+'%';
   track.appendChild(fill);
   row.appendChild(lbl); row.appendChild(track);
