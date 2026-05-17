@@ -1,0 +1,88 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --nav-bg: #18181b;
+  --nav-border: #3f3f46;
+  --nav-text: #a1a1aa;
+  --nav-text-active: #ffffff;
+  --nav-accent: #7c3aed;
+  --nav-pill: rgba(124, 58, 237, 0.15);
+  --nav-glow: rgba(124, 58, 237, 0.35);
+  --tooltip-bg: #1c1c1f;
+  --tooltip-border: #3f3f46;
+}
+
+.nav-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--nav-bg);
+  border: 1px solid var(--nav-border);
+  border-radius: 14px;
+  padding: 6px;
+  position: relative;
+}
+
+.nav-pill {
+  position: absolute;
+  border-radius: 10px;
+  background: var(--nav-pill);
+  border: 1px solid var(--nav-accent);
+  box-shadow: 0 0 12px var(--nav-glow);
+  transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              top 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.nav-item {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: var(--nav-text);
+  border: none;
+  background: transparent;
+  transition: color 0.2s;
+}
+
+.nav-item.active { color: var(--nav-text-active); }
+.nav-item:hover:not(.active) { color: #d4d4d8; }
+
+.nav-item svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.75;
+  flex-shrink: 0;
+}
+
+.nav-tooltip {
+  position: fixed;
+  pointer-events: none;
+  background: var(--tooltip-bg);
+  border: 1px solid var(--tooltip-border);
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #e4e4e7;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.15s, transform 0.15s;
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+.nav-tooltip.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
