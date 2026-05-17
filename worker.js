@@ -96,6 +96,148 @@ async function handleChat(request, env) {
   return json(await resp.json())
 }
 
+// ── REPO SCANNER (used when components.json is absent) ────────────────────────
+
+function parseFrontmatter(content) {
+  if (!content.startsWith('---')) return {}
+  const end = content.indexOf('\n---', 3)
+  if (end < 0) return {}
+  const result = {}
+  for (const line of content.slice(3, end).split('\n')) {
+    const m = line.match(/^([\w-]+):\s*(.*)$/)
+    if (!m) continue
+    result[m[1].toLowerCase()] = m[2].trim().replace(/^["']|["']$/g, '')
+  }
+  return result
+}
+
+function slugify(str) {
+  return (str || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 63) || 'imported'
+}
+
+function firstParagraph(content) {
+  return (content
+    .replace(/^---[\s\S]*?---\n?/, '')
+    .replace(/^#+\s+.+/gm, '')
+    .trim()
+    .split(/\n{2,}/)[0] || ''
+  ).trim().slice(0, 280)
+}
+
+function detectType(path, hint) {
+  if (hint) return hint
+  if (/\/agents?\//i.test(path)) return 'agent'
+  if (/\/mcp\//i.test(path)) return 'mcp'
+  if (/\/memory\//i.test(path)) return 'memory'
+  if (/\/plugin/i.test(path)) return 'plugin'
+  if (/\/orch/i.test(path)) return 'orch'
+  return 'skill'
+}
+
+function buildEntry(path, content, hintType, src) {
+  const fm = parseFrontmatter(content)
+  const folder = path.split('/').slice(-2, -1)[0] || path.split('/').pop().replace(/\.[^.]+$/, '')
+  const type = detectType(path, hintType)
+  const name = fm.name || fm.title || folder
+  const desc = fm.description || fm.desc || firstParagraph(content)
+  const tags = fm.tags ? fm.tags.split(',').map(t => t.trim()).filter(Boolean) : [type]
+  const today = new Date().toISOString().slice(0, 10)
+  return {
+    id: slugify(fm.id || name),
+    name,
+    type,
+    status: fm.status || 'active',
+    version: fm.version || 'v1.0',
+    desc,
+    usage: fm.usage || fm.trigger || '',
+    tags: tags.length ? tags : [type],
+    author: fm.author || src.split('/')[0],
+    updated: fm.updated || fm.date || today,
+    path: `imported/${src.replace('/', '_')}/${path}`,
+  }
+}
+
+async function aiGenerateEntries(files, src, env) {
+  const system = `Generate structured component entries for a Claude Library based on files from a GitHub repo.
+Return a JSON array. Each item:
+{ "id": "kebab-case", "name": "Readable name", "type": "skill|agent|mcp|memory|plugin|orch|api|arch|infra", "status": "active", "version": "v1.0", "desc": "max 200 char description", "usage": "when and how to use", "tags": ["tag1"], "path": "<original file path>" }
+Rules: id is lowercase a-z 0-9 hyphens max 63 chars. desc must always be filled in and informative.`
+
+  const userContent = `Repo: ${src}\n\n` + files.map(f => `=== ${f.path} ===\n${f.content}`).join('\n\n')
+  try {
+    const raw = await callAnthropic(env, { model: 'claude-haiku-4-5-20251001', system, userContent, maxTokens: 2048 })
+    const arrMatch = raw.match(/\[[\s\S]*\]/)
+    if (!arrMatch) return files.map(f => f.entry)
+    const today = new Date().toISOString().slice(0, 10)
+    return JSON.parse(arrMatch[0]).map(item => ({
+      ...item,
+      author: item.author || src.split('/')[0],
+      updated: item.updated || today,
+      path: `imported/${src.replace('/', '_')}/${item.path || ''}`,
+    }))
+  } catch {
+    return files.map(f => f.entry)
+  }
+}
+
+async function scanRepoForComponents(src, env) {
+  const treeResp = await ghGet(`/repos/${src}/git/trees/HEAD?recursive=1`, env)
+  if (!treeResp.ok) throw new Error(treeResp.status === 404 ? 'Repo not found or not accessible' : 'Cannot read repo tree')
+  const { tree } = await treeResp.json()
+
+  // Find files by priority pattern
+  const PATTERNS = [
+    { re: /SKILL\.md$/i,                           type: 'skill'  },
+    { re: /\/agents?\/[^/]+\.(md|yaml|yml)$/i,     type: 'agent'  },
+    { re: /\/mcp\/[^/]+\/[^/]+\.(yml|yaml|json|md)$/i, type: 'mcp' },
+    { re: /\/memory\/[^/]+\.(md|json)$/i,          type: 'memory' },
+    { re: /\/plugins?\/[^/]+\.(md|json)$/i,        type: 'plugin' },
+    { re: /\/orch[^/]*\/[^/]+\.(md|json)$/i,       type: 'orch'   },
+    { re: /\.md$/i,                                type: null     },
+  ]
+
+  const seen = new Set()
+  const candidates = []
+  for (const pat of PATTERNS) {
+    for (const file of tree) {
+      if (file.type !== 'blob' || seen.has(file.path) || (file.size || 0) > 80_000) continue
+      if (pat.re.test(file.path)) {
+        seen.add(file.path)
+        candidates.push({ path: file.path, hintType: pat.type })
+        if (candidates.length >= 15) break
+      }
+    }
+    if (candidates.length >= 15) break
+  }
+
+  if (!candidates.length) throw new Error('No recognizable skill/agent/mcp files found in repo')
+
+  const good = [], needsAI = []
+  for (const cand of candidates) {
+    const r = await ghGet(`/repos/${src}/contents/${cand.path}`, env)
+    if (!r.ok) continue
+    const d = await r.json()
+    const content = atob(d.content.replace(/\n/g, ''))
+    const entry = buildEntry(cand.path, content, cand.hintType, src)
+    if (entry.desc && entry.desc.length > 30) {
+      good.push(entry)
+    } else {
+      needsAI.push({ path: cand.path, content: content.slice(0, 1500), entry })
+    }
+  }
+
+  if (needsAI.length) {
+    const aiEntries = await aiGenerateEntries(needsAI, src, env)
+    good.push(...aiEntries)
+  }
+
+  // Deduplicate by id
+  const seen_ids = new Set()
+  return good.filter(e => e.id && e.name && !seen_ids.has(e.id) && seen_ids.add(e.id))
+}
+
+// ── IMPORT REPO ────────────────────────────────────────────────────────────────
+
 async function handleImportRepo(request, env) {
   const body = await request.json().catch(() => null)
   if (!body?.repo) return err('"repo" required — format: "owner/repo"')
@@ -105,26 +247,37 @@ async function handleImportRepo(request, env) {
 
   const lib = env.LIBRARY_REPO || 'mrtimberme-bot/claude-library'
   const src = body.repo
+  let autoScanned = false
 
-  const compResp = await ghGet(`/repos/${src}/contents/components.json`, env)
-  if (!compResp.ok) return err(`components.json not found in ${src}`, 404)
-
+  // 1. Try components.json
   let components
-  try {
-    const raw = await compResp.json()
-    components = JSON.parse(atob(raw.content.replace(/\n/g, '')))
-    if (!Array.isArray(components)) throw new Error()
-  } catch {
-    return err('components.json in source repo is not a valid JSON array')
+  const compResp = await ghGet(`/repos/${src}/contents/components.json`, env)
+  if (compResp.ok) {
+    try {
+      const raw = await compResp.json()
+      components = JSON.parse(atob(raw.content.replace(/\n/g, '')))
+      if (!Array.isArray(components)) throw new Error()
+    } catch {
+      return err('components.json in source repo is not a valid JSON array')
+    }
+  } else {
+    // 2. Auto-scan
+    try {
+      components = await scanRepoForComponents(src, env)
+      autoScanned = true
+    } catch (e) {
+      return err(`Geen components.json gevonden in ${src}, auto-scan ook mislukt: ${e.message}`, 404)
+    }
+    if (!components.length) return err(`Geen components.json en geen herkenbare bestanden gevonden in ${src}`, 404)
   }
 
-  const required = ['id', 'name', 'type', 'desc', 'path']
-  const invalid = components.filter(c => required.some(f => !c[f]))
-  if (invalid.length)
-    return err(`Components missing required fields: ${invalid.map(c => c.id || '?').join(', ')}`)
+  if (!autoScanned) {
+    const required = ['id', 'name', 'type', 'desc', 'path']
+    const invalid = components.filter(c => required.some(f => !c[f]))
+    if (invalid.length) return err(`Components missing required fields: ${invalid.map(c => c.id || '?').join(', ')}`)
+  }
 
-  if (components.length > 50)
-    return err('Too many components in source repo (max 50)')
+  if (components.length > 50) return err('Too many components in source repo (max 50)')
 
   const prefix = `imported/${src.replace('/', '_')}`
   const files = [
@@ -132,15 +285,13 @@ async function handleImportRepo(request, env) {
   ]
 
   for (const comp of components) {
-    if (!comp.path.endsWith('.md')) continue
-    if (!/^[a-zA-Z0-9._\-\/]+\.md$/.test(comp.path)) continue  // skip unsafe paths
-    const r = await ghGet(`/repos/${src}/contents/${comp.path}`, env)
+    if (!comp.path || !comp.path.endsWith('.md')) continue
+    if (!/^[a-zA-Z0-9._\-\/]+\.md$/.test(comp.path)) continue
+    const filePath = comp.path.startsWith('imported/') ? comp.path.replace(/^imported\/[^/]+\//, '') : comp.path
+    const r = await ghGet(`/repos/${src}/contents/${filePath}`, env)
     if (!r.ok) continue
     const d = await r.json()
-    files.push({
-      path: `${prefix}/${comp.path}`,
-      content: atob(d.content.replace(/\n/g, '')),
-    })
+    files.push({ path: `${prefix}/${filePath}`, content: atob(d.content.replace(/\n/g, '')) })
   }
 
   const refResp = await ghGet(`/repos/${lib}/git/refs/heads/main`, env)
@@ -148,10 +299,7 @@ async function handleImportRepo(request, env) {
   const mainSha = (await refResp.json()).object.sha
 
   const branch = `import/${src.replace('/', '-')}-${Date.now()}`
-  const branchResp = await ghPost(`/repos/${lib}/git/refs`, env, {
-    ref: `refs/heads/${branch}`,
-    sha: mainSha,
-  })
+  const branchResp = await ghPost(`/repos/${lib}/git/refs`, env, { ref: `refs/heads/${branch}`, sha: mainSha })
   if (!branchResp.ok) return err('Failed to create branch', 502)
 
   const commitErrors = []
@@ -164,13 +312,12 @@ async function handleImportRepo(request, env) {
     if (!putResp.ok) commitErrors.push(file.path)
   }
 
-  if (commitErrors.length) {
-    return err(`Failed to commit ${commitErrors.length} file(s): ${commitErrors.join(', ')}`, 502)
-  }
+  if (commitErrors.length) return err(`Failed to commit ${commitErrors.length} file(s): ${commitErrors.join(', ')}`, 502)
 
+  const scanNote = autoScanned ? '\n\n> ℹ️ Geen `components.json` gevonden — entries automatisch gegenereerd via repo-scan + AI.\n' : ''
   const prResp = await ghPost(`/repos/${lib}/pulls`, env, {
-    title: `Import: ${src} (${components.length} component${components.length !== 1 ? 's' : ''})`,
-    body: `## Geïmporteerd van \`${src}\`\n\n${components.map(c => `- **${c.name}** (\`${c.type}\`) — ${c.desc}`).join('\n')}\n\n---\n_Automatisch aangemaakt door Claude Library Worker_`,
+    title: `Import: ${src} (${components.length} component${components.length !== 1 ? 's' : ''})${autoScanned ? ' — auto-scan' : ''}`,
+    body: `## Geïmporteerd van \`${src}\`\n${scanNote}\n${components.map(c => `- **${c.name}** (\`${c.type}\`) — ${c.desc}`).join('\n')}\n\n---\n_Automatisch aangemaakt door Claude Library Worker_`,
     head: branch,
     base: 'main',
   })
@@ -187,6 +334,7 @@ async function handleImportRepo(request, env) {
     pr_number: pr.number,
     components_imported: components.length,
     files_committed: files.length,
+    auto_scanned: autoScanned,
     branch,
   })
 }
@@ -283,7 +431,7 @@ Andere skills in de library (voor overlap-check):
 ${otherSkills.slice(0, 2000)}`
 
   const raw = await callAnthropic(env, {
-    model: 'claude-sonnet-4-6',
+    model: 'claude-haiku-4-5-20251001',
     system,
     userContent,
     maxTokens: 1024,
@@ -372,7 +520,7 @@ Tags: ${(comp.tags || []).join(', ')}
 ${skillMd ? `SKILL.md:\n${skillMd.slice(0, 2000)}` : ''}`
 
   const raw = await callAnthropic(env, {
-    model: 'claude-sonnet-4-6',
+    model: 'claude-haiku-4-5-20251001',
     system,
     userContent,
     maxTokens: 512,
