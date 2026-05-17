@@ -1,1 +1,640 @@
-[\n  {\n    "id": "docx-skill",\n    "name": "Word document skill",\n    "type": "skill",\n    "status": "active",\n    "version": "v1.2",\n    "desc": "Maakt, leest en bewerkt .docx bestanden. Ondersteunt tabellen, inhoudsopgave, paginanummers en letterhoofden.",\n    "usage": "Trigger: \"maak een Word document van...\", \"exporteer als .docx\", \"voeg toe aan Word rapport\"",\n    "tags": [\n      "documenten",\n      "word",\n      "export",\n      "office"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-14",\n    "path": "skills/docx/SKILL.md"\n  },\n  {\n    "id": "pdf-skill",\n    "name": "PDF skill",\n    "type": "skill",\n    "status": "active",\n    "version": "v1.1",\n    "desc": "Alles rondom PDF bestanden: lezen, samenvoegen, splitsen, formulieren invullen, watermerken en OCR.",\n    "usage": "Trigger: \"lees dit PDF bestand\", \"combineer deze PDFs\", \"vul dit formulier in\"",\n    "tags": [\n      "pdf",\n      "formulieren",\n      "ocr",\n      "merge"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-10",\n    "path": "skills/pdf/SKILL.md"\n  },\n  {\n    "id": "frontend-skill",\n    "name": "Frontend design skill",\n    "type": "skill",\n    "status": "active",\n    "version": "v2.0",\n    "desc": "Bouwt productie-klare interfaces in HTML, CSS, JS en React. Vermijdt generieke AI-esthetiek.",\n    "usage": "Trigger: \"bouw een dashboard voor...\", \"maak een React component\", \"ontwerp een landingspagina\"",\n    "tags": [\n      "html",\n      "css",\n      "react",\n      "design",\n      "ui"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-15",\n    "path": "skills/frontend-design/SKILL.md"\n  },\n  {\n    "id": "accessibility-auditor",\n    "name": "Accessibility Auditor",\n    "type": "skill",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "iOS accessibility audit - VoiceOver, Dynamic Type, contrast, motor accessibility. Run bij elke UI feature.",\n    "usage": "Trigger: bij elke iOS UI feature, accessibility review, VoiceOver check",\n    "tags": [\n      "ios",\n      "accessibility",\n      "voiceover",\n      "audit"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-16",\n    "path": "skills/accessibility-auditor/SKILL.md"\n  },\n  {\n    "id": "app-store-readiness",\n    "name": "App Store Readiness",\n    "type": "skill",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "Multi-agent audit voor App Store Review Guidelines, HIG compliance, en privacy requirements. Gebruik bij pre-submit en PR reviews.",\n    "usage": "Trigger: pre-submit audit, App Store submission, PR review met UI changes",\n    "tags": [\n      "ios",\n      "app-store",\n      "audit",\n      "review",\n      "hig"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-16",\n    "path": "skills/app-store-readiness/SKILL.md"\n  },\n  {\n    "id": "debug-detective",\n    "name": "Debug Detective",\n    "type": "skill",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "Crash analyse en debugging - Sentry payloads, stacktraces, regression detection. Gebruik bij production issues.",\n    "usage": "Trigger: bij crash reports, Sentry alerts, stacktraces, onverwacht gedrag in productie",\n    "tags": [\n      "debug",\n      "crash",\n      "sentry",\n      "ios",\n      "analyse"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-16",\n    "path": "skills/debug-detective/SKILL.md"\n  },\n  {\n    "id": "discoverscan",\n    "name": "DiscoverScan Context",\n    "type": "skill",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "DiscoverScan-specifieke context — een iOS app voor foto-identificatie via Apple Intelligence + Claude API verrijking. Activeert bij elke taak in deze codebase.",\n    "usage": "Trigger: bij elke taak in de DiscoverScan codebase, blok 1-10, ScanFirst migratie",\n    "tags": [\n      "discoverscan",\n      "ios",\n      "apple-intelligence",\n      "claude-api"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-16",\n    "path": "skills/discoverscan/SKILL.md"\n  },\n  {\n    "id": "haptics-designer",\n    "name": "Haptics Designer",\n    "type": "skill",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "Haptic feedback orchestratie - wanneer, intensiteit, patterns. Cruciaal voor premium gevoel.",\n    "usage": "Trigger: bij UI werk, nieuwe interacties, premium feel verbeteren",\n    "tags": [\n      "ios",\n      "haptics",\n      "ux",\n      "feedback"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-16",\n    "path": "skills/haptics-designer/SKILL.md"\n  },\n  {\n    "id": "hig-compliance",\n    "name": "HIG Compliance",\n    "type": "skill",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "Apple Human Interface Guidelines compliance check. Gebruik bij UI werk.",\n    "usage": "Trigger: bij UI werk, nieuwe views, design reviews",\n    "tags": [\n      "ios",\n      "hig",\n      "apple",\n      "design",\n      "compliance"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-16",\n    "path": "skills/hig-compliance/SKILL.md"\n  },\n  {\n    "id": "ios-baseline",\n    "name": "iOS Baseline",\n    "type": "skill",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "Conventies en architectuur-regels voor native iOS apps in Swift 6 + SwiftUI + SwiftData. Activeert bij elke iOS development taak.",\n    "usage": "Trigger: bij elke iOS development taak — feature bouwen, refactor, bug fix, test schrijven",\n    "tags": [\n      "ios",\n      "swift",\n      "swiftui",\n      "architectuur",\n      "baseline"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-16",\n    "path": "skills/ios-baseline/SKILL.md"\n  },\n  {\n    "id": "ios-blok-workflow",\n    "name": "iOS Blok Workflow",\n    "type": "skill",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "De blok-gebaseerde werkwijze voor iOS app ontwikkeling — één feature per blok, één feature branch, één PR, met notify protocol via ntfy.",\n    "usage": "Trigger: bij vermelding van \"blok\", \"feature branch\", of start van een nieuwe substantiële feature",\n    "tags": [\n      "ios",\n      "workflow",\n      "blok",\n      "branch",\n      "pr"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-16",\n    "path": "skills/ios-blok-workflow/SKILL.md"\n  },\n  {\n    "id": "ios-testing",\n    "name": "iOS Testing Expert",\n    "type": "skill",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "iOS testing expert voor unit, UI en snapshot tests. Gebruikt bij nieuwe features en refactors.",\n    "usage": "Trigger: bij schrijven van tests, nieuwe features, refactors, CI setup",\n    "tags": [\n      "ios",\n      "testing",\n      "unit-test",\n      "ui-test",\n      "ci"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-16",\n    "path": "skills/ios-testing/SKILL.md"\n  },\n  {\n    "id": "localization-manager",\n    "name": "Localization Manager",\n    "type": "skill",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "Localization setup en review - String Catalogs, pluralization, region formats. Gebruik bij nieuwe features en pre-launch.",\n    "usage": "Trigger: bij nieuwe features met tekst, pre-launch checklist, String Catalog setup",\n    "tags": [\n      "ios",\n      "localization",\n      "i18n",\n      "string-catalog"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-16",\n    "path": "skills/localization-manager/SKILL.md"\n  },\n  {\n    "id": "motion-designer",\n    "name": "Motion Designer",\n    "type": "skill",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "Motion design expert - animation curves, transitions, interruptible animations. Gebruik bij design en review van animaties.",\n    "usage": "Trigger: bij animaties, transitions, motion design review",\n    "tags": [\n      "ios",\n      "animation",\n      "motion",\n      "ux",\n      "design"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-16",\n    "path": "skills/motion-designer/SKILL.md"\n  },\n  {\n    "id": "onboarding-designer",\n    "name": "Onboarding Designer",\n    "type": "skill",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "First-run onboarding flow design. Gebruik bij nieuwe app of major feature launch.",\n    "usage": "Trigger: bij nieuwe app, major feature launch, onboarding flow design",\n    "tags": [\n      "ios",\n      "onboarding",\n      "ux",\n      "first-run"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-16",\n    "path": "skills/onboarding-designer/SKILL.md"\n  },\n  {\n    "id": "post-launch",\n    "name": "Post-Launch Monitor",\n    "type": "skill",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "Post-launch monitoring en update planning — crashes, App Store reviews, ratings, feedback patterns, hotfix beslissing.",\n    "usage": "Trigger: na App Store approval, dag 1/7/30 check, crash rate monitoring, hotfix beslissing",\n    "tags": [\n      "ios",\n      "post-launch",\n      "monitoring",\n      "crash",\n      "app-store"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-16",\n    "path": "skills/post-launch/SKILL.md"\n  },\n  {\n    "id": "privacy-manifest",\n    "name": "Privacy Manifest",\n    "type": "skill",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "PrivacyInfo.xcprivacy generator en validator. Run bij elke dependency change en pre-submit.",\n    "usage": "Trigger: bij dependency changes, pre-submit, App Store submission",\n    "tags": [\n      "ios",\n      "privacy",\n      "xcprivacy",\n      "app-store",\n      "compliance"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-16",\n    "path": "skills/privacy-manifest/SKILL.md"\n  },\n  {\n    "id": "security-auditor",\n    "name": "Security Auditor",\n    "type": "skill",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "Security audit voor iOS - Keychain, networking, data-at-rest, secrets. Run bij PR en pre-submit.",\n    "usage": "Trigger: bij PR review, pre-submit, auth flows, Keychain gebruik, networking code",\n    "tags": [\n      "ios",\n      "security",\n      "keychain",\n      "audit",\n      "privacy"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-16",\n    "path": "skills/security-auditor/SKILL.md"\n  },\n  {\n    "id": "swift-reviewer",\n    "name": "Swift Reviewer",\n    "type": "skill",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "Swift code review - concurrency safety, memory, performance, API design. Gebruik bij PR review.",\n    "usage": "Trigger: bij PR review, code review, Swift concurrency, memory management",\n    "tags": [\n      "ios",\n      "swift",\n      "review",\n      "concurrency",\n      "performance"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-16",\n    "path": "skills/swift-reviewer/SKILL.md"\n  },\n  {\n    "id": "theme-designer",\n    "name": "Theme Designer",\n    "type": "skill",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "Definieer unieke brand identity per app - kleuren, typografie, motion personality, haptic vocabulary. Gebruik bij nieuwe app setup en design refresh.",\n    "usage": "Trigger: bij nieuwe app setup, design refresh, brand identity",\n    "tags": [\n      "ios",\n      "design",\n      "brand",\n      "theme",\n      "typography"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-16",\n    "path": "skills/theme-designer/SKILL.md"\n  },\n  {\n    "id": "ux-designer",\n    "name": "UX Designer",\n    "type": "skill",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "UX patterns - flows, empty states, loading states, information architecture. Gebruik bij nieuwe features en design reviews.",\n    "usage": "Trigger: bij nieuwe features, design reviews, empty states, loading states",\n    "tags": [\n      "ios",\n      "ux",\n      "design",\n      "flows",\n      "patterns"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-16",\n    "path": "skills/ux-designer/SKILL.md"\n  },\n  {\n    "id": "xcode-simulator-expert",\n    "name": "Xcode Simulator Expert",\n    "type": "skill",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "Token-efficient Xcode simulator en build workflow. Gebruik bij alle simulator-interacties. Bespaart 90%+ tokens vs raw screenshot approach.",\n    "usage": "Trigger: bij alle simulator-interacties, build workflow, Xcode gebruik",\n    "tags": [\n      "ios",\n      "xcode",\n      "simulator",\n      "build",\n      "workflow"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-16",\n    "path": "skills/xcode-simulator-expert/SKILL.md"\n  },\n  {\n    "id": "gdrive-mcp",\n    "name": "Google Drive MCP",\n    "type": "mcp",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "Koppeling met Google Drive via MCP. Claude kan bestanden zoeken, lezen en uploaden naar Drive.",\n    "usage": "MCP server. Trigger: \"zoek mijn Q3 rapport in Drive\"",\n    "tags": [\n      "google",\n      "drive",\n      "bestanden",\n      "cloud"\n    ],\n    "author": "anthropic",\n    "updated": "2026-05-01",\n    "path": "mcp/gdrive/config.yml"\n  },\n  {\n    "id": "research-agent",\n    "name": "Research agent",\n    "type": "agent",\n    "status": "active",\n    "version": "v0.3",\n    "desc": "Autonome agent die webonderzoek uitvoert, bronnen vergelijkt en een gestructureerd rapport oplevert.",\n    "usage": "Trigger: \"onderzoek [onderwerp] en maak een rapport\"",\n    "tags": [\n      "research",\n      "autonoom",\n      "rapport",\n      "multi-step"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-12",\n    "path": "agents/research/agent.md"\n  },\n  {\n    "id": "claude-md-memory",\n    "name": "CLAUDE.md memory",\n    "type": "memory",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "Persistent geheugen via CLAUDE.md bestanden. Slaat voorkeuren, werkwijze en projectcontext op.",\n    "usage": "Bestand: /project-root/CLAUDE.md. Bevat naam, stijlvoorkeuren, actieve skills, projectcontext.",\n    "tags": [\n      "memory",\n      "persistent",\n      "claude.md",\n      "context"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-15",\n    "path": "memory/CLAUDE.md"\n  },\n  {\n    "id": "github-infra",\n    "name": "GitHub repo infra",\n    "type": "infra",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "Fundament van de library: folderstructuur, GitHub Actions voor CI, PR-review workflow en changelog.",\n    "usage": "Folderstructuur: /skills/ /agents/ /memory/ /tools/ /mcp/ /architecture/ /.github/workflows/",\n    "tags": [\n      "github",\n      "ci",\n      "structuur",\n      "workflow"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-01",\n    "path": ".github/workflows/"\n  },\n  {\n    "id": "snippet-animated-navbar",\n    "name": "Animated Navbar",\n    "type": "snippet",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "Horizontale navigatiebalk met sliding pill-indicator en cursor-volgende tooltips. Vijf icon-knoppen, soepele cubic-bezier transitie, paars accent. Geen dependencies.",\n    "usage": "Kopieer snippet.html, snippet.css en snippet.js naar je project. Initialiseer via snippet.js — werkt standalone zonder framework.",\n    "tags": [\n      "navigation",\n      "animation",\n      "tooltip",\n      "vanilla-js",\n      "dark"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-17",\n    "path": "snippets/animated-navbar/",\n    "files": {\n      "preview": "snippets/animated-navbar/index.html",\n      "html": "snippets/animated-navbar/snippet.html",\n      "css": "snippets/animated-navbar/snippet.css",\n      "js": "snippets/animated-navbar/snippet.js"\n    }\n  },\n  {\n    "id": "snippet-theme-toggle",\n    "name": "Theme Toggle",\n    "type": "snippet",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "Dark/light toggle met maan→zon transitie, sterrenhemel fade-out en wolkjes fade-in. Pure CSS animatie, geen JavaScript voor de kernovergang. Toegankelijk via label/input patroon.",\n    "usage": "Kopieer snippet.html en snippet.css naar je project. Optioneel: voeg snippet.js toe voor extra gedrag op body-niveau. Luister op change-event van de checkbox voor thema-wisseling.",\n    "tags": [\n      "toggle",\n      "theme",\n      "dark-mode",\n      "css-animation",\n      "accessible"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-17",\n    "path": "snippets/theme-toggle/",\n    "files": {\n      "preview": "snippets/theme-toggle/index.html",\n      "html": "snippets/theme-toggle/snippet.html",\n      "css": "snippets/theme-toggle/snippet.css",\n      "js": "snippets/theme-toggle/snippet.js"\n    }\n  },\n  {\n    "id": "layout-grid-stagger",\n    "name": "Grid Stagger Layout",\n    "type": "snippet",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "Drie-koloms card grid met gestaggerde fade+slide animatie bij laden. Per card hover: lift + glow border in type-kleur.",\n    "usage": "Library layout alternatief — kopieer de CSS grid + animatie structuur naar je eigen project.",\n    "tags": [\n      "layout",\n      "grid",\n      "animation",\n      "library"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-17",\n    "path": "snippets/layout-grid-stagger/",\n    "files": {\n      "preview": "snippets/layout-grid-stagger/index.html"\n    }\n  },\n  {\n    "id": "layout-bento",\n    "name": "Bento Grid Layout",\n    "type": "snippet",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "Asymmetrisch bento-stijl CSS Grid. Eerste card featured (2 kolommen × 2 rijen). Kleurgradiënt per type als achtergrond.",\n    "usage": "Library layout alternatief — gebruik de grid-area structuur voor featured content dashboards.",\n    "tags": [\n      "layout",\n      "bento",\n      "grid",\n      "animation"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-17",\n    "path": "snippets/layout-bento/",\n    "files": {\n      "preview": "snippets/layout-bento/index.html"\n    }\n  },\n  {\n    "id": "layout-rows",\n    "name": "Inbox Rows Layout",\n    "type": "snippet",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "Volledige-breedte rijen als inbox. Slide-in animatie van links met stagger. Sticky filter pills bovenaan.",\n    "usage": "Library layout alternatief — ideaal voor content-dichte lijsten die scanbaar moeten zijn.",\n    "tags": [\n      "layout",\n      "rows",\n      "animation",\n      "list"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-17",\n    "path": "snippets/layout-rows/",\n    "files": {\n      "preview": "snippets/layout-rows/index.html"\n    }\n  },\n  {\n    "id": "layout-kanban",\n    "name": "Kanban Board Layout",\n    "type": "snippet",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "Horizontale kolommen per type. Elke kolom heeft eigen header + scrollbare body. Drop-in animatie per kolom.",\n    "usage": "Library layout alternatief — gebruik wanneer je per categorie wilt scrollen en vergelijken.",\n    "tags": [\n      "layout",\n      "kanban",\n      "columns",\n      "animation"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-17",\n    "path": "snippets/layout-kanban/",\n    "files": {\n      "preview": "snippets/layout-kanban/index.html"\n    }\n  },\n  {\n    "id": "layout-spotlight",\n    "name": "Spotlight Layout",\n    "type": "snippet",\n    "status": "active",\n    "version": "v1.0",\n    "desc": "Vier-koloms grid met CSS :has() spotlight. Hovered card schaalt op, alle andere dimmen naar 0.4 opacity.",\n    "usage": "Library layout alternatief — ideaal voor visuele focus bij scannen van grote collecties.",\n    "tags": [\n      "layout",\n      "spotlight",\n      "animation",\n      "css-has"\n    ],\n    "author": "Timothy Stekkinger",\n    "updated": "2026-05-17",\n    "path": "snippets/layout-spotlight/",\n    "files": {\n      "preview": "snippets/layout-spotlight/index.html"\n    }\n  }\n]\n
+[
+  {
+    "id": "docx-skill",
+    "name": "Word document skill",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.2",
+    "desc": "Maakt, leest en bewerkt .docx bestanden. Ondersteunt tabellen, inhoudsopgave, paginanummers en letterhoofden.",
+    "usage": "Trigger: \"maak een Word document van...\", \"exporteer als .docx\", \"voeg toe aan Word rapport\"",
+    "tags": [
+      "documenten",
+      "word",
+      "export",
+      "office"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-14",
+    "path": "skills/docx/SKILL.md"
+  },
+  {
+    "id": "pdf-skill",
+    "name": "PDF skill",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.1",
+    "desc": "Alles rondom PDF bestanden: lezen, samenvoegen, splitsen, formulieren invullen, watermerken en OCR.",
+    "usage": "Trigger: \"lees dit PDF bestand\", \"combineer deze PDFs\", \"vul dit formulier in\"",
+    "tags": [
+      "pdf",
+      "formulieren",
+      "ocr",
+      "merge"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-10",
+    "path": "skills/pdf/SKILL.md"
+  },
+  {
+    "id": "frontend-skill",
+    "name": "Frontend design skill",
+    "type": "skill",
+    "status": "active",
+    "version": "v2.0",
+    "desc": "Bouwt productie-klare interfaces in HTML, CSS, JS en React. Vermijdt generieke AI-esthetiek.",
+    "usage": "Trigger: \"bouw een dashboard voor...\", \"maak een React component\", \"ontwerp een landingspagina\"",
+    "tags": [
+      "html",
+      "css",
+      "react",
+      "design",
+      "ui"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-15",
+    "path": "skills/frontend-design/SKILL.md"
+  },
+  {
+    "id": "accessibility-auditor",
+    "name": "Accessibility Auditor",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "iOS accessibility audit - VoiceOver, Dynamic Type, contrast, motor accessibility. Run bij elke UI feature.",
+    "usage": "Trigger: bij elke iOS UI feature, accessibility review, VoiceOver check",
+    "tags": [
+      "ios",
+      "accessibility",
+      "voiceover",
+      "audit"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-16",
+    "path": "skills/accessibility-auditor/SKILL.md"
+  },
+  {
+    "id": "app-store-readiness",
+    "name": "App Store Readiness",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Multi-agent audit voor App Store Review Guidelines, HIG compliance, en privacy requirements. Gebruik bij pre-submit en PR reviews.",
+    "usage": "Trigger: pre-submit audit, App Store submission, PR review met UI changes",
+    "tags": [
+      "ios",
+      "app-store",
+      "audit",
+      "review",
+      "hig"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-16",
+    "path": "skills/app-store-readiness/SKILL.md"
+  },
+  {
+    "id": "debug-detective",
+    "name": "Debug Detective",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Crash analyse en debugging - Sentry payloads, stacktraces, regression detection. Gebruik bij production issues.",
+    "usage": "Trigger: bij crash reports, Sentry alerts, stacktraces, onverwacht gedrag in productie",
+    "tags": [
+      "debug",
+      "crash",
+      "sentry",
+      "ios",
+      "analyse"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-16",
+    "path": "skills/debug-detective/SKILL.md"
+  },
+  {
+    "id": "discoverscan",
+    "name": "DiscoverScan Context",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "DiscoverScan-specifieke context — een iOS app voor foto-identificatie via Apple Intelligence + Claude API verrijking. Activeert bij elke taak in deze codebase.",
+    "usage": "Trigger: bij elke taak in de DiscoverScan codebase, blok 1-10, ScanFirst migratie",
+    "tags": [
+      "discoverscan",
+      "ios",
+      "apple-intelligence",
+      "claude-api"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-16",
+    "path": "skills/discoverscan/SKILL.md"
+  },
+  {
+    "id": "haptics-designer",
+    "name": "Haptics Designer",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Haptic feedback orchestratie - wanneer, intensiteit, patterns. Cruciaal voor premium gevoel.",
+    "usage": "Trigger: bij UI werk, nieuwe interacties, premium feel verbeteren",
+    "tags": [
+      "ios",
+      "haptics",
+      "ux",
+      "feedback"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-16",
+    "path": "skills/haptics-designer/SKILL.md"
+  },
+  {
+    "id": "hig-compliance",
+    "name": "HIG Compliance",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Apple Human Interface Guidelines compliance check. Gebruik bij UI werk.",
+    "usage": "Trigger: bij UI werk, nieuwe views, design reviews",
+    "tags": [
+      "ios",
+      "hig",
+      "apple",
+      "design",
+      "compliance"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-16",
+    "path": "skills/hig-compliance/SKILL.md"
+  },
+  {
+    "id": "ios-baseline",
+    "name": "iOS Baseline",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Conventies en architectuur-regels voor native iOS apps in Swift 6 + SwiftUI + SwiftData. Activeert bij elke iOS development taak.",
+    "usage": "Trigger: bij elke iOS development taak — feature bouwen, refactor, bug fix, test schrijven",
+    "tags": [
+      "ios",
+      "swift",
+      "swiftui",
+      "architectuur",
+      "baseline"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-16",
+    "path": "skills/ios-baseline/SKILL.md"
+  },
+  {
+    "id": "ios-blok-workflow",
+    "name": "iOS Blok Workflow",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "De blok-gebaseerde werkwijze voor iOS app ontwikkeling — één feature per blok, één feature branch, één PR, met notify protocol via ntfy.",
+    "usage": "Trigger: bij vermelding van \"blok\", \"feature branch\", of start van een nieuwe substantiële feature",
+    "tags": [
+      "ios",
+      "workflow",
+      "blok",
+      "branch",
+      "pr"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-16",
+    "path": "skills/ios-blok-workflow/SKILL.md"
+  },
+  {
+    "id": "ios-testing",
+    "name": "iOS Testing Expert",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "iOS testing expert voor unit, UI en snapshot tests. Gebruikt bij nieuwe features en refactors.",
+    "usage": "Trigger: bij schrijven van tests, nieuwe features, refactors, CI setup",
+    "tags": [
+      "ios",
+      "testing",
+      "unit-test",
+      "ui-test",
+      "ci"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-16",
+    "path": "skills/ios-testing/SKILL.md"
+  },
+  {
+    "id": "localization-manager",
+    "name": "Localization Manager",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Localization setup en review - String Catalogs, pluralization, region formats. Gebruik bij nieuwe features en pre-launch.",
+    "usage": "Trigger: bij nieuwe features met tekst, pre-launch checklist, String Catalog setup",
+    "tags": [
+      "ios",
+      "localization",
+      "i18n",
+      "string-catalog"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-16",
+    "path": "skills/localization-manager/SKILL.md"
+  },
+  {
+    "id": "motion-designer",
+    "name": "Motion Designer",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Motion design expert - animation curves, transitions, interruptible animations. Gebruik bij design en review van animaties.",
+    "usage": "Trigger: bij animaties, transitions, motion design review",
+    "tags": [
+      "ios",
+      "animation",
+      "motion",
+      "ux",
+      "design"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-16",
+    "path": "skills/motion-designer/SKILL.md"
+  },
+  {
+    "id": "onboarding-designer",
+    "name": "Onboarding Designer",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "First-run onboarding flow design. Gebruik bij nieuwe app of major feature launch.",
+    "usage": "Trigger: bij nieuwe app, major feature launch, onboarding flow design",
+    "tags": [
+      "ios",
+      "onboarding",
+      "ux",
+      "first-run"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-16",
+    "path": "skills/onboarding-designer/SKILL.md"
+  },
+  {
+    "id": "post-launch",
+    "name": "Post-Launch Monitor",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Post-launch monitoring en update planning — crashes, App Store reviews, ratings, feedback patterns, hotfix beslissing.",
+    "usage": "Trigger: na App Store approval, dag 1/7/30 check, crash rate monitoring, hotfix beslissing",
+    "tags": [
+      "ios",
+      "post-launch",
+      "monitoring",
+      "crash",
+      "app-store"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-16",
+    "path": "skills/post-launch/SKILL.md"
+  },
+  {
+    "id": "privacy-manifest",
+    "name": "Privacy Manifest",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "PrivacyInfo.xcprivacy generator en validator. Run bij elke dependency change en pre-submit.",
+    "usage": "Trigger: bij dependency changes, pre-submit, App Store submission",
+    "tags": [
+      "ios",
+      "privacy",
+      "xcprivacy",
+      "app-store",
+      "compliance"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-16",
+    "path": "skills/privacy-manifest/SKILL.md"
+  },
+  {
+    "id": "security-auditor",
+    "name": "Security Auditor",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Security audit voor iOS - Keychain, networking, data-at-rest, secrets. Run bij PR en pre-submit.",
+    "usage": "Trigger: bij PR review, pre-submit, auth flows, Keychain gebruik, networking code",
+    "tags": [
+      "ios",
+      "security",
+      "keychain",
+      "audit",
+      "privacy"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-16",
+    "path": "skills/security-auditor/SKILL.md"
+  },
+  {
+    "id": "swift-reviewer",
+    "name": "Swift Reviewer",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Swift code review - concurrency safety, memory, performance, API design. Gebruik bij PR review.",
+    "usage": "Trigger: bij PR review, code review, Swift concurrency, memory management",
+    "tags": [
+      "ios",
+      "swift",
+      "review",
+      "concurrency",
+      "performance"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-16",
+    "path": "skills/swift-reviewer/SKILL.md"
+  },
+  {
+    "id": "theme-designer",
+    "name": "Theme Designer",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Definieer unieke brand identity per app - kleuren, typografie, motion personality, haptic vocabulary. Gebruik bij nieuwe app setup en design refresh.",
+    "usage": "Trigger: bij nieuwe app setup, design refresh, brand identity",
+    "tags": [
+      "ios",
+      "design",
+      "brand",
+      "theme",
+      "typography"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-16",
+    "path": "skills/theme-designer/SKILL.md"
+  },
+  {
+    "id": "ux-designer",
+    "name": "UX Designer",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "UX patterns - flows, empty states, loading states, information architecture. Gebruik bij nieuwe features en design reviews.",
+    "usage": "Trigger: bij nieuwe features, design reviews, empty states, loading states",
+    "tags": [
+      "ios",
+      "ux",
+      "design",
+      "flows",
+      "patterns"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-16",
+    "path": "skills/ux-designer/SKILL.md"
+  },
+  {
+    "id": "xcode-simulator-expert",
+    "name": "Xcode Simulator Expert",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Token-efficient Xcode simulator en build workflow. Gebruik bij alle simulator-interacties. Bespaart 90%+ tokens vs raw screenshot approach.",
+    "usage": "Trigger: bij alle simulator-interacties, build workflow, Xcode gebruik",
+    "tags": [
+      "ios",
+      "xcode",
+      "simulator",
+      "build",
+      "workflow"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-16",
+    "path": "skills/xcode-simulator-expert/SKILL.md"
+  },
+  {
+    "id": "gdrive-mcp",
+    "name": "Google Drive MCP",
+    "type": "mcp",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Koppeling met Google Drive via MCP. Claude kan bestanden zoeken, lezen en uploaden naar Drive.",
+    "usage": "MCP server. Trigger: \"zoek mijn Q3 rapport in Drive\"",
+    "tags": [
+      "google",
+      "drive",
+      "bestanden",
+      "cloud"
+    ],
+    "author": "anthropic",
+    "updated": "2026-05-01",
+    "path": "mcp/gdrive/config.yml"
+  },
+  {
+    "id": "research-agent",
+    "name": "Research agent",
+    "type": "agent",
+    "status": "active",
+    "version": "v0.3",
+    "desc": "Autonome agent die webonderzoek uitvoert, bronnen vergelijkt en een gestructureerd rapport oplevert.",
+    "usage": "Trigger: \"onderzoek [onderwerp] en maak een rapport\"",
+    "tags": [
+      "research",
+      "autonoom",
+      "rapport",
+      "multi-step"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-12",
+    "path": "agents/research/agent.md"
+  },
+  {
+    "id": "claude-md-memory",
+    "name": "CLAUDE.md memory",
+    "type": "memory",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Persistent geheugen via CLAUDE.md bestanden. Slaat voorkeuren, werkwijze en projectcontext op.",
+    "usage": "Bestand: /project-root/CLAUDE.md. Bevat naam, stijlvoorkeuren, actieve skills, projectcontext.",
+    "tags": [
+      "memory",
+      "persistent",
+      "claude.md",
+      "context"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-15",
+    "path": "memory/CLAUDE.md"
+  },
+  {
+    "id": "github-infra",
+    "name": "GitHub repo infra",
+    "type": "infra",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Fundament van de library: folderstructuur, GitHub Actions voor CI, PR-review workflow en changelog.",
+    "usage": "Folderstructuur: /skills/ /agents/ /memory/ /tools/ /mcp/ /architecture/ /.github/workflows/",
+    "tags": [
+      "github",
+      "ci",
+      "structuur",
+      "workflow"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-01",
+    "path": ".github/workflows/"
+  },
+  {
+    "id": "snippet-animated-navbar",
+    "name": "Animated Navbar",
+    "type": "snippet",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Horizontale navigatiebalk met sliding pill-indicator en cursor-volgende tooltips. Vijf icon-knoppen, soepele cubic-bezier transitie, paars accent. Geen dependencies.",
+    "usage": "Kopieer snippet.html, snippet.css en snippet.js naar je project. Initialiseer via snippet.js — werkt standalone zonder framework.",
+    "tags": [
+      "navigation",
+      "animation",
+      "tooltip",
+      "vanilla-js",
+      "dark"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-17",
+    "path": "snippets/animated-navbar/",
+    "files": {
+      "preview": "snippets/animated-navbar/index.html",
+      "html": "snippets/animated-navbar/snippet.html",
+      "css": "snippets/animated-navbar/snippet.css",
+      "js": "snippets/animated-navbar/snippet.js"
+    }
+  },
+  {
+    "id": "snippet-theme-toggle",
+    "name": "Theme Toggle",
+    "type": "snippet",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Dark/light toggle met maan→zon transitie, sterrenhemel fade-out en wolkjes fade-in. Pure CSS animatie, geen JavaScript voor de kernovergang. Toegankelijk via label/input patroon.",
+    "usage": "Kopieer snippet.html en snippet.css naar je project. Optioneel: voeg snippet.js toe voor extra gedrag op body-niveau. Luister op change-event van de checkbox voor thema-wisseling.",
+    "tags": [
+      "toggle",
+      "theme",
+      "dark-mode",
+      "css-animation",
+      "accessible"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-17",
+    "path": "snippets/theme-toggle/",
+    "files": {
+      "preview": "snippets/theme-toggle/index.html",
+      "html": "snippets/theme-toggle/snippet.html",
+      "css": "snippets/theme-toggle/snippet.css",
+      "js": "snippets/theme-toggle/snippet.js"
+    }
+  },
+  {
+    "id": "layout-grid-stagger",
+    "name": "Grid Stagger Layout",
+    "type": "snippet",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Drie-koloms card grid met gestaggerde fade+slide animatie bij laden. Per card hover: lift + glow border in type-kleur.",
+    "usage": "Library layout alternatief — kopieer de CSS grid + animatie structuur naar je eigen project.",
+    "tags": [
+      "layout",
+      "grid",
+      "animation",
+      "library"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-17",
+    "path": "snippets/layout-grid-stagger/",
+    "files": {
+      "preview": "snippets/layout-grid-stagger/index.html"
+    }
+  },
+  {
+    "id": "layout-bento",
+    "name": "Bento Grid Layout",
+    "type": "snippet",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Asymmetrisch bento-stijl CSS Grid. Eerste card featured (2 kolommen × 2 rijen). Kleurgradiënt per type als achtergrond.",
+    "usage": "Library layout alternatief — gebruik de grid-area structuur voor featured content dashboards.",
+    "tags": [
+      "layout",
+      "bento",
+      "grid",
+      "animation"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-17",
+    "path": "snippets/layout-bento/",
+    "files": {
+      "preview": "snippets/layout-bento/index.html"
+    }
+  },
+  {
+    "id": "layout-rows",
+    "name": "Inbox Rows Layout",
+    "type": "snippet",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Volledige-breedte rijen als inbox. Slide-in animatie van links met stagger. Sticky filter pills bovenaan.",
+    "usage": "Library layout alternatief — ideaal voor content-dichte lijsten die scanbaar moeten zijn.",
+    "tags": [
+      "layout",
+      "rows",
+      "animation",
+      "list"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-17",
+    "path": "snippets/layout-rows/",
+    "files": {
+      "preview": "snippets/layout-rows/index.html"
+    }
+  },
+  {
+    "id": "layout-kanban",
+    "name": "Kanban Board Layout",
+    "type": "snippet",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Horizontale kolommen per type. Elke kolom heeft eigen header + scrollbare body. Drop-in animatie per kolom.",
+    "usage": "Library layout alternatief — gebruik wanneer je per categorie wilt scrollen en vergelijken.",
+    "tags": [
+      "layout",
+      "kanban",
+      "columns",
+      "animation"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-17",
+    "path": "snippets/layout-kanban/",
+    "files": {
+      "preview": "snippets/layout-kanban/index.html"
+    }
+  },
+  {
+    "id": "layout-spotlight",
+    "name": "Spotlight Layout",
+    "type": "snippet",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Vier-koloms grid met CSS :has() spotlight. Hovered card schaalt op, alle andere dimmen naar 0.4 opacity.",
+    "usage": "Library layout alternatief — ideaal voor visuele focus bij scannen van grote collecties.",
+    "tags": [
+      "layout",
+      "spotlight",
+      "animation",
+      "css-has"
+    ],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-17",
+    "path": "snippets/layout-spotlight/",
+    "files": {
+      "preview": "snippets/layout-spotlight/index.html"
+    }
+  }
+]
