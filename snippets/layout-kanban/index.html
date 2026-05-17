@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claude Library — Kanban</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #09090b;
+      --surface: #111113;
+      --surface2: #18181b;
+      --surface3: #27272a;
+      --border: rgba(255,255,255,0.08);
+      --border2: rgba(255,255,255,0.14);
+      --primary: #3b82f6;
+      --green: #22c55e;
+      --text: #fafafa;
+      --text2: #a1a1aa;
+      --text3: #71717a;
+      --text4: #3f3f46;
+      --skill: #22c55e;
+      --agent: #f97316;
+      --mcp: #3b82f6;
+      --memory: #a855f7;
+      --snippet: #7c3aed;
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      overflow-x: auto;
+    }
+
+    /* ── Header ── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1.5rem 2rem 1rem;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      left: 0;
+    }
+
+    .topbar h1 {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+    }
+
+    .topbar-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--primary);
+    }
+
+    .topbar-sub {
+      font-size: 0.8125rem;
+      color: var(--text3);
+    }
+
+    /* ── Board ── */
+    .board {
+      display: flex;
+      gap: 0.875rem;
+      padding: 1.5rem 2rem 3rem;
+      min-width: max-content;
+      align-items: flex-start;
+    }
+
+    /* ── Column ── */
+    @keyframes col-in {
+      from { opacity: 0; transform: translateY(-16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .col {
+      --col-color: var(--primary);
+      --col-color-rgb: 59,130,246;
+      width: 220px;
+      flex-shrink: 0;
+      border-radius: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      animation: col-in 0.4s cubic-bezier(0.16,1,0.3,1) forwards;
+      overflow: hidden;
+    }
+
+    .col[data-type="skill"]   { --col-color: var(--skill);   --col-color-rgb: 34,197,94;  }
+    .col[data-type="agent"]   { --col-color: var(--agent);   --col-color-rgb: 249,115,22; }
+    .col[data-type="mcp"]     { --col-color: var(--mcp);     --col-color-rgb: 59,130,246; }
+    .col[data-type="memory"]  { --col-color: var(--memory);  --col-color-rgb: 168,85,247; }
+    .col[data-type="snippet"] { --col-color: var(--snippet); --col-color-rgb: 124,58,237; }
+
+    .col-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.875rem 1rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(var(--col-color-rgb), 0.06);
+      position: sticky;
+      top: 0;
+    }
+
+    .col-header-left {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .col-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--col-color);
+      box-shadow: 0 0 8px rgba(var(--col-color-rgb), 0.6);
+    }
+
+    .col-title {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--col-color);
+    }
+
+    .col-count {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text3);
+      background: var(--surface3);
+      border-radius: 20px;
+      padding: 0.1rem 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .col-body {
+      padding: 0.625rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      overflow-y: auto;
+      max-height: 420px;
+    }
+
+    /* ── Compact card ── */
+    .kcard {
+      --type-color: var(--col-color);
+      --type-color-rgb: var(--col-color-rgb);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-left: 3px solid transparent;
+      border-radius: 8px;
+      padding: 0.625rem 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      cursor: default;
+      transition: background 0.15s ease,
+                  border-left-color 0.15s ease,
+                  box-shadow 0.15s ease;
+    }
+
+    .kcard:hover {
+      background: var(--surface3);
+      border-left-color: var(--col-color);
+      box-shadow: inset 0 0 12px rgba(var(--col-color-rgb), 0.08);
+    }
+
+    .kcard-name {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--text);
+      flex: 1;
+      line-height: 1.3;
+    }
+
+    .kcard-right {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .kcard-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.625rem;
+      color: var(--text4);
+      background: rgba(255,255,255,0.04);
+      border-radius: 3px;
+      padding: 0.1rem 0.35rem;
+    }
+
+    .kcard-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 5px var(--green);
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-dot"></div>
+    <h1>Claude Library</h1>
+    <span class="topbar-sub">Board view — 8 components</span>
+  </header>
+
+  <div class="board" id="board"></div>
+
+  <script>
+    const components = [
+      { name:"Frontend Design",  type:"skill",   tags:["html","css","ui"] },
+      { name:"Debug Detective",  type:"skill",   tags:["debug","crash"] },
+      { name:"Research Agent",   type:"agent",   tags:["research","autonomy"] },
+      { name:"Google Drive MCP", type:"mcp",     tags:["google","drive"] },
+      { name:"Animated Navbar",  type:"snippet", tags:["css","animation"] },
+      { name:"Theme Toggle",     type:"snippet", tags:["css","toggle"] },
+      { name:"iOS Baseline",     type:"skill",   tags:["ios","swift"] },
+      { name:"CLAUDE.md Memory", type:"memory",  tags:["memory","context"] }
+    ];
+
+    const typeOrder = ["skill","agent","mcp","memory","snippet"];
+    const board = document.getElementById('board');
+
+    const grouped = {};
+    typeOrder.forEach(function(t) { grouped[t] = []; });
+    components.forEach(function(c) {
+      if (grouped[c.type]) grouped[c.type].push(c);
+    });
+
+    typeOrder.forEach(function(type, colIndex) {
+      const items = grouped[type];
+      if (!items.length) return;
+
+      const col = document.createElement('div');
+      col.className = 'col';
+      col.dataset.type = type;
+      col.style.animationDelay = (colIndex * 80) + 'ms';
+
+      const header = document.createElement('div');
+      header.className = 'col-header';
+
+      const left = document.createElement('div');
+      left.className = 'col-header-left';
+
+      const indicator = document.createElement('div');
+      indicator.className = 'col-indicator';
+
+      const title = document.createElement('div');
+      title.className = 'col-title';
+      title.textContent = type.charAt(0).toUpperCase() + type.slice(1);
+
+      left.appendChild(indicator);
+      left.appendChild(title);
+
+      const count = document.createElement('div');
+      count.className = 'col-count';
+      count.textContent = items.length;
+
+      header.appendChild(left);
+      header.appendChild(count);
+
+      const body = document.createElement('div');
+      body.className = 'col-body';
+
+      items.forEach(function(c) {
+        const card = document.createElement('div');
+        card.className = 'kcard';
+
+        const name = document.createElement('div');
+        name.className = 'kcard-name';
+        name.textContent = c.name;
+
+        const right = document.createElement('div');
+        right.className = 'kcard-right';
+
+        if (c.tags[0]) {
+          const tag = document.createElement('span');
+          tag.className = 'kcard-tag';
+          tag.textContent = c.tags[0];
+          right.appendChild(tag);
+        }
+
+        const dot = document.createElement('span');
+        dot.className = 'kcard-dot';
+        right.appendChild(dot);
+
+        card.appendChild(name);
+        card.appendChild(right);
+        body.appendChild(card);
+      });
+
+      col.appendChild(header);
+      col.appendChild(body);
+      board.appendChild(col);
+    });
+  </script>
+</body>
+</html>
