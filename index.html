@@ -195,6 +195,7 @@
   .bl-arch    { --accent: #f43f5e; }
   .bl-infra   { --accent: #78716c; }
   .bl-orch    { --accent: #84cc16; }
+  .bl-snippet { --accent: #7c3aed; }
 
   .lib-card {
     background: var(--surface2);
@@ -290,6 +291,7 @@
   .dr-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text4); }
   .dr-value { font-size: 13px; color: var(--text2); line-height: 1.6; }
   .dr-code { background: var(--bg); border: 1px solid var(--border); border-radius: 5px; padding: 10px 12px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--primary-h); line-height: 1.7; white-space: pre-wrap; }
+  .dr-file-content { background: var(--bg); border: 1px solid var(--border); border-radius: 5px; padding: 10px 12px; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--text2); line-height: 1.7; white-space: pre-wrap; overflow-x: auto; max-height: 360px; overflow-y: auto; }
   .dr-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 20px; }
   .dr-kv { display: flex; flex-direction: column; gap: 2px; }
   .dr-kv .k { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text4); }
@@ -310,7 +312,7 @@
   .drawer-action-btn.enrich:hover { border-color: var(--amber); color: var(--amber); }
 
   /* ── SCORE PANEL ── */
-  .score-panel { display: none; flex-direction: column; gap: 10px; padding: 12px 16px; border-top: 1px solid var(--border); flex-shrink: 0; }
+  .score-panel { display: none; flex-direction: column; gap: 10px; padding: 12px 16px; border-top: 1px solid var(--border); flex-shrink: 0; max-height: 340px; overflow-y: auto; }
   .score-panel.visible { display: flex; }
   .score-row { display: flex; flex-direction: column; gap: 3px; }
   .score-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text4); display: flex; justify-content: space-between; }
@@ -320,13 +322,24 @@
   .score-bar-fill.amber { background: var(--amber); }
   .score-bar-fill.red { background: var(--red); }
   .score-summary { font-size: 12px; color: var(--text2); line-height: 1.5; padding: 8px 0 0; border-top: 1px solid var(--border); }
-  .score-issues { display: flex; flex-direction: column; gap: 4px; }
-  .issue-item { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--amber); line-height: 1.4; }
-  .issue-item::before { content: '! '; }
+  .score-issues { display: flex; flex-direction: column; gap: 6px; }
+  .issue-item { display: flex; align-items: flex-start; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--amber); line-height: 1.4; }
+  .issue-item-text::before { content: '! '; }
+  .issue-item-text { flex: 1; }
+  .issue-apply-btn { flex-shrink: 0; background: transparent; border: 1px solid var(--amber); border-radius: 4px; color: var(--amber); cursor: pointer; font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 600; letter-spacing: 0.04em; padding: 2px 6px; transition: background 0.15s, color 0.15s; white-space: nowrap; }
+  .issue-apply-btn:hover { background: var(--amber); color: var(--bg); }
 
   /* ── ENRICHMENT PREVIEW ── */
   .enrich-panel { display: none; flex-direction: column; gap: 10px; padding: 12px 16px; border-top: 1px solid var(--border); flex-shrink: 0; }
   .enrich-panel.visible { display: flex; }
+
+  #drawer-snippet-panel { padding: 12px 16px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+  .snippet-tabs { display: flex; gap: 2px; }
+  .snippet-tab { background: transparent; border: 1px solid var(--border); border-radius: 5px; color: var(--text3); cursor: pointer; font-size: 11px; font-weight: 600; letter-spacing: 0.05em; padding: 4px 10px; transition: background 0.15s, color 0.15s, border-color 0.15s; }
+  .snippet-tab.active { background: var(--surface3); border-color: var(--primary); color: var(--text); }
+  .snippet-tab-content { display: none; }
+  .snippet-tab-content.active { display: block; }
+  .snip-code { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text2); font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 1.6; max-height: 200px; overflow: auto; padding: 10px 12px; white-space: pre; }
   .enrich-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .enrich-col-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text4); margin-bottom: 4px; }
   .enrich-col-current { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 8px; font-size: 11px; color: var(--text3); line-height: 1.5; }
@@ -538,6 +551,10 @@
         <div class="dr-label">Pad</div>
         <div class="dr-path" id="drawer-path"></div>
       </div>
+      <div class="dr-section" id="drawer-content-section" style="display:none">
+        <div class="dr-label">Inhoud</div>
+        <pre class="dr-file-content" id="drawer-file-content"></pre>
+      </div>
     </div>
     <div class="drawer-actions" id="drawer-skill-actions" style="display:none">
       <button class="drawer-action-btn" id="btn-analyze-skill">Analyseer</button>
@@ -554,6 +571,20 @@
         <button class="enrich-save-btn" id="enrich-save-btn">Opslaan</button>
         <button class="enrich-cancel-btn" id="enrich-cancel-btn">Annuleren</button>
       </div>
+    </div>
+    <div id="drawer-snippet-panel" style="display:none">
+      <div class="snippet-tabs">
+        <button class="snippet-tab active" data-tab="preview">Preview</button>
+        <button class="snippet-tab" data-tab="html">HTML</button>
+        <button class="snippet-tab" data-tab="css">CSS</button>
+        <button class="snippet-tab" data-tab="js">JS</button>
+      </div>
+      <div class="snippet-tab-content active" id="snip-tab-preview">
+        <iframe id="snip-iframe" src="" frameborder="0" style="width:100%;height:180px;border-radius:6px;border:1px solid var(--border2);background:#0f0f11"></iframe>
+      </div>
+      <div class="snippet-tab-content" id="snip-tab-html"><pre class="snip-code" id="snip-code-html"></pre></div>
+      <div class="snippet-tab-content" id="snip-tab-css"><pre class="snip-code" id="snip-code-css"></pre></div>
+      <div class="snippet-tab-content" id="snip-tab-js"><pre class="snip-code" id="snip-code-js"></pre></div>
     </div>
   </div>
   <div class="drawer-backdrop" id="drawer-backdrop"></div>
@@ -756,12 +787,20 @@ var $ = function(id) { return document.getElementById(id); };
 var STATUS_LABEL = { active:'Actief', wip:'In progress', draft:'Draft', deprecated:'Offline' };
 var STATUS_CLASS = { active:'st-active', wip:'st-wip', draft:'st-draft', deprecated:'st-deprecated' };
 var DOT_CLASS    = { active:'dot-active', wip:'dot-wip', draft:'dot-draft', deprecated:'dot-deprecated' };
-var TYPE_LABEL   = { skill:'Skill', plugin:'Plugin', agent:'Agent', memory:'Memory', mcp:'MCP', api:'API', arch:'Arch', infra:'Infra', orch:'Orch' };
+var TYPE_LABEL   = { skill:'Skill', plugin:'Plugin', agent:'Agent', memory:'Memory', mcp:'MCP', api:'API', arch:'Arch', infra:'Infra', orch:'Orch', snippet:'Snippet' };
 
 var COMPONENTS = [];
 
 var currentMode = 'library';
 var cockpitInit = false;
+
+var WORKER_URL_DEFAULT = 'https://claude-library-worker.mrtimberme.workers.dev';
+var CK = {
+  url:   localStorage.getItem('workerUrl') || WORKER_URL_DEFAULT,
+  token: localStorage.getItem('libraryToken') || ''
+};
+
+if (window.location.hash === '#cockpit') { switchMode('cockpit'); }
 
 function switchMode(mode) {
   currentMode = mode;
@@ -796,7 +835,6 @@ $('nav-library').addEventListener('click', function(){ switchMode('library'); })
 $('nav-skills').addEventListener('click',  function(){ switchMode('skills'); });
 $('nav-cockpit').addEventListener('click', function(){ switchMode('cockpit'); });
 
-if (window.location.hash === '#cockpit') { switchMode('cockpit'); }
 
 /* ── LIBRARY ── */
 var libFilter = 'all', libSearch = '', libSort = 'name', libSortDir = 1, libSelected = null;
@@ -823,7 +861,7 @@ function libFiltered() {
     });
 }
 
-var TYPE_ORDER = ['skill','agent','mcp','memory','plugin','api','arch','infra','orch'];
+var TYPE_ORDER = ['skill','agent','mcp','memory','plugin','api','arch','infra','orch','snippet'];
 
 function hlNode(text, q) {
   var frag = document.createDocumentFragment();
@@ -958,12 +996,40 @@ function libSelectRow(id) {
   });
   $('drawer-path').textContent=c.path;
 
+  // Inhoud laden voor skill, agent, memory (tekstbestanden)
+  var contentTypes = ['skill','agent','memory'];
+  var contentSection = $('drawer-content-section');
+  var contentEl = $('drawer-file-content');
+  if (c.path && contentTypes.indexOf(c.type) !== -1) {
+    contentSection.style.display = 'flex';
+    contentEl.textContent = 'Laden…';
+    fetch(c.path)
+      .then(function(r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.text();
+      })
+      .then(function(txt) { contentEl.textContent = txt; })
+      .catch(function(e) { contentEl.textContent = '(kon bestand niet laden: ' + e.message + ')'; });
+  } else {
+    contentSection.style.display = 'none';
+    contentEl.textContent = '';
+  }
+
   var isSkill = c.type==='skill';
+  var isSnippet = c.type==='snippet';
   $('drawer-skill-actions').style.display = isSkill ? 'flex' : 'none';
   $('score-panel').classList.remove('visible');
   $('enrich-panel').classList.remove('visible');
-  drawerCurrentId = c.id;
 
+  var snippetPanel = $('drawer-snippet-panel');
+  if (isSnippet && c.files) {
+    snippetPanel.style.display = 'block';
+    drawerRenderSnippet(c);
+  } else {
+    snippetPanel.style.display = 'none';
+  }
+
+  drawerCurrentId = c.id;
   $('lib-drawer').classList.add('open');
   renderLib(); renderSkills();
 }
@@ -973,8 +1039,41 @@ function drawerClose() {
   $('lib-drawer').classList.remove('open');
   $('score-panel').classList.remove('visible');
   $('enrich-panel').classList.remove('visible');
+  var sp=$('snip-iframe'); if(sp) sp.src='';
   renderLib(); renderSkills();
 }
+
+function drawerRenderSnippet(c) {
+  $('snip-iframe').src = c.files.preview || '';
+
+  var tabs = ['html','css','js'];
+  tabs.forEach(function(t) { $('snip-code-'+t).textContent = 'Laden…'; });
+
+  tabs.forEach(function(t) {
+    var url = c.files[t];
+    if (!url) { $('snip-code-'+t).textContent = '(geen bestand)'; return; }
+    fetch(url)
+      .then(function(r){ return r.text(); })
+      .then(function(txt){ $('snip-code-'+t).textContent = txt; })
+      .catch(function(){ $('snip-code-'+t).textContent = '(kon bestand niet laden)'; });
+  });
+
+  // reset to preview tab
+  document.querySelectorAll('.snippet-tab').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('.snippet-tab-content').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelector('.snippet-tab[data-tab="preview"]').classList.add('active');
+  $('snip-tab-preview').classList.add('active');
+}
+
+// snippet tab clicks — eenmalig opgezet
+document.querySelectorAll('.snippet-tab').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.snippet-tab').forEach(function(b){ b.classList.remove('active'); });
+    document.querySelectorAll('.snippet-tab-content').forEach(function(p){ p.classList.remove('active'); });
+    btn.classList.add('active');
+    $('snip-tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
 
 $('drawer-close').addEventListener('click', drawerClose);
 
@@ -1071,11 +1170,6 @@ fetch('components.json')
   .catch(function(){ renderSidebarNav(); renderLib(); renderSkills(); });
 
 /* ── COCKPIT ── */
-var WORKER_URL_DEFAULT = 'https://claude-library-worker.mrtimberme.workers.dev';
-var CK = {
-  url:   localStorage.getItem('workerUrl')||WORKER_URL_DEFAULT,
-  token: localStorage.getItem('libraryToken')||''
-};
 
 function ckSave() {
   localStorage.setItem('workerUrl', CK.url);
@@ -1336,7 +1430,14 @@ function drawerAnalyzeSkill() {
       if (r.issues&&r.issues.length){
         var issuesWrap=document.createElement('div'); issuesWrap.className='score-issues';
         r.issues.forEach(function(issue){
-          var li=document.createElement('div'); li.className='issue-item'; li.textContent=issue;
+          var li=document.createElement('div'); li.className='issue-item';
+          var txt=document.createElement('span'); txt.className='issue-item-text'; txt.textContent=issue;
+          var applyBtn=document.createElement('button'); applyBtn.className='issue-apply-btn'; applyBtn.textContent='Toepassen';
+          applyBtn.addEventListener('click', function(){
+            applyBtn.disabled=true; applyBtn.textContent='…';
+            drawerEnrichUsage();
+          });
+          li.appendChild(txt); li.appendChild(applyBtn);
           issuesWrap.appendChild(li);
         });
         panel.appendChild(issuesWrap);
