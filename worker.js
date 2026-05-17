@@ -141,6 +141,7 @@ function buildEntry(path, content, hintType, src) {
   const name = fm.name || fm.title || folder
   const desc = fm.description || fm.desc || firstParagraph(content)
   const tags = fm.tags ? fm.tags.split(',').map(t => t.trim()).filter(Boolean) : [type]
+  if (!tags.includes('imported')) tags.push('imported')
   const today = new Date().toISOString().slice(0, 10)
   return {
     id: slugify(fm.id || name),
@@ -150,7 +151,7 @@ function buildEntry(path, content, hintType, src) {
     version: fm.version || 'v1.0',
     desc,
     usage: fm.usage || fm.trigger || '',
-    tags: tags.length ? tags : [type],
+    tags: tags.length ? tags : [type, 'imported'],
     author: fm.author || src.split('/')[0],
     updated: fm.updated || fm.date || today,
     path: `imported/${src.replace('/', '_')}/${path}`,
@@ -169,12 +170,11 @@ Rules: id is lowercase a-z 0-9 hyphens max 63 chars. desc must always be filled 
     const arrMatch = raw.match(/\[[\s\S]*\]/)
     if (!arrMatch) return files.map(f => f.entry)
     const today = new Date().toISOString().slice(0, 10)
-    return JSON.parse(arrMatch[0]).map(item => ({
-      ...item,
-      author: item.author || src.split('/')[0],
-      updated: item.updated || today,
-      path: `imported/${src.replace('/', '_')}/${item.path || ''}`,
-    }))
+    return JSON.parse(arrMatch[0]).map(item => {
+      const tags = Array.isArray(item.tags) ? item.tags : []
+      if (!tags.includes('imported')) tags.push('imported')
+      return { ...item, tags, author: item.author || src.split('/')[0], updated: item.updated || today, path: `imported/${src.replace('/', '_')}/${item.path || ''}` }
+    })
   } catch {
     return files.map(f => f.entry)
   }
@@ -270,6 +270,13 @@ async function handleImportRepo(request, env) {
     }
     if (!components.length) return err(`Geen components.json en geen herkenbare bestanden gevonden in ${src}`, 404)
   }
+
+  // Ensure every imported component carries an 'imported' tag
+  components = components.map(c => {
+    const tags = Array.isArray(c.tags) ? c.tags : []
+    if (!tags.includes('imported')) tags.push('imported')
+    return { ...c, tags }
+  })
 
   if (!autoScanned) {
     const required = ['id', 'name', 'type', 'desc', 'path']
