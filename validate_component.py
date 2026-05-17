@@ -38,7 +38,7 @@ MAX_FILE_SIZE = 512_000  # 500 KB
 REQUIRED_FIELDS = ["id", "name", "type", "status", "version", "desc", "usage", "tags", "author", "updated", "path"]
 
 # Toegestane types en statussen
-ALLOWED_TYPES   = {"skill", "plugin", "agent", "memory", "mcp", "api", "arch", "infra", "orch"}
+ALLOWED_TYPES   = {"skill", "plugin", "agent", "memory", "mcp", "api", "arch", "infra", "orch", "snippet"}
 ALLOWED_STATUSES = {"active", "wip", "draft", "deprecated"}
 
 # Gevaarlijke patronen in SKILL.md / prompt-inhoud
@@ -131,7 +131,7 @@ def check_encoding(content: str, result: ValidationResult):
     if ratio > 0.3:
         result.warn(f"Hoog percentage non-ASCII tekens ({ratio:.0%}) — controleer op obfuscatie")
     # Check op zero-width characters (onzichtbare tekst)
-    zero_width = re.findall(r'[\u200b\u200c\u200d\ufeff\u2060]', content)
+    zero_width = re.findall(r'[​‌‍﻿⁠]', content)
     if zero_width:
         result.error(f"Zero-width (onzichtbare) tekens gevonden — mogelijke verborgen instructies")
 
