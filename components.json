@@ -336,5 +336,43 @@
     "author": "Timothy Stekkinger",
     "updated": "2026-05-01",
     "path": ".github/workflows/"
+  },
+  {
+    "id": "snippet-animated-navbar",
+    "name": "Animated Navbar",
+    "type": "snippet",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Horizontale navigatiebalk met sliding pill-indicator en cursor-volgende tooltips. Vijf icon-knoppen, soepele cubic-bezier transitie, paars accent. Geen dependencies.",
+    "usage": "Kopieer snippet.html, snippet.css en snippet.js naar je project. Initialiseer via snippet.js — werkt standalone zonder framework.",
+    "tags": ["navigation", "animation", "tooltip", "vanilla-js", "dark"],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-17",
+    "path": "snippets/animated-navbar/",
+    "files": {
+      "preview": "snippets/animated-navbar/index.html",
+      "html": "snippets/animated-navbar/snippet.html",
+      "css": "snippets/animated-navbar/snippet.css",
+      "js": "snippets/animated-navbar/snippet.js"
+    }
+  },
+  {
+    "id": "snippet-theme-toggle",
+    "name": "Theme Toggle",
+    "type": "snippet",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Dark/light toggle met maan→zon transitie, sterrenhemel fade-out en wolkjes fade-in. Pure CSS animatie, geen JavaScript voor de kernovergang. Toegankelijk via label/input patroon.",
+    "usage": "Kopieer snippet.html en snippet.css naar je project. Optioneel: voeg snippet.js toe voor extra gedrag op body-niveau. Luister op change-event van de checkbox voor thema-wisseling.",
+    "tags": ["toggle", "theme", "dark-mode", "css-animation", "accessible"],
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-17",
+    "path": "snippets/theme-toggle/",
+    "files": {
+      "preview": "snippets/theme-toggle/index.html",
+      "html": "snippets/theme-toggle/snippet.html",
+      "css": "snippets/theme-toggle/snippet.css",
+      "js": "snippets/theme-toggle/snippet.js"
+    }
   }
 ]
