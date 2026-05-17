@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Theme Toggle — Preview</title>
+<style>
+  html, body {
+    margin: 0; padding: 0;
+    background: #0f0f11;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.4s;
+  }
+  body.light { background: #f0f4ff; }
+</style>
+<link rel="stylesheet" href="snippet.css">
+</head>
+<body>
+<label class="theme-toggle" aria-label="Wissel thema">
+  <input type="checkbox" id="theme-input">
+  <div class="toggle-track"></div>
+  <div class="toggle-thumb" id="toggle-thumb">🌙</div>
+</label>
+
+<script src="snippet.js"></script>
+<script>
+  document.getElementById('theme-input').addEventListener('change', function () {
+    document.body.classList.toggle('light', this.checked);
+  });
+</script>
+</body>
+</html>
