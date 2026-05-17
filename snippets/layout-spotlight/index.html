@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claude Library — Spotlight</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #09090b;
+      --surface: #111113;
+      --surface2: #18181b;
+      --surface3: #27272a;
+      --border: rgba(255,255,255,0.08);
+      --border2: rgba(255,255,255,0.14);
+      --primary: #3b82f6;
+      --green: #22c55e;
+      --text: #fafafa;
+      --text2: #a1a1aa;
+      --text3: #71717a;
+      --text4: #3f3f46;
+      --skill: #22c55e;
+      --agent: #f97316;
+      --mcp: #3b82f6;
+      --memory: #a855f7;
+      --snippet: #7c3aed;
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 2rem 0;
+      margin-bottom: 1.75rem;
+    }
+
+    .topbar-left {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .topbar-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .topbar-hint {
+      font-size: 0.8125rem;
+      color: var(--text3);
+    }
+
+    .topbar-hint strong {
+      color: var(--text2);
+      font-weight: 500;
+    }
+
+    /* ── Main ── */
+    .main {
+      padding: 0 2rem 3rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ── Grid ── */
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.875rem;
+    }
+
+    /* Spotlight effect via :has() */
+    .grid:has(.card:hover) .card:not(:hover) {
+      opacity: 0.4;
+      transform: scale(0.97);
+    }
+
+    /* ── Card ── */
+    .card {
+      --type-color: var(--primary);
+      --type-color-rgb: 59,130,246;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      cursor: default;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      opacity: 0;
+      animation: fade-in 0.5s cubic-bezier(0.16,1,0.3,1) 200ms forwards;
+      transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.06);
+      box-shadow: 0 0 0 1px rgba(var(--type-color-rgb),0.4),
+                  0 16px 40px rgba(0,0,0,0.5),
+                  0 0 60px rgba(var(--type-color-rgb),0.08);
+      border-color: rgba(var(--type-color-rgb),0.3);
+      z-index: 10;
+      position: relative;
+    }
+
+    .card[data-type="skill"]   { --type-color: var(--skill);   --type-color-rgb: 34,197,94;  }
+    .card[data-type="agent"]   { --type-color: var(--agent);   --type-color-rgb: 249,115,22; }
+    .card[data-type="mcp"]     { --type-color: var(--mcp);     --type-color-rgb: 59,130,246; }
+    .card[data-type="memory"]  { --type-color: var(--memory);  --type-color-rgb: 168,85,247; }
+    .card[data-type="snippet"] { --type-color: var(--snippet); --type-color-rgb: 124,58,237; }
+
+    /* Type badge */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--type-color);
+      background: rgba(var(--type-color-rgb),0.1);
+      border: 1px solid rgba(var(--type-color-rgb),0.22);
+      width: fit-content;
+    }
+
+    .badge-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--type-color);
+    }
+
+    .card-name {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      color: var(--text);
+      line-height: 1.25;
+    }
+
+    .card-desc {
+      font-size: 0.8125rem;
+      color: var(--text2);
+      line-height: 1.5;
+      flex: 1;
+    }
+
+    .card-tags {
+      display: flex;
+      gap: 0.375rem;
+      flex-wrap: wrap;
+      margin-top: auto;
+    }
+
+    .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6875rem;
+      color: var(--text3);
+      background: var(--surface3);
+      border-radius: 4px;
+      padding: 0.15rem 0.45rem;
+    }
+
+    /* Glow overlay on hover */
+    .card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(ellipse at 30% 20%, rgba(var(--type-color-rgb),0.08) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      pointer-events: none;
+    }
+
+    .card { position: relative; }
+
+    .card:hover::after {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-title">Claude Library</div>
+      <div class="topbar-hint">Hover a card to <strong>spotlight</strong> it</div>
+    </div>
+    <span style="font-size:0.8125rem;color:var(--text3)">8 components</span>
+  </div>
+
+  <main class="main">
+    <div class="grid" id="grid"></div>
+  </main>
+
+  <script>
+    const components = [
+      { name:"Frontend Design",  type:"skill",   desc:"Production-ready HTML/CSS/JS interfaces", tags:["html","css","ui"] },
+      { name:"Debug Detective",  type:"skill",   desc:"Crash analysis and Sentry payload debugging", tags:["debug","crash"] },
+      { name:"Research Agent",   type:"agent",   desc:"Autonomous web research with structured report", tags:["research","autonomy"] },
+      { name:"Google Drive MCP", type:"mcp",     desc:"Search, read and upload files to Google Drive", tags:["google","drive"] },
+      { name:"Animated Navbar",  type:"snippet", desc:"Pill navbar with sliding indicator and tooltip", tags:["css","animation"] },
+      { name:"Theme Toggle",     type:"snippet", desc:"Dark/light toggle with moon/sun emoji transition", tags:["css","toggle"] },
+      { name:"iOS Baseline",     type:"skill",   desc:"Swift 6 + SwiftUI conventions for every iOS task", tags:["ios","swift"] },
+      { name:"CLAUDE.md Memory", type:"memory",  desc:"Persistent project context via CLAUDE.md files", tags:["memory","context"] }
+    ];
+
+    const grid = document.getElementById('grid');
+
+    components.forEach(function(c) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.dataset.type = c.type;
+
+      const badge = document.createElement('div');
+      badge.className = 'badge';
+      const bdot = document.createElement('span');
+      bdot.className = 'badge-dot';
+      const btext = document.createTextNode(c.type);
+      badge.appendChild(bdot);
+      badge.appendChild(btext);
+
+      const name = document.createElement('div');
+      name.className = 'card-name';
+      name.textContent = c.name;
+
+      const desc = document.createElement('div');
+      desc.className = 'card-desc';
+      desc.textContent = c.desc;
+
+      const tags = document.createElement('div');
+      tags.className = 'card-tags';
+      c.tags.forEach(function(t) {
+        const tag = document.createElement('span');
+        tag.className = 'tag';
+        tag.textContent = t;
+        tags.appendChild(tag);
+      });
+
+      card.appendChild(badge);
+      card.appendChild(name);
+      card.appendChild(desc);
+      card.appendChild(tags);
+      grid.appendChild(card);
+    });
+  </script>
+</body>
+</html>
