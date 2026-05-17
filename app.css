@@ -252,7 +252,8 @@
 
   .drawer {
     width: 0;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     flex-shrink: 0;
     border-left: 1px solid var(--border);
     background: var(--surface);
@@ -263,6 +264,10 @@
   .drawer.open { width: 360px; }
 
   .drawer-header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--surface);
     padding: 14px 16px 12px;
     border-bottom: 1px solid var(--border);
     display: flex; align-items: flex-start;
