@@ -11,6 +11,60 @@ var OUTDATED_IDS = new Set();
 var currentMode = 'library';
 var cockpitInit = false;
 
+var AUTH_UNLOCKED = !!localStorage.getItem('libraryToken');
+
+function requireAuth(fn) {
+  if (AUTH_UNLOCKED) { fn(); return; }
+  showAuthModal(fn);
+}
+
+function showAuthModal(onSuccess) {
+  var overlay = $('auth-modal-overlay');
+  var input = $('auth-modal-input');
+  input.value = '';
+  overlay.classList.remove('hidden');
+  input.focus();
+
+  var confirmBtn = $('auth-modal-confirm');
+  var cancelBtn = $('auth-modal-cancel');
+  var errorEl = $('auth-modal-error');
+  errorEl.style.display = 'none';
+
+  function cleanup() {
+    overlay.classList.add('hidden');
+    confirmBtn.onclick = null;
+    cancelBtn.onclick = null;
+    input.onkeydown = null;
+  }
+
+  function tryUnlock() {
+    var token = input.value.trim();
+    if (!token) { errorEl.textContent = 'Voer een token in.'; errorEl.style.display = 'block'; return; }
+    CK.token = token;
+    localStorage.setItem('libraryToken', token);
+    AUTH_UNLOCKED = true;
+    updateLockUI();
+    cleanup();
+    if (onSuccess) onSuccess();
+  }
+
+  confirmBtn.onclick = tryUnlock;
+  cancelBtn.onclick = cleanup;
+  input.onkeydown = function(e) { if (e.key === 'Enter') tryUnlock(); if (e.key === 'Escape') cleanup(); };
+}
+
+function updateLockUI() {
+  var btn = $('topbar-lock-btn');
+  if (!btn) return;
+  btn.textContent = AUTH_UNLOCKED ? '🔓' : '🔒';
+  btn.title = AUTH_UNLOCKED ? 'Admin actief — klik om te vergrendelen' : 'Vergrendeld — klik om in te loggen';
+  btn.classList.toggle('unlocked', AUTH_UNLOCKED);
+  var adminEls = document.querySelectorAll('.admin-only');
+  adminEls.forEach(function(el) {
+    el.classList.toggle('hidden-locked', !AUTH_UNLOCKED);
+  });
+}
+
 var WORKER_URL_DEFAULT = 'https://claude-library-worker.mrtimberme.workers.dev';
 var CK = {
   url:   localStorage.getItem('workerUrl') || WORKER_URL_DEFAULT,
@@ -44,7 +98,26 @@ function switchMode(mode) {
     right.appendChild(btn);
     if (!cockpitInit) { cockpitInit = true; ckInitConfig(); }
   } else {
-    right.innerHTML = '<span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s ease-in-out infinite"></span>';
+    right.textContent = '';
+    var dot = document.createElement('span');
+    dot.style.cssText = 'width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s ease-in-out infinite';
+    right.appendChild(dot);
+    var lockBtn = document.createElement('button');
+    lockBtn.id = 'topbar-lock-btn';
+    lockBtn.className = 'topbar-lock-btn' + (AUTH_UNLOCKED ? ' unlocked' : '');
+    lockBtn.textContent = AUTH_UNLOCKED ? '🔓' : '🔒';
+    lockBtn.title = AUTH_UNLOCKED ? 'Admin actief — klik om te vergrendelen' : 'Vergrendeld — klik om in te loggen';
+    lockBtn.onclick = function() {
+      if (AUTH_UNLOCKED) {
+        AUTH_UNLOCKED = false;
+        CK.token = '';
+        localStorage.removeItem('libraryToken');
+        updateLockUI();
+      } else {
+        showAuthModal(null);
+      }
+    };
+    right.appendChild(lockBtn);
   }
 }
 
@@ -241,9 +314,9 @@ function libSelectRow(id) {
   var isSnippet = c.type==='snippet';
   var isImported = Array.isArray(c.tags) && c.tags.indexOf('imported') !== -1;
   var isOutdated = OUTDATED_IDS.has(c.id);
-  $('drawer-skill-actions').style.display = isSkill ? 'flex' : 'none';
-  $('drawer-rescan-actions').style.display = isImported ? 'flex' : 'none';
-  $('btn-update-skill').style.display = (isImported && isOutdated) ? 'inline-block' : 'none';
+  $('drawer-skill-actions').style.display = (isSkill && AUTH_UNLOCKED) ? 'flex' : 'none';
+  $('drawer-rescan-actions').style.display = (isImported && AUTH_UNLOCKED) ? 'flex' : 'none';
+  $('btn-update-skill').style.display = (isImported && isOutdated && AUTH_UNLOCKED) ? 'inline-block' : 'none';
   $('drawer-update-badge').style.display = isOutdated ? 'block' : 'none';
   $('rescan-result').style.display = 'none';
   $('score-panel').classList.remove('visible');
@@ -437,6 +510,7 @@ $('ck-cfg-save').addEventListener('click', function(){
   if (!url||!token){ alert('Vul beide velden in.'); return; }
   try { new URL(url); } catch(e){ alert('Ongeldige URL.'); return; }
   CK={url,token};
+  AUTH_UNLOCKED = !!token;
   ckSave();
   $('ck-settings-overlay').classList.add('hidden');
   var d=$('ck-worker-url-display');
@@ -826,6 +900,7 @@ function renderVerrijkingPreview(id, r) {
 }
 
 $('btn-rescan-imported').addEventListener('click', function(){
+  requireAuth(function() {
   var c = COMPONENTS.find(function(x){ return x.id === drawerCurrentId; });
   if (!c || !c.path) return;
   var parts = c.path.split('/'); // ['imported', 'owner_repo', ...]
@@ -847,40 +922,43 @@ $('btn-rescan-imported').addEventListener('click', function(){
       result.textContent = 'Fout: ' + e.message;
     })
     .finally(function(){ btn.disabled = false; btn.textContent = '↻ Rescan bron'; });
+  }); // requireAuth
 });
 
 $('btn-update-skill').addEventListener('click', function(){
-  var c = COMPONENTS.find(function(x){ return x.id === drawerCurrentId; });
-  if (!c) return;
-  var btn = $('btn-update-skill');
-  var result = $('rescan-result');
-  btn.disabled = true; btn.textContent = 'Bijwerken…';
-  result.style.display = 'none';
-  ckApiFetch('/update-skill', {method:'POST', body: JSON.stringify({id: c.id})})
-    .then(function(r){
-      if (r.up_to_date) {
-        result.className = 'rescan-result success';
-        result.textContent = 'Al up-to-date.';
-      } else {
-        OUTDATED_IDS.delete(c.id);
-        $('drawer-update-badge').style.display = 'none';
-        btn.style.display = 'none';
-        result.className = 'rescan-result success';
-        result.textContent = 'Bijgewerkt naar ' + r.new_sha.slice(0,8) + (r.diff_url ? ' — ' + r.diff_url : '');
-        renderLib(); renderSkills();
-      }
-      result.style.display = 'block';
-    })
-    .catch(function(e){
-      result.className = 'rescan-result error';
-      result.textContent = 'Fout: ' + e.message;
-      result.style.display = 'block';
-    })
-    .finally(function(){ btn.disabled = false; btn.textContent = '↑ Update'; });
+  requireAuth(function() {
+    var c = COMPONENTS.find(function(x){ return x.id === drawerCurrentId; });
+    if (!c) return;
+    var btn = $('btn-update-skill');
+    var result = $('rescan-result');
+    btn.disabled = true; btn.textContent = 'Bijwerken…';
+    result.style.display = 'none';
+    ckApiFetch('/update-skill', {method:'POST', body: JSON.stringify({id: c.id})})
+      .then(function(r){
+        if (r.up_to_date) {
+          result.className = 'rescan-result success';
+          result.textContent = 'Al up-to-date.';
+        } else {
+          OUTDATED_IDS.delete(c.id);
+          $('drawer-update-badge').style.display = 'none';
+          btn.style.display = 'none';
+          result.className = 'rescan-result success';
+          result.textContent = 'Bijgewerkt naar ' + r.new_sha.slice(0,8) + (r.diff_url ? ' — ' + r.diff_url : '');
+          renderLib(); renderSkills();
+        }
+        result.style.display = 'block';
+      })
+      .catch(function(e){
+        result.className = 'rescan-result error';
+        result.textContent = 'Fout: ' + e.message;
+        result.style.display = 'block';
+      })
+      .finally(function(){ btn.disabled = false; btn.textContent = '↑ Update'; });
+  }); // requireAuth
 });
 
-$('btn-analyze-skill').addEventListener('click', drawerAnalyzeSkill);
-$('btn-enrich-skill').addEventListener('click', drawerEnrichUsage);
+$('btn-analyze-skill').addEventListener('click', function(){ requireAuth(drawerAnalyzeSkill); });
+$('btn-enrich-skill').addEventListener('click', function(){ requireAuth(drawerEnrichUsage); });
 $('enrich-save-btn').addEventListener('click', drawerSaveEnrichment);
 $('enrich-cancel-btn').addEventListener('click', function(){
   enrichPending=null;
