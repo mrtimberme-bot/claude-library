@@ -710,7 +710,7 @@
     "version": "1.0.0",
     "status": "active",
     "desc": "Guide users through a structured workflow for co-authoring documentation. Use when user wants to write documentation, proposals, technical specs, decision docs, or similar structured content. This wor",
-    "usage": "",
+    "usage": "Gebruik deze skill wanneer je samen met Claude een structured document wilt schrijven, zoals documentatie, een voorstel, technische spec of beslissingsdocument, met begeleiding door alle stadia heen.",
     "author": "anthropic",
     "updated": "2026-05-18",
     "path": "imported/anthropics_skills/doc-coauthoring/SKILL.md",
