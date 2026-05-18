@@ -125,9 +125,12 @@ $('nav-library').addEventListener('click', function(){ switchMode('library'); })
 $('nav-cockpit').addEventListener('click', function(){ switchMode('cockpit'); });
 
 
+var RAW_BASE = 'https://raw.githubusercontent.com/mrtimberme-bot/claude-library/main/';
+
 /* ── LIBRARY ── */
 var libFilter = 'all', libSearch = '', libSort = 'name', libSortDir = 1, libSelected = null;
 var libTagFilter = '', libOwnerFilter = '';
+var libChecked = new Set();
 
 function mkEl(tag, cls, text) {
   var el = document.createElement(tag);
@@ -217,6 +220,21 @@ function renderLib() {
     var tr = document.createElement('tr');
     tr.dataset.id = c.id;
     if (c.id === libSelected) tr.classList.add('selected');
+    if (libChecked.has(c.id)) tr.classList.add('checked');
+
+    // Checkbox
+    var tdCheck = document.createElement('td');
+    tdCheck.className = 'tt-check';
+    var cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.checked = libChecked.has(c.id);
+    cb.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (cb.checked) libChecked.add(c.id); else libChecked.delete(c.id);
+      tr.classList.toggle('checked', cb.checked);
+      updateSelBar();
+    });
+    tdCheck.appendChild(cb);
 
     var color = TYPE_COLOR[c.type] || '#888';
 
@@ -244,10 +262,6 @@ function renderLib() {
     tdDesc.className = 'tt-desc';
     tdDesc.appendChild(hlNode(c.desc, libSearch));
 
-    var tdAuthor = document.createElement('td');
-    tdAuthor.className = 'tt-author';
-    tdAuthor.textContent = (c.author || '').split(' ').pop();
-
     var tdTags = document.createElement('td');
     tdTags.className = 'tt-tags';
     (c.tags || []).slice(0, 3).forEach(function(t) {
@@ -263,16 +277,28 @@ function renderLib() {
     st.textContent = c.status || 'draft';
     tdStatus.appendChild(st);
 
+    var tdDate = document.createElement('td');
+    tdDate.className = 'tt-date';
+    tdDate.textContent = c.updated || c.imported_at || '—';
+
+    tr.appendChild(tdCheck);
     tr.appendChild(tdType);
     tr.appendChild(tdName);
     tr.appendChild(tdDesc);
-    tr.appendChild(tdAuthor);
     tr.appendChild(tdTags);
     tr.appendChild(tdStatus);
+    tr.appendChild(tdDate);
 
     tr.addEventListener('click', function() { libSelectRow(c.id); });
     tbody.appendChild(tr);
   });
+
+  // Sync select-all checkbox
+  var checkAll = $('check-all');
+  if (checkAll) {
+    checkAll.checked = items.length > 0 && items.every(function(c){ return libChecked.has(c.id); });
+    checkAll.indeterminate = !checkAll.checked && items.some(function(c){ return libChecked.has(c.id); });
+  }
 
   $('lib-count').textContent = items.length + ' componenten';
   $('last-sync').textContent = new Date().toLocaleDateString('nl-NL');
@@ -312,7 +338,6 @@ function libSelectRow(id) {
   var contentTypes = ['skill','agent','memory'];
   var contentSection = $('drawer-content-section');
   var contentEl = $('drawer-file-content');
-  var RAW_BASE = 'https://raw.githubusercontent.com/mrtimberme-bot/claude-library/main/';
   if (c.path && contentTypes.indexOf(c.type) !== -1) {
     contentSection.style.display = 'flex';
     contentEl.textContent = 'Laden…';
@@ -422,6 +447,63 @@ $('filter-clear').addEventListener('click', function(){
   $('filter-tag').value='';
   $('filter-owner').value='';
   updateClearBtn(); renderLib();
+});
+
+/* ── MULTI-SELECT & ZIP ── */
+function updateSelBar() {
+  var n = libChecked.size;
+  $('sel-bar').style.display = n > 0 ? 'flex' : 'none';
+  $('sel-count').textContent = n + ' geselecteerd';
+}
+
+$('check-all').addEventListener('click', function(e) {
+  var items = libFiltered();
+  if (this.checked) {
+    items.forEach(function(c){ libChecked.add(c.id); });
+  } else {
+    items.forEach(function(c){ libChecked.delete(c.id); });
+  }
+  updateSelBar(); renderLib();
+});
+
+$('sel-clear').addEventListener('click', function() {
+  libChecked.clear(); updateSelBar(); renderLib();
+});
+
+$('sel-download').addEventListener('click', function() {
+  var btn = this;
+  btn.textContent = '⏳ Laden…';
+  btn.disabled = true;
+
+  var items = COMPONENTS.filter(function(c){ return libChecked.has(c.id); });
+  var zip = new JSZip();
+  var fetches = items.map(function(c) {
+    if (c.path) {
+      return fetch(RAW_BASE + c.path)
+        .then(function(r){ return r.ok ? r.text() : Promise.reject(r.status); })
+        .then(function(txt){ zip.file(c.path, txt); })
+        .catch(function(){ zip.file(c.id + '-meta.json', JSON.stringify(c, null, 2)); });
+    } else {
+      zip.file(c.id + '-meta.json', JSON.stringify(c, null, 2));
+      return Promise.resolve();
+    }
+  });
+
+  Promise.all(fetches).then(function() {
+    return zip.generateAsync({ type: 'blob' });
+  }).then(function(blob) {
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'claude-library-export.zip';
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    btn.textContent = '⬇ Download ZIP';
+    btn.disabled = false;
+  }).catch(function() {
+    btn.textContent = '⬇ Download ZIP';
+    btn.disabled = false;
+  });
 });
 
 function populateFilterDropdowns() {
