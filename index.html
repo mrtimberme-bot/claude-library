@@ -320,6 +320,20 @@
   </div>
 </div>
 
+<div id="auth-modal-overlay" class="ck-overlay hidden" style="z-index:9999">
+  <div class="ck-settings-box" style="max-width:340px">
+    <div class="ck-settings-title">Admin toegang</div>
+    <p style="font-size:12px;color:var(--text3);margin:0 0 12px">Voer het library token in om admin-functies te activeren.</p>
+    <label class="ck-label">Token</label>
+    <input id="auth-modal-input" type="password" class="ck-input" placeholder="••••••••" autocomplete="current-password">
+    <div id="auth-modal-error" style="display:none;color:var(--red);font-size:11px;margin-top:6px"></div>
+    <div class="ck-settings-actions" style="margin-top:16px">
+      <button id="auth-modal-confirm" class="ck-btn primary">Ontgrendelen</button>
+      <button id="auth-modal-cancel" class="ck-btn secondary">Annuleren</button>
+    </div>
+  </div>
+</div>
+
 <script src="app.js"></script>
 </body>
 </html>
