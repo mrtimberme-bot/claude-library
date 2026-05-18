@@ -276,6 +276,7 @@ function renderLib() {
 
   $('lib-count').textContent = items.length + ' componenten';
   $('last-sync').textContent = new Date().toLocaleDateString('nl-NL');
+  updateSortHeaders();
 }
 
 function libSelectRow(id) {
@@ -345,14 +346,14 @@ function libSelectRow(id) {
 
   drawerCurrentId = c.id;
   $('lib-drawer').classList.add('open');
-  renderLib(); renderSkills();
+  renderLib();
 }
 
 function drawerClose() {
   libSelected=null; drawerCurrentId=null;
   $('lib-drawer').classList.remove('open');
   var sp=$('snip-iframe'); if(sp) sp.src='';
-  renderLib(); renderSkills();
+  renderLib();
 }
 
 function drawerRenderSnippet(c) {
@@ -389,94 +390,39 @@ document.querySelectorAll('.snippet-tab').forEach(function(btn) {
 
 $('drawer-close').addEventListener('click', drawerClose);
 
-$('search').addEventListener('input', function(e){ libSearch=e.target.value; renderLib(); });
+$('search').addEventListener('input', function(e){ libSearch=e.target.value; updateClearBtn(); renderLib(); });
 $('sort-select').addEventListener('change', function(e){ libSort=e.target.value; libSortDir=1; renderLib(); });
 
 document.querySelectorAll('thead th[data-col]').forEach(function(th){
   th.addEventListener('click', function(){
-    var col=th.dataset.col, view=th.dataset.view;
-    if (view==='skills') {
-      if (skillsSort===col) skillsSortDir*=-1; else { skillsSort=col; skillsSortDir=1; }
-      $('skills-sort').value=skillsSort; renderSkills();
-    } else {
-      if (libSort===col) libSortDir*=-1; else { libSort=col; libSortDir=1; }
-      $('sort-select').value=libSort; renderLib();
-    }
+    var col=th.dataset.col;
+    if (libSort===col) libSortDir*=-1; else { libSort=col; libSortDir=1; }
+    $('sort-select').value=libSort; renderLib();
   });
 });
 
-function updateSortHeaders(view) {
-  var col=view==='skills'?skillsSort:libSort, dir=view==='skills'?skillsSortDir:libSortDir;
-  document.querySelectorAll('thead th[data-view="skills"]').forEach(function(th){
-    th.classList.toggle('sorted', th.dataset.col===col);
+function updateSortHeaders() {
+  document.querySelectorAll('#view-library thead th[data-col]').forEach(function(th){
     var si=th.querySelector('.si');
-    if (si) si.textContent=th.dataset.col===col?(dir===1?'↑':'↓'):'↕';
+    if (si) si.textContent=th.dataset.col===libSort?(libSortDir===1?'↑':'↓'):'↕';
   });
 }
 
-/* ── SKILLS ── */
-var skillsSearch='', skillsSort='name', skillsSortDir=1;
+$('filter-tag').addEventListener('change', function(e){ libTagFilter=e.target.value; updateClearBtn(); renderLib(); });
+$('filter-owner').addEventListener('change', function(e){ libOwnerFilter=e.target.value; updateClearBtn(); renderLib(); });
 
-function skillsFiltered() {
-  return COMPONENTS
-    .filter(function(c){ return c.type==='skill'; })
-    .filter(function(c){
-      if (!skillsSearch) return true;
-      var q=skillsSearch.toLowerCase();
-      return c.name.toLowerCase().includes(q)||(c.tags||[]).some(function(t){ return t.includes(q); });
-    })
-    .sort(function(a,b){
-      var av=(a[skillsSort]||'').toLowerCase(),bv=(b[skillsSort]||'').toLowerCase();
-      return av<bv?-skillsSortDir:av>bv?skillsSortDir:0;
-    });
+function updateClearBtn() {
+  var active = libTagFilter || libOwnerFilter || libSearch;
+  $('filter-clear').style.display = active ? 'inline-block' : 'none';
 }
 
-function buildSkillsRow(c) {
-  var tr = document.createElement('tr');
-  if (c.id===libSelected) tr.classList.add('selected');
-
-  var nameCell = document.createElement('td');
-  var nameDiv = document.createElement('div'); nameDiv.className='td-name'; nameDiv.textContent=c.name;
-  var pathDiv = document.createElement('div'); pathDiv.className='td-path'; pathDiv.textContent=c.path;
-  nameCell.appendChild(nameDiv); nameCell.appendChild(pathDiv);
-
-  var verCell = document.createElement('td'); verCell.className='version-cell'; verCell.textContent=c.version;
-
-  var statusCell = document.createElement('td');
-  var wrap = document.createElement('div'); wrap.className='status-wrap';
-  var dot = document.createElement('span'); dot.className='status-dot '+(DOT_CLASS[c.status]||'dot-draft');
-  var txt = document.createElement('span'); txt.className='status-text '+(STATUS_CLASS[c.status]||'st-draft');
-  txt.textContent=STATUS_LABEL[c.status]||c.status;
-  wrap.appendChild(dot); wrap.appendChild(txt); statusCell.appendChild(wrap);
-
-  var updCell = document.createElement('td'); updCell.className='updated-cell'; updCell.textContent=c.updated;
-  var tagsCell = document.createElement('td');
-  (c.tags||[]).slice(0,3).forEach(function(t){
-    var chip=document.createElement('span'); chip.className='tag-chip'; chip.textContent=t; tagsCell.appendChild(chip);
-  });
-
-  tr.appendChild(nameCell); tr.appendChild(verCell); tr.appendChild(statusCell);
-  tr.appendChild(updCell); tr.appendChild(tagsCell);
-  tr.addEventListener('click', function(){ libSelectRow(c.id); });
-  return tr;
-}
-
-function renderSkills() {
-  var rows = skillsFiltered();
-  var tbody = $('skills-tbody');
-  tbody.textContent = '';
-  $('skills-empty').style.display = rows.length?'none':'block';
-  rows.forEach(function(c){ tbody.appendChild(buildSkillsRow(c)); });
-  $('skills-count').textContent = rows.length;
-  $('skills-active').textContent = rows.filter(function(c){ return c.status==='active'; }).length;
-  updateSortHeaders('skills');
-}
-
-$('skills-search').addEventListener('input', function(e){ skillsSearch=e.target.value; renderSkills(); });
-$('skills-sort').addEventListener('change', function(e){ skillsSort=e.target.value; skillsSortDir=1; renderSkills(); });
-
-$('filter-tag').addEventListener('change', function(e){ libTagFilter=e.target.value; renderLib(); });
-$('filter-owner').addEventListener('change', function(e){ libOwnerFilter=e.target.value; renderLib(); });
+$('filter-clear').addEventListener('click', function(){
+  libTagFilter=''; libOwnerFilter=''; libSearch='';
+  $('search').value='';
+  $('filter-tag').value='';
+  $('filter-owner').value='';
+  updateClearBtn(); renderLib();
+});
 
 function populateFilterDropdowns() {
   var tags = {}, owners = {};
@@ -508,10 +454,10 @@ function populateFilterDropdowns() {
 fetch('components.json')
   .then(function(r){ return r.json(); })
   .then(function(data){
-    COMPONENTS=data; renderSidebarNav(); renderLib(); renderSkills(); populateFilterDropdowns();
+    COMPONENTS=data; renderSidebarNav(); renderLib(); populateFilterDropdowns();
     fetchOutdatedSkills();
   })
-  .catch(function(){ renderSidebarNav(); renderLib(); renderSkills(); });
+  .catch(function(){ renderSidebarNav(); renderLib(); });
 
 function fetchOutdatedSkills() {
   fetch(CK.url + '/check-updates')
@@ -519,7 +465,7 @@ function fetchOutdatedSkills() {
     .then(function(data){
       if (!data.updates || !data.updates.length) return;
       data.updates.forEach(function(u){ OUTDATED_IDS.add(u.id); });
-      renderLib(); renderSkills();
+      renderLib();
     })
     .catch(function(){});
 }
@@ -793,7 +739,7 @@ $('btn-update-skill').addEventListener('click', function(){
           btn.style.display = 'none';
           result.className = 'rescan-result success';
           result.textContent = 'Bijgewerkt naar ' + r.new_sha.slice(0,8) + (r.diff_url ? ' — ' + r.diff_url : '');
-          renderLib(); renderSkills();
+          renderLib();
         }
         result.style.display = 'block';
       })
