@@ -89,28 +89,12 @@
         <pre class="dr-file-content" id="drawer-file-content"></pre>
       </div>
     </div>
-    <div class="drawer-actions" id="drawer-skill-actions" style="display:none">
-      <button class="drawer-action-btn" id="btn-analyze-skill">Analyseer</button>
-      <button class="drawer-action-btn enrich" id="btn-enrich-skill">Verrijk gebruik</button>
-    </div>
     <div class="drawer-actions" id="drawer-rescan-actions" style="display:none">
       <button class="drawer-action-btn rescan" id="btn-rescan-imported">↻ Rescan bron</button>
       <button class="drawer-action-btn update" id="btn-update-skill" style="display:none">↑ Update</button>
     </div>
     <div class="rescan-result" id="rescan-result" style="display:none"></div>
     <div class="update-badge" id="drawer-update-badge" style="display:none">Update beschikbaar</div>
-    <div class="score-panel" id="score-panel">
-      <div class="score-issues" id="score-issues"></div>
-      <div class="score-summary" id="score-summary"></div>
-    </div>
-    <div class="enrich-panel" id="enrich-panel">
-      <div class="enrich-row" id="enrich-row"></div>
-      <div class="enrich-triggers" id="enrich-triggers"></div>
-      <div class="enrich-save-row">
-        <button class="enrich-save-btn" id="enrich-save-btn">Opslaan</button>
-        <button class="enrich-cancel-btn" id="enrich-cancel-btn">Annuleren</button>
-      </div>
-    </div>
     <div id="drawer-snippet-panel" style="display:none">
       <div class="snippet-tabs">
         <button class="snippet-tab active" data-tab="preview">Preview</button>
@@ -200,8 +184,6 @@
         <div class="ck-tab" data-tab="import">Import repo</div>
         <div class="ck-tab" data-tab="chat">Chat</div>
         <div class="ck-tab" data-tab="upload">Upload skill</div>
-        <div class="ck-tab" data-tab="analyse">Analyse</div>
-        <div class="ck-tab" data-tab="verrijking">Verrijking</div>
       </div>
       <div class="ck-tab-content active" id="ck-tab-detail">
         <div id="ck-detail-empty" class="ck-detail-empty">Selecteer een module voor details.</div>
@@ -280,41 +262,6 @@
           <div><button class="ck-btn" id="ck-upload-btn">Upload</button></div>
         </div>
         <div id="ck-upload-result" style="display:none" class="ck-result"></div>
-      </div>
-      <div class="ck-tab-content" id="ck-tab-analyse">
-        <div>
-          <div class="ck-section-title">Bulk skill analyse</div>
-          <p style="font-size:13px;color:var(--text3);margin-bottom:16px;line-height:1.5">
-            Analyseer alle skills op volledigheid, triggers, overlap en kwaliteit.
-            Scores zijn 0–100. Rood &lt;60, amber 60–79, groen ≥80.
-          </p>
-          <div class="ck-overall-score" id="ck-overall-score" style="display:none"></div>
-          <div style="margin-bottom:12px">
-            <button class="ck-btn" id="ck-analyze-all-btn">Analyseer alle skills</button>
-          </div>
-          <div id="ck-analyse-result" style="display:none;overflow-x:auto">
-            <table class="bulk-table">
-              <thead>
-                <tr>
-                  <th>Skill</th><th>Score</th><th>Volledigheid</th>
-                  <th>Triggers</th><th>Overlap</th><th>Kwaliteit</th><th>Top issue</th>
-                </tr>
-              </thead>
-              <tbody id="ck-analyse-tbody"></tbody>
-            </table>
-          </div>
-          <div id="ck-analyse-error" style="display:none" class="ck-result error"></div>
-        </div>
-      </div>
-      <div class="ck-tab-content" id="ck-tab-verrijking">
-        <div>
-          <div class="ck-section-title">Gebruik verrijking opslaan</div>
-          <p style="font-size:13px;color:var(--text3);margin-bottom:16px;line-height:1.5">
-            Hier verschijnt een preview wanneer je "Verrijk gebruik" klikt in het detail paneel.
-          </p>
-        </div>
-        <div id="ck-verrijking-empty" class="ck-empty">Selecteer een skill en klik "Verrijk gebruik".</div>
-        <div id="ck-verrijking-preview" style="display:none;flex-direction:column;gap:14px"></div>
       </div>
     </div>
   </div>
