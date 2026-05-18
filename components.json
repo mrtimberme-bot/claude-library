@@ -1081,5 +1081,29 @@
     "source_path": "skills/dispatching-parallel-agents/SKILL.md",
     "source_sha": "a6a3f5a0798318edb6ccef716cfecce92a50d914",
     "imported_at": "2026-05-18"
+  },
+  {
+    "id": "ui-design-craft",
+    "name": "UI Design Craft",
+    "type": "skill",
+    "version": "1.0.0",
+    "status": "active",
+    "desc": "Gecombineerde frontend (HTML/CSS/JS) en iOS (SwiftUI) design skill. Commiteert aan een bold aesthetic direction vóór code, met 8 aesthetic anchors, anti-patterns tabel, accessibility checklist en screenshot-driven iteration loop.",
+    "usage": "Trigger bij: \"bouw een interface\", \"ontwerp een scherm\", \"maak een component\", \"verbeter de UI\". Werkt voor zowel web (HTML/CSS/React) als iOS (SwiftUI). Kiest altijd een concreet aesthetic anchor voor het project.",
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-18",
+    "path": "skills/ui-design-craft/SKILL.md",
+    "tags": [
+      "design",
+      "html",
+      "css",
+      "ios",
+      "swiftui",
+      "ui",
+      "frontend",
+      "imported"
+    ],
+    "source_repo": "anthropics/claude-code + Ilm-Alan/frontend-design + vabole/apple-skills",
+    "imported_at": "2026-05-18"
   }
 ]
