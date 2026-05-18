@@ -36,6 +36,7 @@
       </div>
       <select class="filter-select" id="filter-tag"><option value="">Alle tags</option></select>
       <select class="filter-select" id="filter-owner"><option value="">Alle owners</option></select>
+      <button class="filter-clear-btn" id="filter-clear" style="display:none">✕ Wis filters</button>
       <select id="sort-select" style="display:none">
         <option value="name">naam</option>
         <option value="updated">bijgewerkt</option>
@@ -128,43 +129,6 @@
   <div class="drawer-backdrop" id="drawer-backdrop"></div>
 </div>
 
-<!-- SKILLS VIEW -->
-<div class="view" id="view-skills" style="flex-direction:row">
-  <div class="skills-main">
-    <div class="toolbar">
-      <div class="search-wrap">
-        <input type="text" id="skills-search" placeholder="Zoek skills..." autocomplete="off">
-      </div>
-      <div class="sort-wrap">
-        Sorteren:
-        <select id="skills-sort">
-          <option value="name">naam</option>
-          <option value="updated">bijgewerkt</option>
-          <option value="status">status</option>
-        </select>
-      </div>
-    </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th class="col-name" data-col="name" data-view="skills">Naam <span class="si">↕</span></th>
-            <th class="col-version" data-col="version" data-view="skills">Versie <span class="si">↕</span></th>
-            <th class="col-status" data-col="status" data-view="skills">Status <span class="si">↕</span></th>
-            <th class="col-updated" data-col="updated" data-view="skills">Bijgewerkt <span class="si">↕</span></th>
-            <th>Tags</th>
-          </tr>
-        </thead>
-        <tbody id="skills-tbody"></tbody>
-      </table>
-      <div class="empty-state" id="skills-empty" style="display:none">Geen skills gevonden.</div>
-    </div>
-    <div class="lib-footer">
-      <span>Skills — alle .md bestanden in /skills/</span>
-      <span><span id="skills-count">0</span> skills · <span id="skills-active">0</span> actief</span>
-    </div>
-  </div>
-</div>
 
 <!-- COCKPIT VIEW -->
 <div class="view cockpit-view" id="view-cockpit">
