@@ -814,13 +814,13 @@ $('btn-rescan-imported').addEventListener('click', function(){
   result.style.display = 'none';
   ckApiFetch('/import-repo', {method:'POST', body: JSON.stringify({repo: repo})})
     .then(function(r){
+      result.className = 'rescan-result success';
       result.style.display = 'block';
-      result.style.color = 'var(--green)';
       result.textContent = 'Opnieuw geïmporteerd — PR: ' + r.pr_url;
     })
     .catch(function(e){
+      result.className = 'rescan-result error';
       result.style.display = 'block';
-      result.style.color = 'var(--red)';
       result.textContent = 'Fout: ' + e.message;
     })
     .finally(function(){ btn.disabled = false; btn.textContent = '↻ Rescan bron'; });
