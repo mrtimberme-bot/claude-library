@@ -686,7 +686,100 @@ async function handleUploadSkill(request, env) {
   return json({ success: true, path: skillPath })
 }
 
+/* ── CHECK UPDATES ── */
+async function handleCheckUpdates(env) {
+  const repo = env.LIBRARY_REPO || 'mrtimberme-bot/claude-library'
+  const { components } = await readComponentsJson(repo, env)
+  const imported = components.filter(c => c.source_repo && c.source_sha)
+
+  const updates = []
+  for (const comp of imported) {
+    const r = await ghGet(`/repos/${comp.source_repo}/contents/${comp.source_path}`, env)
+    if (!r.ok) continue
+    const data = await r.json()
+    if (data.sha !== comp.source_sha) {
+      updates.push({
+        id: comp.id,
+        name: comp.name,
+        source_repo: comp.source_repo,
+        source_path: comp.source_path,
+        current_sha: comp.source_sha,
+        latest_sha: data.sha,
+        diff_url: `https://github.com/${comp.source_repo}/compare/${comp.source_sha}...${data.sha}`,
+      })
+    }
+  }
+  return json({ updates, checked: imported.length, outdated: updates.length })
+}
+
+/* ── UPDATE SKILL ── */
+async function handleUpdateSkill(request, env) {
+  const body = await request.json().catch(() => null)
+  if (!body?.id) return err('"id" required')
+
+  const repo = env.LIBRARY_REPO || 'mrtimberme-bot/claude-library'
+  const { components, sha: compSha } = await readComponentsJson(repo, env)
+  const idx = components.findIndex(c => c.id === body.id)
+  if (idx < 0) return err('Component not found', 404)
+
+  const comp = components[idx]
+  if (!comp.source_repo || !comp.source_path) return err('Component has no source_repo/source_path — cannot update', 400)
+
+  const srcResp = await ghGet(`/repos/${comp.source_repo}/contents/${comp.source_path}`, env)
+  if (!srcResp.ok) return err(`Could not fetch source: ${srcResp.status}`, 502)
+  const srcData = await srcResp.json()
+
+  if (srcData.sha === comp.source_sha) return json({ ok: true, message: 'Already up to date', up_to_date: true })
+
+  const newContent = atob(srcData.content.replace(/\n/g, ''))
+  const libFileSha = await ghGet(`/repos/${repo}/contents/${comp.path}`, env)
+    .then(r => r.ok ? r.json().then(d => d.sha) : null)
+
+  const putResp = await ghPut(`/repos/${repo}/contents/${comp.path}`, env, {
+    message: `chore: update ${comp.id} van ${comp.source_repo} (${srcData.sha.slice(0,8)})`,
+    content: btoa(unescape(encodeURIComponent(newContent))),
+    ...(libFileSha ? { sha: libFileSha } : {}),
+  })
+  if (!putResp.ok) {
+    const e = await putResp.json().catch(() => ({}))
+    return err(`Kon skill niet updaten: ${e.message || putResp.status}`, 502)
+  }
+
+  const today = new Date().toISOString().slice(0, 10)
+  components[idx] = { ...comp, source_sha: srcData.sha, updated: today }
+
+  const compPutResp = await ghPut(`/repos/${repo}/contents/components.json`, env, {
+    message: `chore: source_sha bijgewerkt voor ${comp.id}`,
+    content: btoa(unescape(encodeURIComponent(JSON.stringify(components, null, 2)))),
+    sha: compSha,
+  })
+  if (!compPutResp.ok) return err('Skill bijgewerkt maar components.json update mislukt', 502)
+
+  await invalidateComponentsCache(env)
+  return json({ ok: true, updated: true, new_sha: srcData.sha, diff_url: `https://github.com/${comp.source_repo}/compare/${comp.source_sha}...${srcData.sha}` })
+}
+
+/* ── SCHEDULED CRON: dagelijkse update-check + ntfy notificatie ── */
+async function runScheduledUpdateCheck(env) {
+  const resp = await handleCheckUpdates(env)
+  const data = await resp.json()
+  if (!data.outdated || !env.NTFY_TOPIC) return
+
+  const msg = `Claude Library: ${data.outdated} skill${data.outdated > 1 ? 's' : ''} heeft een update beschikbaar!\n` +
+    data.updates.map(u => `• ${u.name} (${u.source_repo})`).join('\n')
+
+  await fetch(`https://ntfy.sh/${env.NTFY_TOPIC}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain', 'Title': 'Library Update Beschikbaar', 'Priority': '3' },
+    body: msg,
+  }).catch(() => {})
+}
+
 export default {
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(runScheduledUpdateCheck(env))
+  },
+
   async fetch(request, env) {
     if (request.method === 'OPTIONS')
       return new Response(null, { status: 204, headers: CORS })
@@ -697,7 +790,10 @@ export default {
       if (pathname === '/components' && request.method === 'GET')
         return handleComponents(env)
 
-      const authPaths = ['/chat','/import-repo','/upload-skill','/analyze-skill','/analyze-all','/enrich-usage','/save-enrichment','/cache-refresh']
+      if (pathname === '/check-updates' && request.method === 'GET')
+        return handleCheckUpdates(env)
+
+      const authPaths = ['/chat','/import-repo','/upload-skill','/analyze-skill','/analyze-all','/enrich-usage','/save-enrichment','/cache-refresh','/update-skill']
       if (authPaths.includes(pathname)) {
         if (request.method !== 'POST') return err('POST required', 405)
         if (!checkAuth(request, env)) return err('Unauthorized', 401)
@@ -708,6 +804,7 @@ export default {
         if (pathname === '/analyze-all') return handleAnalyzeAll(request, env)
         if (pathname === '/enrich-usage') return handleEnrichUsage(request, env)
         if (pathname === '/save-enrichment') return handleSaveEnrichment(request, env)
+        if (pathname === '/update-skill') return handleUpdateSkill(request, env)
         if (pathname === '/cache-refresh') {
           await invalidateComponentsCache(env)
           return json({ ok: true, message: 'Cache invalidated' })
