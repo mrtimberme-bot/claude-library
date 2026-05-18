@@ -310,17 +310,13 @@ function libSelectRow(id) {
     contentEl.textContent = '';
   }
 
-  var isSkill = c.type==='skill';
   var isSnippet = c.type==='snippet';
   var isImported = Array.isArray(c.tags) && c.tags.indexOf('imported') !== -1;
   var isOutdated = OUTDATED_IDS.has(c.id);
-  $('drawer-skill-actions').style.display = (isSkill && AUTH_UNLOCKED) ? 'flex' : 'none';
   $('drawer-rescan-actions').style.display = (isImported && AUTH_UNLOCKED) ? 'flex' : 'none';
   $('btn-update-skill').style.display = (isImported && isOutdated && AUTH_UNLOCKED) ? 'inline-block' : 'none';
   $('drawer-update-badge').style.display = isOutdated ? 'block' : 'none';
   $('rescan-result').style.display = 'none';
-  $('score-panel').classList.remove('visible');
-  $('enrich-panel').classList.remove('visible');
 
   var snippetPanel = $('drawer-snippet-panel');
   if (isSnippet && c.files) {
@@ -338,8 +334,6 @@ function libSelectRow(id) {
 function drawerClose() {
   libSelected=null; drawerCurrentId=null;
   $('lib-drawer').classList.remove('open');
-  $('score-panel').classList.remove('visible');
-  $('enrich-panel').classList.remove('visible');
   var sp=$('snip-iframe'); if(sp) sp.src='';
   renderLib(); renderSkills();
 }
@@ -705,199 +699,8 @@ function ckShowUploadResult(ok,text){
 
 /* ── SKILL ANALYSER ── */
 var drawerCurrentId = null;
-var enrichPending = null;
 
-function scoreColor(s) {
-  return s >= 80 ? '' : s >= 60 ? 'amber' : 'red';
-}
-
-function renderScoreBar(label, score) {
-  var row = document.createElement('div'); row.className='score-row';
-  var lbl = document.createElement('div'); lbl.className='score-label';
-  var lt = document.createTextNode(label);
-  var sv = document.createElement('span'); sv.textContent=score+'/100';
-  lbl.appendChild(lt); lbl.appendChild(sv);
-  var track = document.createElement('div'); track.className='score-bar-track';
-  var fill = document.createElement('div');
-  var sc=scoreColor(score); fill.className=('score-bar-fill'+(sc?' '+sc:''));
-  fill.style.width=score+'%';
-  track.appendChild(fill);
-  row.appendChild(lbl); row.appendChild(track);
-  return row;
-}
-
-function drawerAnalyzeSkill() {
-  var id = drawerCurrentId;
-  if (!id) return;
-  var btn = $('btn-analyze-skill');
-  btn.disabled=true; btn.textContent='Bezig...';
-  $('score-panel').classList.remove('visible');
-  $('enrich-panel').classList.remove('visible');
-
-  ckApiFetch('/analyze-skill',{method:'POST',body:JSON.stringify({id})})
-    .then(function(r){
-      var panel=$('score-panel'); panel.textContent='';
-
-      var labels={volledigheid:'Volledigheid',triggers:'Triggers',overlap:'Overlap',kwaliteit:'Kwaliteit'};
-      Object.keys(labels).forEach(function(k){
-        panel.appendChild(renderScoreBar(labels[k], r.scores[k]||0));
-      });
-
-      if (r.issues&&r.issues.length){
-        var issuesWrap=document.createElement('div'); issuesWrap.className='score-issues';
-        r.issues.forEach(function(issue){
-          var li=document.createElement('div'); li.className='issue-item';
-          var txt=document.createElement('span'); txt.className='issue-item-text'; txt.textContent=issue;
-          var applyBtn=document.createElement('button'); applyBtn.className='issue-apply-btn'; applyBtn.textContent='Toepassen';
-          applyBtn.addEventListener('click', function(){
-            applyBtn.disabled=true; applyBtn.textContent='…';
-            drawerEnrichUsage();
-          });
-          li.appendChild(txt); li.appendChild(applyBtn);
-          issuesWrap.appendChild(li);
-        });
-        panel.appendChild(issuesWrap);
-      }
-
-      if (r.summary){
-        var sum=document.createElement('div'); sum.className='score-summary'; sum.textContent=r.summary;
-        panel.appendChild(sum);
-      }
-
-      panel.classList.add('visible');
-    })
-    .catch(function(e){
-      var panel=$('score-panel'); panel.textContent='';
-      var errEl=document.createElement('div');
-      errEl.style.cssText='font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--red);padding:4px 0';
-      errEl.textContent='Fout: '+e.message;
-      panel.appendChild(errEl); panel.classList.add('visible');
-    })
-    .finally(function(){ btn.disabled=false; btn.textContent='Analyseer'; });
-}
-
-function drawerEnrichUsage() {
-  var id = drawerCurrentId;
-  if (!id) return;
-  var btn = $('btn-enrich-skill');
-  btn.disabled=true; btn.textContent='Bezig...';
-  $('enrich-panel').classList.remove('visible');
-
-  ckApiFetch('/enrich-usage',{method:'POST',body:JSON.stringify({id})})
-    .then(function(r){
-      enrichPending = { id, usage: r.proposed_usage };
-
-      var row=$('enrich-row'); row.textContent='';
-      var colCur=document.createElement('div');
-      var lCur=document.createElement('div'); lCur.className='enrich-col-label'; lCur.textContent='Huidig';
-      var vCur=document.createElement('div'); vCur.className='enrich-col-current'; vCur.textContent=r.current_usage||'(leeg)';
-      colCur.appendChild(lCur); colCur.appendChild(vCur);
-
-      var colNew=document.createElement('div');
-      var lNew=document.createElement('div'); lNew.className='enrich-col-label'; lNew.textContent='Voorstel';
-      var vNew=document.createElement('div'); vNew.className='enrich-col-proposed'; vNew.textContent=r.proposed_usage||'';
-      colNew.appendChild(lNew); colNew.appendChild(vNew);
-      row.appendChild(colCur); row.appendChild(colNew);
-
-      var trigsEl=$('enrich-triggers'); trigsEl.textContent='';
-      (r.triggers||[]).forEach(function(t){
-        var div=document.createElement('div'); div.className='enrich-trigger'; div.textContent=t;
-        trigsEl.appendChild(div);
-      });
-
-      $('enrich-panel').classList.add('visible');
-      renderVerrijkingPreview(id, r);
-    })
-    .catch(function(e){
-      var panel=$('enrich-panel'); panel.textContent='';
-      var errEl=document.createElement('div');
-      errEl.style.cssText='font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--red);padding:4px 0';
-      errEl.textContent='Fout: '+e.message;
-      panel.appendChild(errEl); panel.classList.add('visible');
-    })
-    .finally(function(){ btn.disabled=false; btn.textContent='Verrijk gebruik'; });
-}
-
-function drawerSaveEnrichment() {
-  if (!enrichPending) return;
-  var saveBtn=$('enrich-save-btn');
-  saveBtn.disabled=true; saveBtn.textContent='Opslaan...';
-
-  ckApiFetch('/save-enrichment',{method:'POST',body:JSON.stringify(enrichPending)})
-    .then(function(){
-      enrichPending=null;
-      $('enrich-panel').classList.remove('visible');
-      $('ck-verrijking-preview').style.display='none';
-      $('ck-verrijking-empty').style.display='block';
-      var savedId=drawerCurrentId;
-      fetch('components.json').then(function(r){return r.json();}).then(function(d){
-        COMPONENTS=d; renderLib(); renderSkills();
-        var updated=COMPONENTS.find(function(c){ return c.id===savedId; });
-        if (updated) $('drawer-usage').textContent=updated.usage||'—';
-      }).catch(function(){});
-      showToast('Verrijking opgeslagen.');
-    })
-    .catch(function(e){ showToast('Fout: '+e.message, true); })
-    .finally(function(){ saveBtn.disabled=false; saveBtn.textContent='Opslaan'; });
-}
-
-function renderVerrijkingPreview(id, r) {
-  $('ck-verrijking-empty').style.display='none';
-  var prev=$('ck-verrijking-preview');
-  prev.textContent='';
-  prev.style.cssText='display:flex;flex-direction:column;gap:14px';
-
-  var comp=COMPONENTS.find(function(c){ return c.id===id; });
-  var title=document.createElement('div'); title.className='ck-section-title';
-  title.textContent=comp?comp.name:id;
-  prev.appendChild(title);
-
-  var grid=document.createElement('div'); grid.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:8px';
-  var colCur=document.createElement('div');
-  var lCur=document.createElement('div'); lCur.className='enrich-col-label'; lCur.textContent='Huidig';
-  var vCur=document.createElement('div'); vCur.className='enrich-col-current'; vCur.textContent=r.current_usage||'(leeg)';
-  colCur.appendChild(lCur); colCur.appendChild(vCur);
-  var colNew=document.createElement('div');
-  var lNew=document.createElement('div'); lNew.className='enrich-col-label'; lNew.textContent='Voorstel';
-  var vNew=document.createElement('div'); vNew.className='enrich-col-proposed'; vNew.textContent=r.proposed_usage||'';
-  colNew.appendChild(lNew); colNew.appendChild(vNew);
-  grid.appendChild(colCur); grid.appendChild(colNew);
-  prev.appendChild(grid);
-
-  if (r.triggers&&r.triggers.length){
-    var tl=document.createElement('div'); tl.className='enrich-col-label'; tl.textContent='Trigger-zinnen';
-    prev.appendChild(tl);
-    var trigsEl=document.createElement('div'); trigsEl.className='enrich-triggers';
-    r.triggers.forEach(function(t){ var d=document.createElement('div'); d.className='enrich-trigger'; d.textContent=t; trigsEl.appendChild(d); });
-    prev.appendChild(trigsEl);
-  }
-
-  var saveRow=document.createElement('div'); saveRow.className='enrich-save-row';
-  var saveBtn=document.createElement('button'); saveBtn.className='enrich-save-btn'; saveBtn.textContent='Opslaan';
-  var cancelBtn=document.createElement('button'); cancelBtn.className='enrich-cancel-btn'; cancelBtn.textContent='Annuleren';
-  saveBtn.addEventListener('click', function(){
-    if (!enrichPending) return;
-    saveBtn.disabled=true; saveBtn.textContent='Opslaan...';
-    ckApiFetch('/save-enrichment',{method:'POST',body:JSON.stringify(enrichPending)})
-      .then(function(){
-        enrichPending=null;
-        prev.style.display='none';
-        $('ck-verrijking-empty').style.display='block';
-        $('enrich-panel').classList.remove('visible');
-        fetch('components.json').then(function(r2){return r2.json();}).then(function(d){ COMPONENTS=d; renderLib(); renderSkills(); }).catch(function(){});
-        showToast('Verrijking opgeslagen.');
-      })
-      .catch(function(e){ showToast('Fout: '+e.message, true); })
-      .finally(function(){ saveBtn.disabled=false; saveBtn.textContent='Opslaan'; });
-  });
-  cancelBtn.addEventListener('click', function(){
-    enrichPending=null; prev.style.display='none';
-    $('ck-verrijking-empty').style.display='block';
-    $('enrich-panel').classList.remove('visible');
-  });
-  saveRow.appendChild(saveBtn); saveRow.appendChild(cancelBtn);
-  prev.appendChild(saveRow);
-}
+var drawerCurrentId = null;
 
 $('btn-rescan-imported').addEventListener('click', function(){
   requireAuth(function() {
@@ -957,53 +760,6 @@ $('btn-update-skill').addEventListener('click', function(){
   }); // requireAuth
 });
 
-$('btn-analyze-skill').addEventListener('click', function(){ requireAuth(drawerAnalyzeSkill); });
-$('btn-enrich-skill').addEventListener('click', function(){ requireAuth(drawerEnrichUsage); });
-$('enrich-save-btn').addEventListener('click', drawerSaveEnrichment);
-$('enrich-cancel-btn').addEventListener('click', function(){
-  enrichPending=null;
-  $('enrich-panel').classList.remove('visible');
-  $('ck-verrijking-empty').style.display='block';
-  $('ck-verrijking-preview').style.display='none';
-});
-
-/* ── BULK ANALYSE ── */
-$('ck-analyze-all-btn').addEventListener('click', function(){
-  var btn=$('ck-analyze-all-btn');
-  btn.disabled=true; btn.textContent='Bezig...';
-  $('ck-analyse-result').style.display='none';
-  $('ck-analyse-error').style.display='none';
-  $('ck-overall-score').style.display='none';
-
-  ckApiFetch('/analyze-all',{method:'POST',body:JSON.stringify({})})
-    .then(function(r){
-      var tbody=$('ck-analyse-tbody'); tbody.textContent='';
-      var sorted=r.skills.slice().sort(function(a,b){ return a.avg-b.avg; });
-      sorted.forEach(function(s){
-        var cls=s.avg>=80?'row-green':s.avg>=60?'row-amber':'row-red';
-        var scoreCls=s.avg>=80?'bulk-score-green':s.avg>=60?'bulk-score-amber':'bulk-score-red';
-        var tr=document.createElement('tr'); tr.className=cls;
-        [s.name,'',s.scores.volledigheid||0,s.scores.triggers||0,s.scores.overlap||0,s.scores.kwaliteit||0,''].forEach(function(val,i){
-          var td=document.createElement('td');
-          if (i===1){ td.className=scoreCls; td.textContent=s.avg; }
-          else if (i===6){ td.className='bulk-issue'; td.textContent=s.top_issue||'—'; }
-          else { td.textContent=String(val); }
-          tr.appendChild(td);
-        });
-        tbody.appendChild(tr);
-      });
-      var os=$('ck-overall-score');
-      os.textContent='Gemiddelde score: '+r.overall+'/100 · '+r.skills.length+' skills geanalyseerd';
-      os.style.display='block';
-      $('ck-analyse-result').style.display='block';
-    })
-    .catch(function(e){
-      var el=$('ck-analyse-error');
-      el.textContent='Fout: '+e.message;
-      el.style.display='block';
-    })
-    .finally(function(){ btn.disabled=false; btn.textContent='Analyseer alle skills'; });
-});
 
 /* ── TOAST ── */
 function showToast(msg, isError) {
