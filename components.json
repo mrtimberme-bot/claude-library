@@ -653,7 +653,11 @@
       "mcp",
       "api",
       "tools"
-    ]
+    ],
+    "source_repo": "anthropics/skills",
+    "source_path": "skills/mcp-builder/SKILL.md",
+    "source_sha": "8a1a77a47d141967b246adb4da4f91037578ff7d",
+    "imported_at": "2026-05-18"
   },
   {
     "id": "webapp-testing",
@@ -671,7 +675,11 @@
       "testing",
       "playwright",
       "web"
-    ]
+    ],
+    "source_repo": "anthropics/skills",
+    "source_path": "skills/webapp-testing/SKILL.md",
+    "source_sha": "4726215301db64a0cc4d41fc3219c61f37a30f4a",
+    "imported_at": "2026-05-18"
   },
   {
     "id": "skill-creator",
@@ -689,7 +697,11 @@
       "meta",
       "skills",
       "dev"
-    ]
+    ],
+    "source_repo": "anthropics/skills",
+    "source_path": "skills/skill-creator/SKILL.md",
+    "source_sha": "65b3a402dbd09b8e83f9d637c6b553875189085c",
+    "imported_at": "2026-05-18"
   },
   {
     "id": "doc-coauthoring",
@@ -706,7 +718,11 @@
       "imported",
       "docs",
       "writing"
-    ]
+    ],
+    "source_repo": "anthropics/skills",
+    "source_path": "skills/doc-coauthoring/SKILL.md",
+    "source_sha": "a5a69839ef4a161131d80b6daef10037a9686f4a",
+    "imported_at": "2026-05-18"
   },
   {
     "id": "react-best-practices",
@@ -725,7 +741,11 @@
       "nextjs",
       "web",
       "performance"
-    ]
+    ],
+    "source_repo": "vercel-labs/agent-skills",
+    "source_path": "skills/react-best-practices/SKILL.md",
+    "source_sha": "237988de4a66dd8a71d30a2c24ebe1a86b58d04e",
+    "imported_at": "2026-05-18"
   },
   {
     "id": "web-design-guidelines",
@@ -744,7 +764,11 @@
       "accessibility",
       "web",
       "ux"
-    ]
+    ],
+    "source_repo": "vercel-labs/agent-skills",
+    "source_path": "skills/web-design-guidelines/SKILL.md",
+    "source_sha": "ceae92ab319216a68274168fba9b63b998b65997",
+    "imported_at": "2026-05-18"
   },
   {
     "id": "prompt-optimizer",
@@ -762,7 +786,11 @@
       "prompting",
       "requirements",
       "ai"
-    ]
+    ],
+    "source_repo": "daymade/claude-code-skills",
+    "source_path": "prompt-optimizer/SKILL.md",
+    "source_sha": "af34f86fa2e49aed3738016d21467bfeffc7e118",
+    "imported_at": "2026-05-18"
   },
   {
     "id": "fact-checker",
@@ -780,7 +808,11 @@
       "research",
       "verification",
       "quality"
-    ]
+    ],
+    "source_repo": "daymade/claude-code-skills",
+    "source_path": "fact-checker/SKILL.md",
+    "source_sha": "c146486dccd945fd2c9eacc5c099f59353219473",
+    "imported_at": "2026-05-18"
   },
   {
     "id": "i18n-expert",
@@ -798,7 +830,11 @@
       "i18n",
       "l10n",
       "web"
-    ]
+    ],
+    "source_repo": "daymade/claude-code-skills",
+    "source_path": "i18n-expert/SKILL.md",
+    "source_sha": "59e1ba4e642e3266a44be53ddb2366acc97849d5",
+    "imported_at": "2026-05-18"
   },
   {
     "id": "github-ops",
@@ -816,6 +852,10 @@
       "github",
       "git",
       "devops"
-    ]
+    ],
+    "source_repo": "daymade/claude-code-skills",
+    "source_path": "github-ops/SKILL.md",
+    "source_sha": "c0640a4b67cb1752c42ea825043404b6022c9e91",
+    "imported_at": "2026-05-18"
   }
 ]
