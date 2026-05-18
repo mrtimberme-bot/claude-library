@@ -199,88 +199,91 @@ body {
 }
 
 /* ── CARD GRID ───────────────────────────────────── */
-.card-grid-wrap { flex: 1; overflow-y: auto; padding: 16px; }
+/* Terminal Table layout */
+.tt-wrap { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+.tt-header { padding: 8px 16px 6px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.tt-count { font-family: var(--mono); font-size: 10px; color: var(--text4); }
+.tt-scroll { flex: 1; overflow-y: auto; }
 
-.type-group-label {
+.tt-table {
+  width: 100%;
+  border-collapse: collapse;
   font-family: var(--mono);
+  font-size: 11px;
+}
+
+.tt-table thead th {
+  text-align: left;
+  padding: 7px 12px;
   font-size: 9px;
-  font-weight: 700;
+  letter-spacing: 0.12em;
   color: var(--text4);
   text-transform: uppercase;
-  letter-spacing: 0.15em;
-  padding: 12px 0 6px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.type-group-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 6px;
-  margin-bottom: 4px;
-}
-
-.bl-skill   { --accent: #22c55e; }
-.bl-agent   { --accent: #fb923c; }
-.bl-mcp     { --accent: #60a5fa; }
-.bl-memory  { --accent: #c084fc; }
-.bl-plugin  { --accent: #f472b6; }
-.bl-api     { --accent: #06b6d4; }
-.bl-arch    { --accent: #f43f5e; }
-.bl-infra   { --accent: #a8a29e; }
-.bl-orch    { --accent: #84cc16; }
-.bl-snippet { --accent: #f472b6; }
-
-.lib-card {
+  border-bottom: 1px solid var(--border);
+  font-weight: 400;
+  position: sticky;
+  top: 0;
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--accent, var(--border2));
-  border-radius: 3px;
-  padding: 10px 12px;
   cursor: pointer;
-  transition: background 0.08s, border-color 0.08s;
-}
-
-.lib-card:hover { background: var(--surface2); border-right-color: var(--border2); border-top-color: var(--border2); border-bottom-color: var(--border2); }
-.lib-card.selected { background: var(--primary3); border-right-color: rgba(249,115,22,0.3); border-top-color: rgba(249,115,22,0.3); border-bottom-color: rgba(249,115,22,0.3); }
-
-.lib-card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 4px; gap: 8px; }
-.lib-card-name { font-size: 12px; font-weight: 600; color: var(--text); line-height: 1.2; font-family: var(--sans); }
-
-.lib-card-desc {
-  font-size: 11px;
-  color: var(--text3);
-  line-height: 1.5;
-  margin-bottom: 8px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.lib-card-footer { display: flex; align-items: center; justify-content: space-between; gap: 4px; }
-.lib-card-tags { display: flex; gap: 3px; flex-wrap: wrap; flex: 1; min-width: 0; }
-
-.lib-card-copy {
-  opacity: 0;
-  background: var(--surface3);
-  border: 1px solid var(--border2);
-  border-radius: 2px;
-  color: var(--text3);
-  cursor: pointer;
-  font-family: var(--mono);
-  font-size: 9px;
-  padding: 2px 5px;
-  transition: opacity 0.15s, color 0.1s;
+  user-select: none;
   white-space: nowrap;
-  flex-shrink: 0;
 }
 
-.lib-card:hover .lib-card-copy { opacity: 1; }
-.lib-card-copy:hover { color: var(--primary); border-color: var(--primary); }
+.tt-table thead th:hover { color: var(--text2); }
+.tt-table tbody tr { border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.08s; }
+.tt-table tbody tr:hover { background: var(--surface2); }
+.tt-table tbody tr.selected { background: rgba(249,115,22,0.06); }
+.tt-table td { padding: 7px 12px; vertical-align: middle; }
+
+.tt-type { white-space: nowrap; }
+.tt-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+.tt-type-lbl { font-size: 9px; letter-spacing: 0.1em; }
+
+.tt-name { color: var(--text); font-weight: 500; white-space: nowrap; }
+
+.tt-desc {
+  color: var(--text3);
+  font-size: 10px;
+  max-width: 340px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tt-author { color: var(--text4); font-size: 10px; white-space: nowrap; }
+.tt-tags { display: flex; gap: 3px; align-items: center; }
+
+.tt-tag {
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 2px;
+  background: var(--surface3);
+  color: var(--text4);
+  white-space: nowrap;
+}
+
+.tt-tag-imported { background: rgba(245,158,11,0.1); color: var(--amber); }
+
+.tt-status {
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.tt-status.active { background: rgba(34,197,94,0.1); color: var(--green); }
+.tt-status.wip    { background: rgba(245,158,11,0.1); color: var(--amber); }
+.tt-status.draft, .tt-status.deprecated { background: rgba(100,100,120,0.1); color: var(--text4); }
+
+.tt-update-dot {
+  display: inline-block;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--amber);
+  margin-left: 5px;
+  vertical-align: middle;
+}
 
 .type-badge {
   font-family: var(--mono);
@@ -478,14 +481,6 @@ mark.hl { background: rgba(249,115,22,0.18); color: var(--primary-h); font-style
   display: inline-block;
 }
 
-.lib-card-update-dot {
-  display: inline-block;
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--amber);
-  margin-left: 5px;
-  vertical-align: middle;
-}
 
 .rescan-result {
   margin: 0 16px;
