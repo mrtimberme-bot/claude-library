@@ -1105,5 +1105,111 @@
     ],
     "source_repo": "anthropics/claude-code + Ilm-Alan/frontend-design + vabole/apple-skills",
     "imported_at": "2026-05-18"
+  },
+  {
+    "id": "mp-diagnose",
+    "name": "Diagnose",
+    "type": "skill",
+    "version": "1.0.0",
+    "status": "active",
+    "desc": "Gedisciplineerde 6-fase debug-loop: feedback loop bouwen → reproduceren → hypotheses → instrumenteren → fixen → cleanup. De sterkste debugging skill voor harde bugs en performance-regressies.",
+    "usage": "Trigger bij: \"diagnose this\", \"debug this\", \"something is broken\", performance-regressie. Bouwt altijd eerst een reproduceerbare feedback loop voordat er gehypotheseerd wordt.",
+    "author": "Matt Pocock",
+    "updated": "2026-05-18",
+    "path": "skills/mp-diagnose/SKILL.md",
+    "tags": [
+      "debug",
+      "engineering",
+      "tdd",
+      "imported"
+    ],
+    "source_repo": "mattpocock/skills",
+    "source_path": "skills/engineering/diagnose/SKILL.md",
+    "imported_at": "2026-05-18"
+  },
+  {
+    "id": "mp-caveman",
+    "name": "Caveman Mode",
+    "type": "skill",
+    "version": "1.0.0",
+    "status": "active",
+    "desc": "Ultra-gecomprimeerde communicatiemodus. Reduceert tokengebruik ~75% door filler, lidwoorden en beleefdheden te verwijderen terwijl technische precisie behouden blijft.",
+    "usage": "Trigger bij: \"caveman mode\", \"less tokens\", \"be brief\", \"talk like caveman\". Blijft actief totdat je \"stop caveman\" of \"normal mode\" zegt.",
+    "author": "Matt Pocock",
+    "updated": "2026-05-18",
+    "path": "skills/mp-caveman/SKILL.md",
+    "tags": [
+      "productivity",
+      "tokens",
+      "communication",
+      "imported"
+    ],
+    "source_repo": "mattpocock/skills",
+    "source_path": "skills/productivity/caveman/SKILL.md",
+    "imported_at": "2026-05-18"
+  },
+  {
+    "id": "mp-handoff",
+    "name": "Handoff",
+    "type": "skill",
+    "version": "1.0.0",
+    "status": "active",
+    "desc": "Compacteert de huidige conversatie naar een handoff-document zodat een volgende agent of sessie naadloos kan doorgaan. Verwijst naar bestaande artefacten in plaats van ze te dupliceren.",
+    "usage": "Trigger bij: \"handoff\", \"maak een overdracht\", \"volgende sessie\", \"nieuwe agent\". Optioneel argument: omschrijving van wat de volgende sessie gaat doen.",
+    "author": "Matt Pocock",
+    "updated": "2026-05-18",
+    "path": "skills/mp-handoff/SKILL.md",
+    "tags": [
+      "productivity",
+      "workflow",
+      "session",
+      "imported"
+    ],
+    "source_repo": "mattpocock/skills",
+    "source_path": "skills/productivity/handoff/SKILL.md",
+    "imported_at": "2026-05-18"
+  },
+  {
+    "id": "mp-zoom-out",
+    "name": "Zoom Out",
+    "type": "skill",
+    "version": "1.0.0",
+    "status": "active",
+    "desc": "Instrueert de agent een abstractielaag omhoog te gaan en een overzichtskaart te geven van alle relevante modules en callers in de projecttaal. Handig bij onbekende code of wanneer context ontbreekt.",
+    "usage": "Trigger bij: \"zoom out\", \"ik ken dit stuk niet\", \"geef me een overzicht\", \"hoe past dit in het grotere geheel\". Geen model-invocatie — direct instructie aan de agent.",
+    "author": "Matt Pocock",
+    "updated": "2026-05-18",
+    "path": "skills/mp-zoom-out/SKILL.md",
+    "tags": [
+      "engineering",
+      "navigation",
+      "architecture",
+      "imported"
+    ],
+    "source_repo": "mattpocock/skills",
+    "source_path": "skills/engineering/zoom-out/SKILL.md",
+    "imported_at": "2026-05-18"
+  },
+  {
+    "id": "mp-git-guardrails",
+    "name": "Git Guardrails",
+    "type": "skill",
+    "version": "1.0.0",
+    "status": "active",
+    "desc": "Installeert Claude Code PreToolUse hooks die destructieve git-commando's blokkeren: push --force, reset --hard, clean -f, branch -D, checkout ., restore .. Vraagt naar scope (project of globaal).",
+    "usage": "Trigger bij: \"blokkeer git push\", \"git guardrails instellen\", \"voorkom destructieve git commando's\", \"voeg git safety hooks toe\". Eenmalige setup per project of globaal.",
+    "author": "Matt Pocock",
+    "updated": "2026-05-18",
+    "path": "skills/mp-git-guardrails/SKILL.md",
+    "tags": [
+      "git",
+      "safety",
+      "hooks",
+      "engineering",
+      "imported"
+    ],
+    "source_repo": "mattpocock/skills",
+    "source_path": "skills/misc/git-guardrails-claude-code/SKILL.md",
+    "imported_at": "2026-05-18"
   }
 ]
