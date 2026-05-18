@@ -6,6 +6,7 @@ var DOT_CLASS    = { active:'dot-active', wip:'dot-wip', draft:'dot-draft', depr
 var TYPE_LABEL   = { skill:'Skill', plugin:'Plugin', agent:'Agent', memory:'Memory', mcp:'MCP', api:'API', arch:'Arch', infra:'Infra', orch:'Orch', snippet:'Snippet' };
 
 var COMPONENTS = [];
+var OUTDATED_IDS = new Set();
 
 var currentMode = 'library';
 var cockpitInit = false;
@@ -168,7 +169,12 @@ function buildCard(c) {
   var dot=document.createElement('span'); dot.className='status-dot '+(DOT_CLASS[c.status]||'dot-draft');
   var copyBtn=document.createElement('button'); copyBtn.className='lib-card-copy';
   copyBtn.title='Pad kopiëren'; copyBtn.textContent='⎘ PAD';
-  right.appendChild(dot); right.appendChild(copyBtn);
+  right.appendChild(dot);
+  if (OUTDATED_IDS.has(c.id)) {
+    var updDot=document.createElement('span'); updDot.className='lib-card-update-dot'; updDot.title='Update beschikbaar';
+    right.appendChild(updDot);
+  }
+  right.appendChild(copyBtn);
   footer.appendChild(tagsEl); footer.appendChild(right);
   card.appendChild(top); card.appendChild(desc); card.appendChild(footer);
 
@@ -234,8 +240,11 @@ function libSelectRow(id) {
   var isSkill = c.type==='skill';
   var isSnippet = c.type==='snippet';
   var isImported = Array.isArray(c.tags) && c.tags.indexOf('imported') !== -1;
+  var isOutdated = OUTDATED_IDS.has(c.id);
   $('drawer-skill-actions').style.display = isSkill ? 'flex' : 'none';
   $('drawer-rescan-actions').style.display = isImported ? 'flex' : 'none';
+  $('btn-update-skill').style.display = (isImported && isOutdated) ? 'inline-block' : 'none';
+  $('drawer-update-badge').style.display = isOutdated ? 'block' : 'none';
   $('rescan-result').style.display = 'none';
   $('score-panel').classList.remove('visible');
   $('enrich-panel').classList.remove('visible');
@@ -385,8 +394,22 @@ $('skills-sort').addEventListener('change', function(e){ skillsSort=e.target.val
 /* ── DATA ── */
 fetch('components.json')
   .then(function(r){ return r.json(); })
-  .then(function(data){ COMPONENTS=data; renderSidebarNav(); renderLib(); renderSkills(); })
+  .then(function(data){
+    COMPONENTS=data; renderSidebarNav(); renderLib(); renderSkills();
+    fetchOutdatedSkills();
+  })
   .catch(function(){ renderSidebarNav(); renderLib(); renderSkills(); });
+
+function fetchOutdatedSkills() {
+  fetch(CK.url + '/check-updates')
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if (!data.updates || !data.updates.length) return;
+      data.updates.forEach(function(u){ OUTDATED_IDS.add(u.id); });
+      renderLib(); renderSkills();
+    })
+    .catch(function(){});
+}
 
 /* ── COCKPIT ── */
 
@@ -824,6 +847,36 @@ $('btn-rescan-imported').addEventListener('click', function(){
       result.textContent = 'Fout: ' + e.message;
     })
     .finally(function(){ btn.disabled = false; btn.textContent = '↻ Rescan bron'; });
+});
+
+$('btn-update-skill').addEventListener('click', function(){
+  var c = COMPONENTS.find(function(x){ return x.id === drawerCurrentId; });
+  if (!c) return;
+  var btn = $('btn-update-skill');
+  var result = $('rescan-result');
+  btn.disabled = true; btn.textContent = 'Bijwerken…';
+  result.style.display = 'none';
+  ckApiFetch('/update-skill', {method:'POST', body: JSON.stringify({id: c.id})})
+    .then(function(r){
+      if (r.up_to_date) {
+        result.className = 'rescan-result success';
+        result.textContent = 'Al up-to-date.';
+      } else {
+        OUTDATED_IDS.delete(c.id);
+        $('drawer-update-badge').style.display = 'none';
+        btn.style.display = 'none';
+        result.className = 'rescan-result success';
+        result.textContent = 'Bijgewerkt naar ' + r.new_sha.slice(0,8) + (r.diff_url ? ' — ' + r.diff_url : '');
+        renderLib(); renderSkills();
+      }
+      result.style.display = 'block';
+    })
+    .catch(function(e){
+      result.className = 'rescan-result error';
+      result.textContent = 'Fout: ' + e.message;
+      result.style.display = 'block';
+    })
+    .finally(function(){ btn.disabled = false; btn.textContent = '↑ Update'; });
 });
 
 $('btn-analyze-skill').addEventListener('click', drawerAnalyzeSkill);
