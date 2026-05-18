@@ -176,6 +176,22 @@ body {
 .search-wrap input::placeholder { color: var(--text4); }
 .search-wrap input:focus { border-color: var(--primary); }
 
+.filter-select {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--text3);
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 6px 8px;
+  outline: none;
+  cursor: pointer;
+  max-width: 160px;
+  transition: border-color 0.15s;
+}
+.filter-select:focus { border-color: var(--primary); color: var(--text); }
+.filter-select:not([value=""]) { color: var(--text); border-color: var(--primary-h); }
+
 .sort-wrap {
   display: flex;
   align-items: center;
