@@ -464,6 +464,29 @@ mark.hl { background: rgba(249,115,22,0.18); color: var(--primary-h); font-style
 .drawer-action-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 .drawer-action-btn.enrich:hover { border-color: var(--primary); color: var(--primary); }
 .drawer-action-btn.rescan:hover { border-color: var(--primary-h); color: var(--primary-h); }
+.drawer-action-btn.update { border-color: var(--amber); color: var(--amber); }
+.drawer-action-btn.update:hover { background: rgba(245,158,11,0.08); }
+
+.update-badge {
+  margin: 0 16px 8px;
+  padding: 4px 10px;
+  border-radius: 3px;
+  font-family: var(--mono);
+  font-size: 10px;
+  background: rgba(245,158,11,0.1);
+  border: 1px solid var(--amber);
+  color: var(--amber);
+  display: inline-block;
+}
+
+.lib-card-update-dot {
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--amber);
+  margin-left: 5px;
+  vertical-align: middle;
+}
 
 .rescan-result {
   margin: 0 16px;
