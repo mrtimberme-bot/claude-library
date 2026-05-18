@@ -233,7 +233,10 @@ function libSelectRow(id) {
 
   var isSkill = c.type==='skill';
   var isSnippet = c.type==='snippet';
+  var isImported = Array.isArray(c.tags) && c.tags.indexOf('imported') !== -1;
   $('drawer-skill-actions').style.display = isSkill ? 'flex' : 'none';
+  $('drawer-rescan-actions').style.display = isImported ? 'flex' : 'none';
+  $('rescan-result').style.display = 'none';
   $('score-panel').classList.remove('visible');
   $('enrich-panel').classList.remove('visible');
 
@@ -798,6 +801,30 @@ function renderVerrijkingPreview(id, r) {
   saveRow.appendChild(saveBtn); saveRow.appendChild(cancelBtn);
   prev.appendChild(saveRow);
 }
+
+$('btn-rescan-imported').addEventListener('click', function(){
+  var c = COMPONENTS.find(function(x){ return x.id === drawerCurrentId; });
+  if (!c || !c.path) return;
+  var parts = c.path.split('/'); // ['imported', 'owner_repo', ...]
+  if (parts.length < 2) return;
+  var repo = parts[1].replace('_', '/');
+  var btn = $('btn-rescan-imported');
+  var result = $('rescan-result');
+  btn.disabled = true; btn.textContent = 'Bezig…';
+  result.style.display = 'none';
+  ckApiFetch('/import-repo', {method:'POST', body: JSON.stringify({repo: repo})})
+    .then(function(r){
+      result.style.display = 'block';
+      result.style.color = 'var(--green)';
+      result.textContent = 'Opnieuw geïmporteerd — PR: ' + r.pr_url;
+    })
+    .catch(function(e){
+      result.style.display = 'block';
+      result.style.color = 'var(--red)';
+      result.textContent = 'Fout: ' + e.message;
+    })
+    .finally(function(){ btn.disabled = false; btn.textContent = '↻ Rescan bron'; });
+});
 
 $('btn-analyze-skill').addEventListener('click', drawerAnalyzeSkill);
 $('btn-enrich-skill').addEventListener('click', drawerEnrichUsage);
