@@ -1,6 +1,8 @@
 // worker.js
 const GITHUB_API = 'https://api.github.com'
 const ANTHROPIC_API = 'https://api.anthropic.com/v1/messages'
+const COMPONENTS_CACHE_KEY = 'components_v1'
+const COMPONENTS_CACHE_TTL = 300 // 5 minutes
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -56,6 +58,11 @@ function checkAuth(request, env) {
 }
 
 async function handleComponents(env) {
+  if (env.LIBRARY_CACHE) {
+    const cached = await env.LIBRARY_CACHE.get(COMPONENTS_CACHE_KEY)
+    if (cached) return json(JSON.parse(cached))
+  }
+
   const repo = env.LIBRARY_REPO || 'mrtimberme-bot/claude-library'
   let resp = await ghGet(`/repos/${repo}/contents/components.json`, env)
   if (resp.status === 401) {
@@ -67,7 +74,18 @@ async function handleComponents(env) {
   if (!resp.ok) return err('Failed to fetch components', 502)
   const data = await resp.json()
   const content = JSON.parse(atob(data.content.replace(/\n/g, '')))
+
+  if (env.LIBRARY_CACHE) {
+    await env.LIBRARY_CACHE.put(COMPONENTS_CACHE_KEY, JSON.stringify(content), { expirationTtl: COMPONENTS_CACHE_TTL })
+  }
+
   return json(content)
+}
+
+async function invalidateComponentsCache(env) {
+  if (env.LIBRARY_CACHE) {
+    await env.LIBRARY_CACHE.delete(COMPONENTS_CACHE_KEY)
+  }
 }
 
 async function handleChat(request, env) {
@@ -563,6 +581,7 @@ async function handleSaveEnrichment(request, env) {
     const e = await putResp.json().catch(() => ({}))
     return err(`Kon niet opslaan: ${e.message || putResp.status}`, 502)
   }
+  await invalidateComponentsCache(env)
   return json({ ok: true })
 }
 
@@ -663,6 +682,7 @@ async function handleUploadSkill(request, env) {
     return err(`Kon components.json niet bijwerken: ${e.message || compPutResp.status}`, 502)
   }
 
+  await invalidateComponentsCache(env)
   return json({ success: true, path: skillPath })
 }
 
@@ -677,7 +697,7 @@ export default {
       if (pathname === '/components' && request.method === 'GET')
         return handleComponents(env)
 
-      const authPaths = ['/chat','/import-repo','/upload-skill','/analyze-skill','/analyze-all','/enrich-usage','/save-enrichment']
+      const authPaths = ['/chat','/import-repo','/upload-skill','/analyze-skill','/analyze-all','/enrich-usage','/save-enrichment','/cache-refresh']
       if (authPaths.includes(pathname)) {
         if (request.method !== 'POST') return err('POST required', 405)
         if (!checkAuth(request, env)) return err('Unauthorized', 401)
@@ -688,6 +708,10 @@ export default {
         if (pathname === '/analyze-all') return handleAnalyzeAll(request, env)
         if (pathname === '/enrich-usage') return handleEnrichUsage(request, env)
         if (pathname === '/save-enrichment') return handleSaveEnrichment(request, env)
+        if (pathname === '/cache-refresh') {
+          await invalidateComponentsCache(env)
+          return json({ ok: true, message: 'Cache invalidated' })
+        }
       }
 
       return err('Not found', 404)
