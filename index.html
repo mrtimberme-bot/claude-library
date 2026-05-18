@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="app.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body>
 
@@ -52,18 +53,24 @@
         <table class="tt-table">
           <thead>
             <tr>
+              <th class="col-check"><input type="checkbox" id="check-all" title="Alles selecteren"></th>
               <th class="col-type" data-col="type">Type <span class="si">↕</span></th>
               <th class="col-name" data-col="name">Naam <span class="si">↕</span></th>
               <th class="col-desc">Beschrijving</th>
-              <th class="col-author" data-col="author">Auteur <span class="si">↕</span></th>
               <th class="col-tags">Tags</th>
               <th class="col-status" data-col="status">Status <span class="si">↕</span></th>
+              <th class="col-updated" data-col="updated">Datum <span class="si">↕</span></th>
             </tr>
           </thead>
           <tbody id="lib-tbody"></tbody>
         </table>
         <div class="empty-state" id="lib-empty" style="display:none">Geen modules gevonden.</div>
       </div>
+    </div>
+    <div class="sel-bar" id="sel-bar" style="display:none">
+      <span class="sel-count" id="sel-count">0 geselecteerd</span>
+      <button class="sel-btn" id="sel-download">⬇ Download ZIP</button>
+      <button class="sel-clear" id="sel-clear">✕</button>
     </div>
     <div class="lib-footer">
       <span>Claude Library — persoonlijke component registry</span>
