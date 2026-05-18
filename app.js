@@ -471,7 +471,11 @@ $('sel-clear').addEventListener('click', function() {
 });
 
 $('sel-download').addEventListener('click', function() {
-  var btn = this;
+  requireAuth(startDownload);
+});
+
+function startDownload() {
+  var btn = $('sel-download');
   btn.textContent = '⏳ Laden…';
   btn.disabled = true;
 
@@ -504,7 +508,7 @@ $('sel-download').addEventListener('click', function() {
     btn.textContent = '⬇ Download ZIP';
     btn.disabled = false;
   });
-});
+}
 
 function populateFilterDropdowns() {
   var tags = {}, owners = {};
