@@ -192,6 +192,20 @@ body {
 .filter-select:focus { border-color: var(--primary); color: var(--text); }
 .filter-select:not([value=""]) { color: var(--text); border-color: var(--primary-h); }
 
+.filter-clear-btn {
+  background: transparent;
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  color: var(--text4);
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 9px;
+  padding: 5px 8px;
+  white-space: nowrap;
+  transition: color 0.1s, border-color 0.1s;
+}
+.filter-clear-btn:hover { color: var(--primary); border-color: var(--primary); }
+
 .sort-wrap {
   display: flex;
   align-items: center;
