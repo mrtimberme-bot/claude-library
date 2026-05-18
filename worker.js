@@ -57,6 +57,29 @@ function checkAuth(request, env) {
   return token === env.LIBRARY_TOKEN
 }
 
+const RATE_LIMIT_MAX    = 10   // max failed attempts
+const RATE_LIMIT_WINDOW = 900  // 15 minutes in seconds
+
+function clientIp(request) {
+  return request.headers.get('CF-Connecting-IP') || 'unknown'
+}
+
+async function isRateLimited(request, env) {
+  if (!env.LIBRARY_CACHE) return false
+  const raw = await env.LIBRARY_CACHE.get(`rl:${clientIp(request)}`)
+  if (!raw) return false
+  return JSON.parse(raw).count >= RATE_LIMIT_MAX
+}
+
+async function recordFailedAuth(request, env) {
+  if (!env.LIBRARY_CACHE) return
+  const key = `rl:${clientIp(request)}`
+  const raw = await env.LIBRARY_CACHE.get(key)
+  const data = raw ? JSON.parse(raw) : { count: 0 }
+  data.count += 1
+  await env.LIBRARY_CACHE.put(key, JSON.stringify(data), { expirationTtl: RATE_LIMIT_WINDOW })
+}
+
 async function handleComponents(env) {
   if (env.LIBRARY_CACHE) {
     const cached = await env.LIBRARY_CACHE.get(COMPONENTS_CACHE_KEY)
@@ -796,7 +819,15 @@ export default {
       const authPaths = ['/chat','/import-repo','/upload-skill','/analyze-skill','/analyze-all','/enrich-usage','/save-enrichment','/cache-refresh','/update-skill']
       if (authPaths.includes(pathname)) {
         if (request.method !== 'POST') return err('POST required', 405)
-        if (!checkAuth(request, env)) return err('Unauthorized', 401)
+        if (await isRateLimited(request, env))
+          return new Response(JSON.stringify({ error: 'Too many failed attempts — try again in 15 minutes' }), {
+            status: 429,
+            headers: { ...CORS, 'Content-Type': 'application/json', 'Retry-After': String(RATE_LIMIT_WINDOW) },
+          })
+        if (!checkAuth(request, env)) {
+          await recordFailedAuth(request, env)
+          return err('Unauthorized', 401)
+        }
         if (pathname === '/chat') return handleChat(request, env)
         if (pathname === '/import-repo') return handleImportRepo(request, env)
         if (pathname === '/upload-skill') return handleUploadSkill(request, env)
