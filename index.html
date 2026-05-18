@@ -16,7 +16,6 @@
   <div class="topbar-sep"></div>
   <div class="topbar-nav">
     <button class="nav-btn active" id="nav-library">Library</button>
-    <button class="nav-btn" id="nav-skills">Skills</button>
     <button class="nav-btn" id="nav-cockpit">Cockpit</button>
   </div>
   <div class="topbar-right" id="topbar-right">
@@ -35,6 +34,8 @@
       <div class="search-wrap">
         <input type="text" id="search" placeholder="Zoek modules..." autocomplete="off">
       </div>
+      <select class="filter-select" id="filter-tag"><option value="">Alle tags</option></select>
+      <select class="filter-select" id="filter-owner"><option value="">Alle owners</option></select>
       <select id="sort-select" style="display:none">
         <option value="name">naam</option>
         <option value="updated">bijgewerkt</option>
