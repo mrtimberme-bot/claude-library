@@ -636,5 +636,176 @@
     "files": {
       "preview": "snippets/layout-spotlight/index.html"
     }
+  },
+  {
+    "id": "mcp-builder",
+    "name": "MCP Server Builder",
+    "type": "skill",
+    "version": "1.0.0",
+    "status": "active",
+    "desc": "Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate externa",
+    "usage": "",
+    "author": "anthropic",
+    "updated": "2026-05-18",
+    "path": "imported/anthropics_skills/mcp-builder/SKILL.md",
+    "tags": [
+      "mcp",
+      "api",
+      "tools"
+    ]
+  },
+  {
+    "id": "webapp-testing",
+    "name": "Web App Testing",
+    "type": "skill",
+    "version": "1.0.0",
+    "status": "active",
+    "desc": "Toolkit for interacting with and testing local web applications using Playwright. Supports verifying frontend functionality, debugging UI behavior, capturing browser screenshots, and viewing browser l",
+    "usage": "",
+    "author": "anthropic",
+    "updated": "2026-05-18",
+    "path": "imported/anthropics_skills/webapp-testing/SKILL.md",
+    "tags": [
+      "testing",
+      "playwright",
+      "web"
+    ]
+  },
+  {
+    "id": "skill-creator",
+    "name": "Skill Creator",
+    "type": "skill",
+    "version": "1.0.0",
+    "status": "active",
+    "desc": "Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, edit, or optimize an existing skill, run evals to test a skill",
+    "usage": "",
+    "author": "anthropic",
+    "updated": "2026-05-18",
+    "path": "imported/anthropics_skills/skill-creator/SKILL.md",
+    "tags": [
+      "meta",
+      "skills",
+      "dev"
+    ]
+  },
+  {
+    "id": "doc-coauthoring",
+    "name": "Doc Co-Authoring",
+    "type": "skill",
+    "version": "1.0.0",
+    "status": "active",
+    "desc": "Guide users through a structured workflow for co-authoring documentation. Use when user wants to write documentation, proposals, technical specs, decision docs, or similar structured content. This wor",
+    "usage": "",
+    "author": "anthropic",
+    "updated": "2026-05-18",
+    "path": "imported/anthropics_skills/doc-coauthoring/SKILL.md",
+    "tags": [
+      "docs",
+      "writing"
+    ]
+  },
+  {
+    "id": "react-best-practices",
+    "name": "React & Next.js Best Practices",
+    "type": "skill",
+    "version": "1.0.0",
+    "status": "active",
+    "desc": "React and Next.js performance optimization guidelines from Vercel Engineering. This skill should be used when writing, reviewing, or refactoring React/Next.js code to ensure optimal performance patter",
+    "usage": "",
+    "author": "vercel",
+    "updated": "2026-05-18",
+    "path": "imported/vercel-labs_agent-skills/react-best-practices/SKILL.md",
+    "tags": [
+      "react",
+      "nextjs",
+      "web",
+      "performance"
+    ]
+  },
+  {
+    "id": "web-design-guidelines",
+    "name": "Web Design Guidelines",
+    "type": "skill",
+    "version": "1.0.0",
+    "status": "active",
+    "desc": "Review UI code for Web Interface Guidelines compliance. Use when asked to \"review my UI\", \"check accessibility\", \"audit design\", \"review UX\", or \"check my site against best practices\".",
+    "usage": "",
+    "author": "vercel",
+    "updated": "2026-05-18",
+    "path": "imported/vercel-labs_agent-skills/web-design-guidelines/SKILL.md",
+    "tags": [
+      "design",
+      "accessibility",
+      "web",
+      "ux"
+    ]
+  },
+  {
+    "id": "prompt-optimizer",
+    "name": "Prompt Optimizer",
+    "type": "skill",
+    "version": "1.0.0",
+    "status": "active",
+    "desc": "Transform vague prompts into precise, well-structured specifications using EARS (Easy Approach to Requirements Syntax) methodology. This skill should be used when users provide loose requirements, amb",
+    "usage": "",
+    "author": "daymade",
+    "updated": "2026-05-18",
+    "path": "imported/daymade_claude-code-skills/prompt-optimizer/SKILL.md",
+    "tags": [
+      "prompting",
+      "requirements",
+      "ai"
+    ]
+  },
+  {
+    "id": "fact-checker",
+    "name": "Fact Checker",
+    "type": "skill",
+    "version": "1.0.0",
+    "status": "active",
+    "desc": "Verifies factual claims in documents using web search and official sources, then proposes corrections with user confirmation. Use when the user asks to fact-check, verify information, validate claims,",
+    "usage": "",
+    "author": "daymade",
+    "updated": "2026-05-18",
+    "path": "imported/daymade_claude-code-skills/fact-checker/SKILL.md",
+    "tags": [
+      "research",
+      "verification",
+      "quality"
+    ]
+  },
+  {
+    "id": "i18n-expert",
+    "name": "i18n Expert",
+    "type": "skill",
+    "version": "1.0.0",
+    "status": "active",
+    "desc": "This skill should be used when setting up, auditing, or enforcing internationalization/localization in UI codebases (React/TS, i18next or similar, JSON locales), including installing/configuring the i",
+    "usage": "",
+    "author": "daymade",
+    "updated": "2026-05-18",
+    "path": "imported/daymade_claude-code-skills/i18n-expert/SKILL.md",
+    "tags": [
+      "i18n",
+      "l10n",
+      "web"
+    ]
+  },
+  {
+    "id": "github-ops",
+    "name": "GitHub Ops",
+    "type": "skill",
+    "version": "1.0.0",
+    "status": "active",
+    "desc": "Provides comprehensive GitHub operations using gh CLI and GitHub API. Activates when working with pull requests, issues, repositories, workflows, or GitHub API operations including creating/viewing/me",
+    "usage": "",
+    "author": "daymade",
+    "updated": "2026-05-18",
+    "path": "imported/daymade_claude-code-skills/github-ops/SKILL.md",
+    "tags": [
+      "github",
+      "git",
+      "devops"
+    ]
   }
 ]
