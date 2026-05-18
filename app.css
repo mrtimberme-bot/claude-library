@@ -895,6 +895,22 @@ tbody td { padding: 10px 16px; vertical-align: middle; overflow: hidden; text-ov
 
 .cockpit-settings-btn:hover { background: var(--surface3); color: var(--text2); }
 
+.topbar-lock-btn {
+  font-size: 14px;
+  padding: 3px 7px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.15s, border-color 0.15s;
+  line-height: 1;
+}
+.topbar-lock-btn:hover { opacity: 0.85; }
+.topbar-lock-btn.unlocked { opacity: 1; border-color: var(--amber); }
+
+.hidden-locked { display: none !important; }
+
 .bulk-table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 11px; }
 .bulk-table th { text-align: left; padding: 6px 10px; font-size: 9px; letter-spacing: 0.12em; color: var(--text4); text-transform: uppercase; border-bottom: 1px solid var(--border); }
 .bulk-table td { padding: 7px 10px; border-bottom: 1px solid var(--border); color: var(--text2); }
