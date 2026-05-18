@@ -354,7 +354,7 @@ mark.hl { background: rgba(249,115,22,0.18); color: var(--primary-h); font-style
   flex-direction: column;
 }
 
-.drawer.open { width: 340px; }
+.drawer.open { width: 480px; }
 
 .drawer-header {
   position: sticky;
