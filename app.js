@@ -295,10 +295,11 @@ function libSelectRow(id) {
   var contentTypes = ['skill','agent','memory'];
   var contentSection = $('drawer-content-section');
   var contentEl = $('drawer-file-content');
+  var RAW_BASE = 'https://raw.githubusercontent.com/mrtimberme-bot/claude-library/main/';
   if (c.path && contentTypes.indexOf(c.type) !== -1) {
     contentSection.style.display = 'flex';
     contentEl.textContent = 'Laden…';
-    fetch(c.path)
+    fetch(RAW_BASE + c.path)
       .then(function(r) {
         if (!r.ok) throw new Error('HTTP ' + r.status);
         return r.text();
