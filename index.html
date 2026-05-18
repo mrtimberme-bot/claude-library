@@ -45,9 +45,26 @@
         </select>
       </div>
     </div>
-    <div class="card-grid-wrap">
-      <div id="lib-cards"></div>
-      <div class="empty-state" id="lib-empty" style="display:none">Geen modules gevonden.</div>
+    <div class="tt-wrap">
+      <div class="tt-header">
+        <span class="tt-count" id="lib-count">— componenten</span>
+      </div>
+      <div class="tt-scroll">
+        <table class="tt-table">
+          <thead>
+            <tr>
+              <th class="col-type" data-col="type">Type <span class="si">↕</span></th>
+              <th class="col-name" data-col="name">Naam <span class="si">↕</span></th>
+              <th class="col-desc">Beschrijving</th>
+              <th class="col-author" data-col="author">Auteur <span class="si">↕</span></th>
+              <th class="col-tags">Tags</th>
+              <th class="col-status" data-col="status">Status <span class="si">↕</span></th>
+            </tr>
+          </thead>
+          <tbody id="lib-tbody"></tbody>
+        </table>
+        <div class="empty-state" id="lib-empty" style="display:none">Geen modules gevonden.</div>
+      </div>
     </div>
     <div class="lib-footer">
       <span>Claude Library — persoonlijke component registry</span>
