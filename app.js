@@ -75,7 +75,7 @@ if (window.location.hash === '#cockpit') { switchMode('cockpit'); }
 
 function switchMode(mode) {
   currentMode = mode;
-  ['library','skills','cockpit'].forEach(function(m) {
+  ['library','cockpit'].forEach(function(m) {
     $('view-'+m).classList.toggle('active', m===mode);
     $('nav-'+m).classList.toggle('active', m===mode);
   });
@@ -122,12 +122,12 @@ function switchMode(mode) {
 }
 
 $('nav-library').addEventListener('click', function(){ switchMode('library'); });
-$('nav-skills').addEventListener('click',  function(){ switchMode('skills'); });
 $('nav-cockpit').addEventListener('click', function(){ switchMode('cockpit'); });
 
 
 /* ── LIBRARY ── */
 var libFilter = 'all', libSearch = '', libSort = 'name', libSortDir = 1, libSelected = null;
+var libTagFilter = '', libOwnerFilter = '';
 
 function mkEl(tag, cls, text) {
   var el = document.createElement(tag);
@@ -144,6 +144,14 @@ function libFiltered() {
       var q = libSearch.toLowerCase();
       return c.name.toLowerCase().includes(q) || c.desc.toLowerCase().includes(q)
           || (c.tags||[]).some(function(t){ return t.includes(q); });
+    })
+    .filter(function(c){
+      if (!libTagFilter) return true;
+      return (c.tags||[]).indexOf(libTagFilter) !== -1;
+    })
+    .filter(function(c){
+      if (!libOwnerFilter) return true;
+      return (c.author||'') === libOwnerFilter;
     })
     .sort(function(a,b){
       var av=(a[libSort]||'').toLowerCase(), bv=(b[libSort]||'').toLowerCase();
@@ -467,11 +475,40 @@ function renderSkills() {
 $('skills-search').addEventListener('input', function(e){ skillsSearch=e.target.value; renderSkills(); });
 $('skills-sort').addEventListener('change', function(e){ skillsSort=e.target.value; skillsSortDir=1; renderSkills(); });
 
+$('filter-tag').addEventListener('change', function(e){ libTagFilter=e.target.value; renderLib(); });
+$('filter-owner').addEventListener('change', function(e){ libOwnerFilter=e.target.value; renderLib(); });
+
+function populateFilterDropdowns() {
+  var tags = {}, owners = {};
+  COMPONENTS.forEach(function(c){
+    (c.tags||[]).forEach(function(t){ tags[t]=(tags[t]||0)+1; });
+    if (c.author) owners[c.author]=(owners[c.author]||0)+1;
+  });
+
+  var tagSel = $('filter-tag');
+  var tagVal = tagSel.value;
+  tagSel.textContent='';
+  var opt=document.createElement('option'); opt.value=''; opt.textContent='Alle tags'; tagSel.appendChild(opt);
+  Object.keys(tags).sort().forEach(function(t){
+    var o=document.createElement('option'); o.value=t; o.textContent=t+' ('+tags[t]+')'; tagSel.appendChild(o);
+  });
+  tagSel.value = tagVal;
+
+  var ownerSel = $('filter-owner');
+  var ownerVal = ownerSel.value;
+  ownerSel.textContent='';
+  var opt2=document.createElement('option'); opt2.value=''; opt2.textContent='Alle owners'; ownerSel.appendChild(opt2);
+  Object.keys(owners).sort().forEach(function(o){
+    var el=document.createElement('option'); el.value=o; el.textContent=o+' ('+owners[o]+')'; ownerSel.appendChild(el);
+  });
+  ownerSel.value = ownerVal;
+}
+
 /* ── DATA ── */
 fetch('components.json')
   .then(function(r){ return r.json(); })
   .then(function(data){
-    COMPONENTS=data; renderSidebarNav(); renderLib(); renderSkills();
+    COMPONENTS=data; renderSidebarNav(); renderLib(); renderSkills(); populateFilterDropdowns();
     fetchOutdatedSkills();
   })
   .catch(function(){ renderSidebarNav(); renderLib(); renderSkills(); });
