@@ -192,74 +192,82 @@ function renderSidebarNav() {
   });
 }
 
+var TYPE_COLOR = {
+  skill:'#22c55e', agent:'#fb923c', mcp:'#60a5fa', memory:'#c084fc',
+  plugin:'#f472b6', api:'#06b6d4', arch:'#f43f5e', infra:'#a8a29e',
+  orch:'#84cc16', snippet:'#f472b6'
+};
+
 function renderLib() {
   var items = libFiltered();
-  var container = $('lib-cards'); container.textContent='';
-  $('lib-empty').style.display = items.length?'none':'block';
+  $('lib-empty').style.display = items.length ? 'none' : 'block';
 
-  function makeGrid(list) {
-    var g = document.createElement('div'); g.className='card-grid';
-    list.forEach(function(c){ g.appendChild(buildCard(c)); });
-    return g;
-  }
+  var tbody = $('lib-tbody');
+  tbody.textContent = '';
 
-  if (libFilter==='all' && !libSearch) {
-    var byType={};
-    items.forEach(function(c){ (byType[c.type]=byType[c.type]||[]).push(c); });
-    TYPE_ORDER.filter(function(t){ return byType[t]&&byType[t].length; }).forEach(function(t){
-      var lbl=document.createElement('div'); lbl.className='type-group-label';
-      lbl.textContent=(TYPE_LABEL[t]||t)+' ('+byType[t].length+')';
-      container.appendChild(lbl); container.appendChild(makeGrid(byType[t]));
+  items.forEach(function(c) {
+    var tr = document.createElement('tr');
+    tr.dataset.id = c.id;
+    if (c.id === libSelected) tr.classList.add('selected');
+
+    var color = TYPE_COLOR[c.type] || '#888';
+
+    var tdType = document.createElement('td');
+    tdType.className = 'tt-type';
+    var dot = document.createElement('span');
+    dot.className = 'tt-dot';
+    dot.style.background = color;
+    var lbl = document.createElement('span');
+    lbl.className = 'tt-type-lbl';
+    lbl.style.color = color;
+    lbl.textContent = (TYPE_LABEL[c.type] || c.type).toUpperCase();
+    tdType.appendChild(dot);
+    tdType.appendChild(lbl);
+
+    var tdName = document.createElement('td');
+    tdName.className = 'tt-name';
+    tdName.appendChild(hlNode(c.name, libSearch));
+    if (OUTDATED_IDS.has(c.id)) {
+      var upd = document.createElement('span'); upd.className = 'tt-update-dot'; upd.title = 'Update beschikbaar';
+      tdName.appendChild(upd);
+    }
+
+    var tdDesc = document.createElement('td');
+    tdDesc.className = 'tt-desc';
+    tdDesc.appendChild(hlNode(c.desc, libSearch));
+
+    var tdAuthor = document.createElement('td');
+    tdAuthor.className = 'tt-author';
+    tdAuthor.textContent = (c.author || '').split(' ').pop();
+
+    var tdTags = document.createElement('td');
+    tdTags.className = 'tt-tags';
+    (c.tags || []).slice(0, 3).forEach(function(t) {
+      var chip = document.createElement('span');
+      chip.className = 'tt-tag' + (t === 'imported' ? ' tt-tag-imported' : '');
+      chip.textContent = t;
+      tdTags.appendChild(chip);
     });
-  } else {
-    container.appendChild(makeGrid(items));
-  }
 
+    var tdStatus = document.createElement('td');
+    var st = document.createElement('span');
+    st.className = 'tt-status ' + (c.status || 'draft');
+    st.textContent = c.status || 'draft';
+    tdStatus.appendChild(st);
+
+    tr.appendChild(tdType);
+    tr.appendChild(tdName);
+    tr.appendChild(tdDesc);
+    tr.appendChild(tdAuthor);
+    tr.appendChild(tdTags);
+    tr.appendChild(tdStatus);
+
+    tr.addEventListener('click', function() { libSelectRow(c.id); });
+    tbody.appendChild(tr);
+  });
+
+  $('lib-count').textContent = items.length + ' componenten';
   $('last-sync').textContent = new Date().toLocaleDateString('nl-NL');
-}
-
-function buildCard(c) {
-  var card = document.createElement('div');
-  card.className = 'lib-card bl-'+(c.type||'');
-  if (c.id===libSelected) card.classList.add('selected');
-
-  var top = document.createElement('div'); top.className='lib-card-top';
-  var nameEl = document.createElement('div'); nameEl.className='lib-card-name';
-  nameEl.appendChild(hlNode(c.name, libSearch));
-  var badge = document.createElement('span'); badge.className='type-badge';
-  badge.textContent=TYPE_LABEL[c.type]||c.type;
-  top.appendChild(nameEl); top.appendChild(badge);
-
-  var desc = document.createElement('div'); desc.className='lib-card-desc';
-  desc.appendChild(hlNode(c.desc, libSearch));
-
-  var footer = document.createElement('div'); footer.className='lib-card-footer';
-  var tagsEl = document.createElement('div'); tagsEl.className='lib-card-tags';
-  (c.tags||[]).slice(0,3).forEach(function(t){
-    var chip=document.createElement('span'); chip.className='tag-chip'; chip.textContent=t; tagsEl.appendChild(chip);
-  });
-  var right=document.createElement('div'); right.style.cssText='display:flex;align-items:center;gap:6px;flex-shrink:0';
-  var dot=document.createElement('span'); dot.className='status-dot '+(DOT_CLASS[c.status]||'dot-draft');
-  var copyBtn=document.createElement('button'); copyBtn.className='lib-card-copy';
-  copyBtn.title='Pad kopiëren'; copyBtn.textContent='⎘ PAD';
-  right.appendChild(dot);
-  if (OUTDATED_IDS.has(c.id)) {
-    var updDot=document.createElement('span'); updDot.className='lib-card-update-dot'; updDot.title='Update beschikbaar';
-    right.appendChild(updDot);
-  }
-  right.appendChild(copyBtn);
-  footer.appendChild(tagsEl); footer.appendChild(right);
-  card.appendChild(top); card.appendChild(desc); card.appendChild(footer);
-
-  card.addEventListener('click', function(e){ if (!e.target.closest('.lib-card-copy')) libSelectRow(c.id); });
-  copyBtn.addEventListener('click', function(e){
-    e.stopPropagation();
-    navigator.clipboard.writeText(c.path).catch(function(){});
-    var orig=copyBtn.textContent; copyBtn.textContent='✓ Gekopieerd';
-    copyBtn.style.color='var(--green)'; copyBtn.style.borderColor='var(--green)';
-    setTimeout(function(){ copyBtn.textContent=orig; copyBtn.style.color=''; copyBtn.style.borderColor=''; },1500);
-  });
-  return card;
 }
 
 function libSelectRow(id) {
