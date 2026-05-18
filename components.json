@@ -649,6 +649,7 @@
     "updated": "2026-05-18",
     "path": "imported/anthropics_skills/mcp-builder/SKILL.md",
     "tags": [
+      "imported",
       "mcp",
       "api",
       "tools"
@@ -666,6 +667,7 @@
     "updated": "2026-05-18",
     "path": "imported/anthropics_skills/webapp-testing/SKILL.md",
     "tags": [
+      "imported",
       "testing",
       "playwright",
       "web"
@@ -683,6 +685,7 @@
     "updated": "2026-05-18",
     "path": "imported/anthropics_skills/skill-creator/SKILL.md",
     "tags": [
+      "imported",
       "meta",
       "skills",
       "dev"
@@ -700,6 +703,7 @@
     "updated": "2026-05-18",
     "path": "imported/anthropics_skills/doc-coauthoring/SKILL.md",
     "tags": [
+      "imported",
       "docs",
       "writing"
     ]
@@ -716,6 +720,7 @@
     "updated": "2026-05-18",
     "path": "imported/vercel-labs_agent-skills/react-best-practices/SKILL.md",
     "tags": [
+      "imported",
       "react",
       "nextjs",
       "web",
@@ -734,6 +739,7 @@
     "updated": "2026-05-18",
     "path": "imported/vercel-labs_agent-skills/web-design-guidelines/SKILL.md",
     "tags": [
+      "imported",
       "design",
       "accessibility",
       "web",
@@ -752,6 +758,7 @@
     "updated": "2026-05-18",
     "path": "imported/daymade_claude-code-skills/prompt-optimizer/SKILL.md",
     "tags": [
+      "imported",
       "prompting",
       "requirements",
       "ai"
@@ -769,6 +776,7 @@
     "updated": "2026-05-18",
     "path": "imported/daymade_claude-code-skills/fact-checker/SKILL.md",
     "tags": [
+      "imported",
       "research",
       "verification",
       "quality"
@@ -786,6 +794,7 @@
     "updated": "2026-05-18",
     "path": "imported/daymade_claude-code-skills/i18n-expert/SKILL.md",
     "tags": [
+      "imported",
       "i18n",
       "l10n",
       "web"
@@ -803,6 +812,7 @@
     "updated": "2026-05-18",
     "path": "imported/daymade_claude-code-skills/github-ops/SKILL.md",
     "tags": [
+      "imported",
       "github",
       "git",
       "devops"
