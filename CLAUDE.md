@@ -39,8 +39,18 @@ GITHUB_TOKEN=ghp_jouwtoken claude
 
 **iOS Golden Set (ios-golden) — herbeoordelingsregel:**
 Na elke nieuwe skill-import controleer je altijd of de nieuwe skills thuishoren in de `ios-golden` set. Criteria voor toevoeging:
-- De skill heeft `ios`, `swift`, `swiftui`, `xcode`, `tvos`, `visionos` of `apple` in de tags
-- De skill is relevant voor één van de iOS lifecycle fases: setup, development, testing, UI/design, features, privacy/security, build/CI-CD, App Store, of post-launch
+- De skill heeft `ios`, `swift`, `swiftui`, `xcode`, `tvos`, `visionos`, `apple` of `app-store` in de tags
+- De skill is relevant voor één van de iOS lifecycle fases:
+  - **F0 · Pre-development**: marktonderzoek, competitive intelligence, app concept validatie
+  - **F1 · Setup & architectuur**: project setup, tooling, Swift architectuur
+  - **F2 · Development**: Swift, SwiftUI, data, concurrency
+  - **F3 · Testing & debugging**: tests, profiling, debugging
+  - **F4 · UI / Design**: HIG, SwiftUI design, accessibility
+  - **F5 · Features**: notificaties, widgets, IAP, AI, lokalisatie
+  - **F6 · Privacy & security**: privacy manifest, security
+  - **F7 · Build & CI/CD**: Xcode, simulators, CI/CD
+  - **F8 · App Store**: review compliance, ASC, store readiness
+  - **F9 · Post-launch**: monitoring, onderhoud
 - De skill is nog niet opgenomen in de set
 
 Werk `ios-golden` bij in `components.json` en push naar GitHub na de beoordeling.
