@@ -111,24 +111,6 @@
     "path": "skills/debug-detective/SKILL.md"
   },
   {
-    "id": "discoverscan",
-    "name": "DiscoverScan Context",
-    "type": "skill",
-    "status": "active",
-    "version": "v1.0",
-    "desc": "DiscoverScan-specifieke context — een iOS app voor foto-identificatie via Apple Intelligence + Claude API verrijking. Activeert bij elke taak in deze codebase.",
-    "usage": "Trigger: bij elke taak in de DiscoverScan codebase, blok 1-10, ScanFirst migratie",
-    "tags": [
-      "discoverscan",
-      "ios",
-      "apple-intelligence",
-      "claude-api"
-    ],
-    "author": "Timothy Stekkinger",
-    "updated": "2026-05-16",
-    "path": "skills/discoverscan/SKILL.md"
-  },
-  {
     "id": "haptics-designer",
     "name": "Haptics Designer",
     "type": "skill",
@@ -1449,5 +1431,64 @@
     "author": "timothystekkinger",
     "updated": "2026-05-19",
     "path": "skills/eod/SKILL.md"
+  },
+  {
+    "id": "daily-workflow",
+    "name": "Daily Workflow",
+    "type": "set",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Dagelijkse workflow skills — start/einde van de dag, debugging, git, handoff en zoom-out.",
+    "usage": "Gebruik bij dagelijkse werkroutine: python3 library-fetch.py --set daily-workflow",
+    "tags": [
+      "workflow",
+      "daily",
+      "productivity",
+      "debugging",
+      "git",
+      "set"
+    ],
+    "author": "timothystekkinger",
+    "updated": "2026-05-19",
+    "path": null,
+    "skills": [
+      "sod",
+      "eod",
+      "handoff",
+      "zoom-out",
+      "caveman",
+      "diagnose",
+      "git-guardrails"
+    ]
+  },
+  {
+    "id": "ios-tooling",
+    "name": "iOS Tooling",
+    "type": "set",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "iOS development tooling — Xcode, simulator, Tuist, CloudKit sync, accessibility en design principles.",
+    "usage": "Gebruik bij iOS project setup of tooling issues: python3 library-fetch.py --set ios-tooling",
+    "tags": [
+      "ios",
+      "xcode",
+      "tuist",
+      "tooling",
+      "accessibility",
+      "set"
+    ],
+    "author": "timothystekkinger",
+    "updated": "2026-05-19",
+    "path": null,
+    "skills": [
+      "xcode-simulator-expert",
+      "ios-build-verify",
+      "tuist-expert",
+      "swiftdata-cloudkit",
+      "swift-formatstyle",
+      "swiftui-design-principles",
+      "apple-accessibility-enhanced",
+      "focus-engine-tvos"
+    ]
   }
 ]
