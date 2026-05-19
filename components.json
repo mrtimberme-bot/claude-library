@@ -1241,5 +1241,147 @@
     "author": "mattpocock",
     "updated": "2026-05-19",
     "path": "skills/git-guardrails/SKILL.md"
+  },
+  {
+    "id": "ios-foundation",
+    "name": "iOS Foundation",
+    "type": "set",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Basispakket voor elke nieuwe iOS app — workflow, kwaliteit, compliance en lokalisatie.",
+    "usage": "Gebruik bij start van een nieuwe iOS app: python3 library-fetch.py --set ios-foundation",
+    "tags": [
+      "ios",
+      "swift",
+      "foundation",
+      "set"
+    ],
+    "author": "timothystekkinger",
+    "updated": "2026-05-19",
+    "path": null,
+    "skills": [
+      "ios-baseline",
+      "ios-blok-workflow",
+      "swift-reviewer",
+      "hig-compliance",
+      "accessibility-auditor",
+      "ios-testing",
+      "privacy-manifest",
+      "security-auditor",
+      "debug-detective",
+      "localization-manager"
+    ]
+  },
+  {
+    "id": "ios-advanced",
+    "name": "iOS Advanced",
+    "type": "set",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Geavanceerde Swift/SwiftUI skills voor concurrency, persistence, performance en architectuur.",
+    "usage": "Gebruik bij complexe feature ontwikkeling: python3 library-fetch.py --set ios-advanced",
+    "tags": [
+      "ios",
+      "swift",
+      "advanced",
+      "set"
+    ],
+    "author": "timothystekkinger",
+    "updated": "2026-05-19",
+    "path": null,
+    "skills": [
+      "swift-concurrency-expert",
+      "swiftdata-expert",
+      "swift-testing-expert",
+      "instruments-profiling",
+      "swiftui-performance-audit",
+      "swift-architecture",
+      "core-data-expert",
+      "swift-api-design-guidelines"
+    ]
+  },
+  {
+    "id": "ios-release",
+    "name": "iOS Release",
+    "type": "set",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "App Store voorbereiding, CI/CD, review compliance en post-launch monitoring.",
+    "usage": "Gebruik bij app release flow: python3 library-fetch.py --set ios-release",
+    "tags": [
+      "ios",
+      "release",
+      "app-store",
+      "ci-cd",
+      "set"
+    ],
+    "author": "timothystekkinger",
+    "updated": "2026-05-19",
+    "path": null,
+    "skills": [
+      "app-store-readiness",
+      "app-store-review-compliance",
+      "app-store-connect-automation",
+      "post-launch",
+      "ios-cicd",
+      "privacy-manifest"
+    ]
+  },
+  {
+    "id": "ios-design",
+    "name": "iOS Design",
+    "type": "set",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Volledig iOS design systeem — HIG, UI craft, motion, haptics, theme, onboarding en Liquid Glass.",
+    "usage": "Gebruik bij nieuwe app design of UI redesign: python3 library-fetch.py --set ios-design",
+    "tags": [
+      "ios",
+      "design",
+      "ui",
+      "ux",
+      "swiftui",
+      "set"
+    ],
+    "author": "timothystekkinger",
+    "updated": "2026-05-19",
+    "path": null,
+    "skills": [
+      "hig-compliance",
+      "ui-design-craft",
+      "motion-designer",
+      "haptics-designer",
+      "theme-designer",
+      "ux-designer",
+      "onboarding-designer",
+      "swiftui-liquid-glass",
+      "figma-to-swiftui"
+    ]
+  },
+  {
+    "id": "ios-monetization",
+    "name": "iOS Monetization",
+    "type": "set",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Betaalde features en engagement — StoreKit 2, push, widgets, App Intents en Apple Intelligence.",
+    "usage": "Gebruik bij toevoegen van betaalde of engagement features: python3 library-fetch.py --set ios-monetization",
+    "tags": [
+      "ios",
+      "monetization",
+      "storekit",
+      "widgets",
+      "set"
+    ],
+    "author": "timothystekkinger",
+    "updated": "2026-05-19",
+    "path": null,
+    "skills": [
+      "storekit-iap",
+      "push-notifications-expert",
+      "widgetkit-liveactivities",
+      "app-intents-expert",
+      "apple-foundation-models"
+    ]
   }
 ]
