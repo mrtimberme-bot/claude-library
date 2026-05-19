@@ -1490,5 +1490,210 @@
       "apple-accessibility-enhanced",
       "focus-engine-tvos"
     ]
+  },
+  {
+    "id": "ui-ux-pro-max",
+    "name": "UI/UX Pro Max",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Comprehensive UI/UX design intelligence — 50+ styles, 161 color palettes, 57 font pairings, 99 UX guidelines across 10 stacks (React, Next.js, Vue, Svelte, SwiftUI, Flutter, Tailwind, shadcn).",
+    "usage": "Trigger: \"design this page\", \"improve UI\", \"which color scheme\", \"review UX\". Multi-stack: web, mobile, iOS.",
+    "tags": [
+      "design",
+      "ui",
+      "ux",
+      "web",
+      "mobile",
+      "color",
+      "typography",
+      "multi-platform"
+    ],
+    "author": "nextlevelbuilder",
+    "updated": "2026-05-19",
+    "path": "skills/ui-ux-pro-max/SKILL.md"
+  },
+  {
+    "id": "interface-design",
+    "name": "Interface Design",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Craft-first interface design for dashboards, admin panels, SaaS apps. Persistent design system memory via .interface-design/system.md prevents stylistic drift across sessions.",
+    "usage": "Trigger: \"design dashboard\", \"build admin panel\", \"UI for SaaS\". NOT for landing pages → use frontend-design.",
+    "tags": [
+      "design",
+      "dashboard",
+      "interface",
+      "saas",
+      "web",
+      "craft"
+    ],
+    "author": "Dammyjay93",
+    "updated": "2026-05-19",
+    "path": "skills/interface-design/SKILL.md"
+  },
+  {
+    "id": "design-system",
+    "name": "Design System",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Design token architecture (primitive → semantic → component), CSS variable systems, spacing/typography scales. Three-layer token model for consistent cross-platform theming.",
+    "usage": "Trigger: \"create design tokens\", \"token architecture\", \"CSS variables system\", \"Tailwind theme config\".",
+    "tags": [
+      "design",
+      "tokens",
+      "css",
+      "tailwind",
+      "system",
+      "typography",
+      "color"
+    ],
+    "author": "nextlevelbuilder",
+    "updated": "2026-05-19",
+    "path": "skills/design-system/SKILL.md"
+  },
+  {
+    "id": "material-3",
+    "name": "Material Design 3",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Material Design 3 (Material You) for Jetpack Compose, Flutter, and web. Dynamic color, tonal surfaces, spring-based motion, 30+ components, adaptive layout across 5 window size classes.",
+    "usage": "Trigger: \"material design\", \"MD3\", \"material you\", \"Jetpack Compose MaterialTheme\", \"flutter material\".",
+    "tags": [
+      "design",
+      "material",
+      "android",
+      "flutter",
+      "compose",
+      "tokens"
+    ],
+    "author": "hamen",
+    "updated": "2026-05-19",
+    "path": "skills/material-3/SKILL.md"
+  },
+  {
+    "id": "data-visualization",
+    "name": "Data Visualization",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Chart type selection, axis design, color encoding, accessibility in data graphics. Selects correct chart for each data story with responsive and interactive patterns.",
+    "usage": "Trigger: \"show this data as chart\", \"which chart type\", \"visualize metrics\", \"dashboard charts\".",
+    "tags": [
+      "design",
+      "data",
+      "charts",
+      "visualization",
+      "accessibility",
+      "web"
+    ],
+    "author": "imsaif",
+    "updated": "2026-05-19",
+    "path": "skills/data-visualization/SKILL.md"
+  },
+  {
+    "id": "typography-expert",
+    "name": "Typography Expert",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Type scale generation (Major Third/Perfect Fourth), font pairing rules, vertical rhythm, responsive typography with CSS clamp(). Web font loading performance and typographic accessibility.",
+    "usage": "Trigger: \"improve typography\", \"font pairing\", \"type scale\", \"vertical rhythm\", \"fluid typography\".",
+    "tags": [
+      "design",
+      "typography",
+      "fonts",
+      "css",
+      "accessibility",
+      "web"
+    ],
+    "author": "imsaif",
+    "updated": "2026-05-19",
+    "path": "skills/typography-expert/SKILL.md"
+  },
+  {
+    "id": "dark-mode-design",
+    "name": "Dark Mode Design",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Purpose-built dark mode beyond color inversion. Elevation via lightness, surface hierarchy (#121212-#1A1A1A), desaturated accents, FOUC prevention, system preference detection.",
+    "usage": "Trigger: \"add dark mode\", \"dark theme\", \"dark surface colors\", \"prefers-color-scheme\", \"FOUC\".",
+    "tags": [
+      "design",
+      "dark-mode",
+      "css",
+      "accessibility",
+      "theme",
+      "web"
+    ],
+    "author": "imsaif",
+    "updated": "2026-05-19",
+    "path": "skills/dark-mode-design/SKILL.md"
+  },
+  {
+    "id": "color-system",
+    "name": "Color System",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Systematic color palette design using OKLCH perceptually-uniform scales, semantic color tokens, WCAG contrast compliance, dark mode color mapping, and color blindness simulation.",
+    "usage": "Trigger: \"create color palette\", \"WCAG contrast\", \"semantic colors\", \"color tokens\", \"OKLCH\".",
+    "tags": [
+      "design",
+      "color",
+      "accessibility",
+      "wcag",
+      "tokens",
+      "palette"
+    ],
+    "author": "imsaif",
+    "updated": "2026-05-19",
+    "path": "skills/color-system/SKILL.md"
+  },
+  {
+    "id": "responsive-design",
+    "name": "Responsive Design",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Mobile-first responsive design — breakpoint strategy, fluid typography via CSS clamp(), container queries, responsive images, CSS Grid/Flexbox. Content-driven breakpoints, not device-driven.",
+    "usage": "Trigger: \"make responsive\", \"mobile-first\", \"breakpoints\", \"container queries\", \"fluid layout\".",
+    "tags": [
+      "design",
+      "responsive",
+      "mobile",
+      "css",
+      "grid",
+      "flexbox",
+      "web"
+    ],
+    "author": "imsaif",
+    "updated": "2026-05-19",
+    "path": "skills/responsive-design/SKILL.md"
+  },
+  {
+    "id": "ai-graphic-design",
+    "name": "AI Graphic Design",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "AI-assisted logo, brand identity, and visual asset creation. Tool selection matrix (Recraft for SVG, Midjourney for ideation, Firefly for IP-safe), vectorization pipelines, mockups, and prompt engineering.",
+    "usage": "Trigger: \"create logo\", \"brand identity\", \"visual asset\", \"vectorize image\", \"AI image for brand\".",
+    "tags": [
+      "design",
+      "brand",
+      "logo",
+      "ai",
+      "graphic",
+      "identity",
+      "visual"
+    ],
+    "author": "designrique",
+    "updated": "2026-05-19",
+    "path": "skills/ai-graphic-design/SKILL.md"
   }
 ]
