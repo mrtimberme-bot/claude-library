@@ -1957,5 +1957,25 @@
       "app-store-connect-automation",
       "post-launch"
     ]
+  },
+  {
+    "id": "competitor-intelligence",
+    "name": "Competitor Intelligence",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Gespecialiseerde competitive intelligence voor iOS/Android apps. Review mining, feature gap matrix, ASO analyse en geprioriteerde marktaandeel-acties.",
+    "usage": "Trigger: \"/competitor-intelligence [app naam]\", \"analyseer concurrenten\", \"competitive analysis\", \"marktonderzoek app\"",
+    "tags": [
+      "research",
+      "competitive-analysis",
+      "ios",
+      "app-store",
+      "market-research",
+      "aso"
+    ],
+    "author": "timothystekkinger",
+    "updated": "2026-05-19",
+    "path": "skills/competitor-intelligence/SKILL.md"
   }
 ]
