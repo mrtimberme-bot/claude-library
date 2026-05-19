@@ -11,6 +11,8 @@ var OUTDATED_IDS = new Set();
 var currentMode = 'library';
 var cockpitInit = false;
 
+var setsChecked = new Set();
+
 var SET_COLORS = {
   'ios-foundation':  '#22c55e',
   'ios-advanced':    '#60a5fa',
@@ -143,6 +145,28 @@ function hexToRgba(hex, alpha) {
   return 'rgba('+r+','+g+','+b+','+alpha+')';
 }
 
+function getCheckedSetSkills() {
+  var seen = new Set(), result = [];
+  COMPONENTS.filter(function(c){ return c.type === 'set' && setsChecked.has(c.id); })
+    .forEach(function(s) {
+      (s.skills || []).forEach(function(sid) {
+        if (!seen.has(sid)) { seen.add(sid); result.push(sid); }
+      });
+    });
+  return result;
+}
+
+function updateSetsSelBar() {
+  var bar = $('sets-sel-bar');
+  var n = setsChecked.size;
+  if (!n) { bar.style.display = 'none'; return; }
+  bar.style.display = 'flex';
+  var skills = getCheckedSetSkills();
+  var setNames = COMPONENTS.filter(function(c){ return c.type==='set' && setsChecked.has(c.id); })
+    .map(function(c){ return c.name; }).join(', ');
+  $('sets-sel-info').textContent = n + (n===1?' set':' sets') + ' — ' + skills.length + ' unieke skills  (' + setNames + ')';
+}
+
 function renderSets() {
   var grid = $('sets-grid');
   var sets = COMPONENTS.filter(function(c){ return c.type === 'set'; });
@@ -162,7 +186,19 @@ function renderSets() {
     var skillIds = s.skills || [];
 
     var card = document.createElement('div');
-    card.className = 'set-card';
+    card.className = 'set-card' + (setsChecked.has(s.id) ? ' set-selected' : '');
+
+    // Checkbox
+    var cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.className = 'set-card-checkbox';
+    cb.checked = setsChecked.has(s.id);
+    cb.addEventListener('change', (function(setId, c){ return function() {
+      if (cb.checked) setsChecked.add(setId); else setsChecked.delete(setId);
+      c.classList.toggle('set-selected', cb.checked);
+      updateSetsSelBar();
+    }; })(s.id, card));
+    card.appendChild(cb);
 
     var accent = document.createElement('div');
     accent.className = 'set-card-accent';
@@ -198,7 +234,8 @@ function renderSets() {
       chip.className = 'set-skill-chip';
       chip.textContent = sid;
       chip.title = 'Bekijk in Library';
-      chip.addEventListener('click', (function(id){ return function() {
+      chip.addEventListener('click', (function(id){ return function(e) {
+        e.stopPropagation();
         switchMode('library');
         setTimeout(function(){ libSelectRow(id); }, 50);
       }; })(sid));
@@ -213,7 +250,8 @@ function renderSets() {
     var installBtn = document.createElement('button');
     installBtn.className = 'set-action-btn primary';
     installBtn.textContent = '📋 Copy install command';
-    installBtn.addEventListener('click', (function(setId, btn){ return function() {
+    installBtn.addEventListener('click', (function(setId, btn){ return function(e) {
+      e.stopPropagation();
       var cmd = 'python3 ~/Claude/Library/library-fetch.py --set ' + setId;
       if (navigator.clipboard) {
         navigator.clipboard.writeText(cmd).then(function() {
@@ -228,7 +266,8 @@ function renderSets() {
     var selectBtn = document.createElement('button');
     selectBtn.className = 'set-action-btn';
     selectBtn.textContent = '☑ Selecteer in Library';
-    selectBtn.addEventListener('click', (function(ids){ return function() {
+    selectBtn.addEventListener('click', (function(ids){ return function(e) {
+      e.stopPropagation();
       ids.forEach(function(sid){ libChecked.add(sid); });
       switchMode('library');
       updateSelBar();
@@ -239,9 +278,50 @@ function renderSets() {
     footer.appendChild(selectBtn);
     card.appendChild(footer);
 
+    // Click card toggles checkbox
+    card.addEventListener('click', function(e) {
+      if (e.target === cb || e.target.closest('button') || e.target.closest('.set-skill-chip')) return;
+      cb.checked = !cb.checked;
+      if (cb.checked) setsChecked.add(s.id); else setsChecked.delete(s.id);
+      card.classList.toggle('set-selected', cb.checked);
+      updateSetsSelBar();
+    });
+
     grid.appendChild(card);
   });
+
+  updateSetsSelBar();
 }
+
+// Multi-set selection bar actions
+$('sets-sel-install').addEventListener('click', function() {
+  var skills = getCheckedSetSkills();
+  var cmd = 'python3 ~/Claude/Library/library-fetch.py --install ' + skills.join(' ');
+  var btn = $('sets-sel-install');
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(cmd).then(function() {
+      btn.textContent = '✓ Gekopieerd!';
+      setTimeout(function(){ btn.textContent = '📋 Copy install command'; }, 2000);
+    });
+  } else {
+    prompt('Kopieer dit commando:', cmd);
+  }
+});
+
+$('sets-sel-library').addEventListener('click', function() {
+  var skills = getCheckedSetSkills();
+  skills.forEach(function(sid){ libChecked.add(sid); });
+  setsChecked.clear();
+  switchMode('library');
+  updateSelBar();
+  renderLib();
+});
+
+$('sets-sel-clear').addEventListener('click', function() {
+  setsChecked.clear();
+  updateSetsSelBar();
+  renderSets();
+});
 
 
 var RAW_BASE = 'https://raw.githubusercontent.com/mrtimberme-bot/claude-library/main/';
