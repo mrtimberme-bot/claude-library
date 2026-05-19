@@ -693,5 +693,467 @@
     "author": "timothystekkinger",
     "updated": "2026-05-19",
     "path": "skills/parallel-code-review/SKILL.md"
+  },
+  {
+    "id": "swift-concurrency-expert",
+    "name": "Swift Concurrency Expert",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Diagnose Swift Concurrency issues, refactor callback-based code to async/await, and guide Swift 6 migration when working with tasks, actors, @MainActor, Sendable, data races, thread safety, or concurr",
+    "usage": "Trigger: wanneer je werkt met swift concurrency expert",
+    "tags": [
+      "ios",
+      "swift",
+      "concurrency",
+      "async-await",
+      "actor"
+    ],
+    "author": "imported",
+    "updated": "2026-05-19",
+    "path": "skills/swift-concurrency-expert/SKILL.md"
+  },
+  {
+    "id": "swift-testing-expert",
+    "name": "Swift Testing Expert",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "'Expert guidance for Swift Testing: test structure, #expect/#require macros, traits and tags, parameterized tests, test plans, parallel execution, async waiting patterns, and XCTest migration. Use whe",
+    "usage": "Trigger: wanneer je werkt met swift testing expert",
+    "tags": [
+      "ios",
+      "swift",
+      "testing",
+      "swift-testing",
+      "xctest"
+    ],
+    "author": "imported",
+    "updated": "2026-05-19",
+    "path": "skills/swift-testing-expert/SKILL.md"
+  },
+  {
+    "id": "swiftdata-expert",
+    "name": "SwiftData Expert",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Writes, reviews, and improves SwiftData code using modern APIs and best practices. Use when reading, writing, or reviewing projects that use SwiftData.",
+    "usage": "Trigger: wanneer je werkt met swiftdata expert",
+    "tags": [
+      "ios",
+      "swiftdata",
+      "persistence",
+      "cloudkit"
+    ],
+    "author": "imported",
+    "updated": "2026-05-19",
+    "path": "skills/swiftdata-expert/SKILL.md"
+  },
+  {
+    "id": "core-data-expert",
+    "name": "Core Data Expert",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "'Expert Core Data guidance (iOS/macOS): stack setup, fetch requests & NSFetchedResultsController, saving/merge conflicts, threading & Swift Concurrency, batch operations & persistent history, migratio",
+    "usage": "Trigger: wanneer je werkt met core data expert",
+    "tags": [
+      "ios",
+      "core-data",
+      "persistence",
+      "cloudkit"
+    ],
+    "author": "imported",
+    "updated": "2026-05-19",
+    "path": "skills/core-data-expert/SKILL.md"
+  },
+  {
+    "id": "swiftui-performance-audit",
+    "name": "SwiftUI Performance Audit",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Audit and improve SwiftUI runtime performance from code review and architecture. Use for requests to diagnose slow rendering, janky scrolling, high CPU/memory usage, excessive view updates, or layout ",
+    "usage": "Trigger: wanneer je werkt met swiftui performance audit",
+    "tags": [
+      "ios",
+      "swiftui",
+      "performance",
+      "instruments"
+    ],
+    "author": "imported",
+    "updated": "2026-05-19",
+    "path": "skills/swiftui-performance-audit/SKILL.md"
+  },
+  {
+    "id": "app-store-connect-automation",
+    "name": "App Store Connect Automation",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Determine whether an app is ready to submit, then drive the current App Store release flow with asc, including validation, staging, review submission, first-time availability, subscriptions, IAP, Game",
+    "usage": "Trigger: wanneer je werkt met app store connect automation",
+    "tags": [
+      "ios",
+      "app-store",
+      "asc",
+      "automation",
+      "testflight"
+    ],
+    "author": "imported",
+    "updated": "2026-05-19",
+    "path": "skills/app-store-connect-automation/SKILL.md"
+  },
+  {
+    "id": "swift-architecture",
+    "name": "Swift Architecture",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Swift architecture patterns and playbooks for MVVM, TCA, Clean Architecture, and more.",
+    "usage": "Trigger: wanneer je werkt met swift architecture",
+    "tags": [
+      "ios",
+      "swift",
+      "tca",
+      "mvvm",
+      "architecture"
+    ],
+    "author": "imported",
+    "updated": "2026-05-19",
+    "path": "skills/swift-architecture/SKILL.md"
+  },
+  {
+    "id": "app-intents-expert",
+    "name": "App Intents Expert",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Writes and reviews Swift App Intents code that exposes app actions and data to Siri, Shortcuts, Spotlight, widgets, Control Center, and Apple Intelligence. Use when adding AppIntent, AppEntity, OpenIn",
+    "usage": "Trigger: wanneer je werkt met app intents expert",
+    "tags": [
+      "ios",
+      "app-intents",
+      "siri",
+      "shortcuts",
+      "apple-intelligence"
+    ],
+    "author": "imported",
+    "updated": "2026-05-19",
+    "path": "skills/app-intents-expert/SKILL.md"
+  },
+  {
+    "id": "apple-foundation-models",
+    "name": "Apple Foundation Models",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Use this skill when working with Apple's Foundation Models framework for on-device AI and LLM capabilities in iOS/macOS apps",
+    "usage": "Trigger: wanneer je werkt met apple foundation models",
+    "tags": [
+      "ios",
+      "apple-intelligence",
+      "on-device-ai",
+      "foundation-models"
+    ],
+    "author": "imported",
+    "updated": "2026-05-19",
+    "path": "skills/apple-foundation-models/SKILL.md"
+  },
+  {
+    "id": "swiftui-liquid-glass",
+    "name": "SwiftUI Liquid Glass",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Implement, review, or improve SwiftUI features using the iOS 26+ Liquid Glass API. Use when asked to adopt Liquid Glass in new SwiftUI UI, refactor an existing feature to Liquid Glass, or review Liqui",
+    "usage": "Trigger: wanneer je werkt met swiftui liquid glass",
+    "tags": [
+      "ios",
+      "swiftui",
+      "ios26",
+      "liquid-glass",
+      "design"
+    ],
+    "author": "imported",
+    "updated": "2026-05-19",
+    "path": "skills/swiftui-liquid-glass/SKILL.md"
+  },
+  {
+    "id": "instruments-profiling",
+    "name": "Instruments Profiling",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Profile native macOS/iOS apps using Time Profiler via CLI (xctrace). Use when asked to identify performance hotspots, profile CPU usage, or diagnose slow code paths without opening Instruments.",
+    "usage": "Trigger: wanneer je werkt met instruments profiling",
+    "tags": [
+      "ios",
+      "instruments",
+      "profiling",
+      "performance",
+      "xctrace"
+    ],
+    "author": "imported",
+    "updated": "2026-05-19",
+    "path": "skills/instruments-profiling/SKILL.md"
+  },
+  {
+    "id": "tuist-expert",
+    "name": "Tuist Expert",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Guides day-to-day work in Tuist-generated Xcode workspaces, including generation, build and test commands, and buildable folders. Use when working in a Tuist-generated project or when users mention `t",
+    "usage": "Trigger: wanneer je werkt met tuist expert",
+    "tags": [
+      "ios",
+      "tuist",
+      "project-generation",
+      "modular"
+    ],
+    "author": "imported",
+    "updated": "2026-05-19",
+    "path": "skills/tuist-expert/SKILL.md"
+  },
+  {
+    "id": "ios-cicd",
+    "name": "iOS CI/CD",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Complete CI/CD pipeline for Tuist-based iOS apps using GitHub Actions: PR testing, snapshot validation across locale/device matrix, archive builds with fastlane match code signing, App Store Connect s",
+    "usage": "Trigger: wanneer je werkt met ios ci/cd",
+    "tags": [
+      "ios",
+      "ci-cd",
+      "github-actions",
+      "fastlane",
+      "code-signing"
+    ],
+    "author": "imported",
+    "updated": "2026-05-19",
+    "path": "skills/ios-cicd/SKILL.md"
+  },
+  {
+    "id": "swift-api-design-guidelines",
+    "name": "Swift API Design Guidelines",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Write, review, or improve Swift APIs using Swift API Design Guidelines for naming, argument labels, documentation comments, terminology, and general conventions. Use when designing new APIs, refactori",
+    "usage": "Trigger: wanneer je werkt met swift api design guidelines",
+    "tags": [
+      "ios",
+      "swift",
+      "api-design",
+      "naming"
+    ],
+    "author": "imported",
+    "updated": "2026-05-19",
+    "path": "skills/swift-api-design-guidelines/SKILL.md"
+  },
+  {
+    "id": "figma-to-swiftui",
+    "name": "Figma to SwiftUI",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Convert Figma URLs, nodes, selections, or briefs into production SwiftUI for iOS using Figma MCP. Use for Figma-to-SwiftUI implementation, planning, design tokens, and asset export; not for web or Rea",
+    "usage": "Trigger: wanneer je werkt met figma to swiftui",
+    "tags": [
+      "ios",
+      "swiftui",
+      "figma",
+      "design-to-code"
+    ],
+    "author": "imported",
+    "updated": "2026-05-19",
+    "path": "skills/figma-to-swiftui/SKILL.md"
+  },
+  {
+    "id": "app-store-review-compliance",
+    "name": "App Store Review Compliance",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Evaluates code against Apple's App Store Review Guidelines. Use this skill when reviewing iOS, macOS, tvOS, watchOS, or visionOS app code (Swift, Objective-C, React Native, or Expo) to identify potent",
+    "usage": "Trigger: wanneer je werkt met app store review compliance",
+    "tags": [
+      "ios",
+      "app-store",
+      "review-guidelines",
+      "compliance"
+    ],
+    "author": "imported",
+    "updated": "2026-05-19",
+    "path": "skills/app-store-review-compliance/SKILL.md"
+  },
+  {
+    "id": "swift-formatstyle",
+    "name": "Swift FormatStyle",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Writes and reviews Swift FormatStyle code, replacing legacy Formatter subclasses and C-style String(format:) with modern .formatted() APIs. Use when formatting numbers, dates, durations, measurements,",
+    "usage": "Trigger: wanneer je werkt met swift formatstyle",
+    "tags": [
+      "ios",
+      "swift",
+      "formatting",
+      "localization"
+    ],
+    "author": "imported",
+    "updated": "2026-05-19",
+    "path": "skills/swift-formatstyle/SKILL.md"
+  },
+  {
+    "id": "push-notifications-expert",
+    "name": "Push Notifications Expert",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Implement, review, or debug push notifications in iOS/macOS apps — local notifications, remote (APNs) notifications, rich notifications, notification actions, silent pushes, and notification service/c",
+    "usage": "Trigger: wanneer je werkt met push notifications expert",
+    "tags": [
+      "ios",
+      "push-notifications",
+      "apns",
+      "live-activities"
+    ],
+    "author": "imported",
+    "updated": "2026-05-19",
+    "path": "skills/push-notifications-expert/SKILL.md"
+  },
+  {
+    "id": "storekit-iap",
+    "name": "StoreKit / In-App Purchases",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Implement, review, or improve in-app purchases and subscriptions using StoreKit 2. Use when building paywalls with SubscriptionStoreView or ProductView, processing transactions with Product and Transa",
+    "usage": "Trigger: wanneer je werkt met storekit / in-app purchases",
+    "tags": [
+      "ios",
+      "storekit",
+      "iap",
+      "subscriptions",
+      "revenuecat"
+    ],
+    "author": "imported",
+    "updated": "2026-05-19",
+    "path": "skills/storekit-iap/SKILL.md"
+  },
+  {
+    "id": "widgetkit-liveactivities",
+    "name": "WidgetKit & Live Activities",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Implement, review, or improve widgets, Live Activities, and controls using WidgetKit and ActivityKit. Use when building home screen, Lock Screen, or StandBy widgets with timeline providers; when creat",
+    "usage": "Trigger: wanneer je werkt met widgetkit & live activities",
+    "tags": [
+      "ios",
+      "widgetkit",
+      "live-activities",
+      "dynamic-island"
+    ],
+    "author": "imported",
+    "updated": "2026-05-19",
+    "path": "skills/widgetkit-liveactivities/SKILL.md"
+  },
+  {
+    "id": "focus-engine-tvos",
+    "name": "Focus Engine / tvOS",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Reviews and fixes focus management code for all Apple platforms (tvOS, iOS, watchOS, visionOS, macOS) in SwiftUI and UIKit.",
+    "usage": "Trigger: wanneer je werkt met focus engine / tvos",
+    "tags": [
+      "tvos",
+      "visionos",
+      "focus-engine",
+      "accessibility"
+    ],
+    "author": "imported",
+    "updated": "2026-05-19",
+    "path": "skills/focus-engine-tvos/SKILL.md"
+  },
+  {
+    "id": "swiftui-design-principles",
+    "name": "SwiftUI Design Principles",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Design principles for building polished, native-feeling SwiftUI apps and widgets. Use this skill when creating or modifying SwiftUI views, iOS widgets (WidgetKit), or any native Apple UI. Ensures prop",
+    "usage": "Trigger: wanneer je werkt met swiftui design principles",
+    "tags": [
+      "ios",
+      "swiftui",
+      "design",
+      "spacing",
+      "typography"
+    ],
+    "author": "imported",
+    "updated": "2026-05-19",
+    "path": "skills/swiftui-design-principles/SKILL.md"
+  },
+  {
+    "id": "apple-accessibility-enhanced",
+    "name": "Apple Accessibility Enhanced",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Apply platform accessibility best practices to SwiftUI, UIKit, and AppKit code. Essential companion to any SwiftUI, UIKit, or AppKit skill — always use together. Use whenever writing, editing, or revi",
+    "usage": "Trigger: wanneer je werkt met apple accessibility enhanced",
+    "tags": [
+      "ios",
+      "accessibility",
+      "voiceover",
+      "wcag",
+      "nutrition-label"
+    ],
+    "author": "imported",
+    "updated": "2026-05-19",
+    "path": "skills/apple-accessibility-enhanced/SKILL.md"
+  },
+  {
+    "id": "ios-build-verify",
+    "name": "iOS Build Verify",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Build and verify SwiftUI iOS apps. Bundles xcodebuild + xcbeautify for builds and AXe-driven simulator operations for verification — lifecycle, describe-ui, tap, screenshot, named-intent ops (read/ver",
+    "usage": "Trigger: wanneer je werkt met ios build verify",
+    "tags": [
+      "ios",
+      "build",
+      "xcodebuild",
+      "verification",
+      "ci"
+    ],
+    "author": "imported",
+    "updated": "2026-05-19",
+    "path": "skills/ios-build-verify/SKILL.md"
+  },
+  {
+    "id": "swiftdata-cloudkit",
+    "name": "SwiftData + CloudKit",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Expert guidance for designing, implementing, migrating, and debugging SwiftData persistence in Swift and SwiftUI apps. Use when working with @Model schemas, @Relationship/@Attribute rules, Query or Fe",
+    "usage": "Trigger: wanneer je werkt met swiftdata + cloudkit",
+    "tags": [
+      "ios",
+      "swiftdata",
+      "cloudkit",
+      "sync"
+    ],
+    "author": "imported",
+    "updated": "2026-05-19",
+    "path": "skills/swiftdata-cloudkit/SKILL.md"
   }
 ]
