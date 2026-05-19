@@ -1155,5 +1155,91 @@
     "author": "imported",
     "updated": "2026-05-19",
     "path": "skills/swiftdata-cloudkit/SKILL.md"
+  },
+  {
+    "id": "diagnose",
+    "name": "Diagnose",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Systematisch debuggen en root-cause analyse. Trigger: 'diagnose', 'wat is er mis', 'debug this'.",
+    "usage": "Systematisch debuggen en root-cause analyse. Trigger: 'diagnose', 'wat is er mis', 'debug this'.",
+    "tags": [
+      "debugging",
+      "diagnosis",
+      "triage",
+      "engineering"
+    ],
+    "author": "mattpocock",
+    "updated": "2026-05-19",
+    "path": "skills/diagnose/SKILL.md"
+  },
+  {
+    "id": "caveman",
+    "name": "Caveman Debug",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Simpele caveman-debug aanpak: console.log/print alles. Trigger: 'caveman', 'log everything'.",
+    "usage": "Simpele caveman-debug aanpak: console.log/print alles. Trigger: 'caveman', 'log everything'.",
+    "tags": [
+      "debugging",
+      "logging",
+      "productivity"
+    ],
+    "author": "mattpocock",
+    "updated": "2026-05-19",
+    "path": "skills/caveman/SKILL.md"
+  },
+  {
+    "id": "handoff",
+    "name": "Handoff",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Gestructureerde handoff naar volgende sessie of collega. Trigger: 'handoff', 'samenvatting voor morgen'.",
+    "usage": "Gestructureerde handoff naar volgende sessie of collega. Trigger: 'handoff', 'samenvatting voor morgen'.",
+    "tags": [
+      "productivity",
+      "documentation",
+      "handoff"
+    ],
+    "author": "mattpocock",
+    "updated": "2026-05-19",
+    "path": "skills/handoff/SKILL.md"
+  },
+  {
+    "id": "zoom-out",
+    "name": "Zoom Out",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Stap terug en bekijk het grote plaatje. Trigger: 'zoom out', 'big picture', 'te veel in detail'.",
+    "usage": "Stap terug en bekijk het grote plaatje. Trigger: 'zoom out', 'big picture', 'te veel in detail'.",
+    "tags": [
+      "engineering",
+      "architecture",
+      "refactor"
+    ],
+    "author": "mattpocock",
+    "updated": "2026-05-19",
+    "path": "skills/zoom-out/SKILL.md"
+  },
+  {
+    "id": "git-guardrails",
+    "name": "Git Guardrails",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Veilige git-workflow met guardrails. Trigger: 'git', 'branch', 'commit safety'.",
+    "usage": "Veilige git-workflow met guardrails. Trigger: 'git', 'branch', 'commit safety'.",
+    "tags": [
+      "git",
+      "safety",
+      "workflow"
+    ],
+    "author": "mattpocock",
+    "updated": "2026-05-19",
+    "path": "skills/git-guardrails/SKILL.md"
   }
 ]
