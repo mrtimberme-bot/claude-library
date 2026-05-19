@@ -85,12 +85,12 @@ def dim(t):       return cl(DIM, t)
 TYPE_COLORS = {
     "skill":GREEN,"plugin":MAGENTA,"agent":YELLOW,
     "memory":CYAN,"mcp":BLUE,"api":CYAN,
-    "arch":RED,"infra":DIM,"orch":MAGENTA,
+    "arch":RED,"infra":DIM,"orch":MAGENTA,"set":YELLOW,
 }
 TYPE_LABELS = {
     "skill":"skill","plugin":"plugin","agent":"agent",
     "memory":"memory","mcp":"MCP","api":"API","arch":"arch",
-    "infra":"infra","orch":"orch",
+    "infra":"infra","orch":"orch","set":"set",
 }
 
 # ── GITHUB — ALTIJD LIVE ──────────────────────────────────────────────────────
