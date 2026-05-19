@@ -3,7 +3,7 @@ var $ = function(id) { return document.getElementById(id); };
 var STATUS_LABEL = { active:'Actief', wip:'In progress', draft:'Draft', deprecated:'Offline' };
 var STATUS_CLASS = { active:'st-active', wip:'st-wip', draft:'st-draft', deprecated:'st-deprecated' };
 var DOT_CLASS    = { active:'dot-active', wip:'dot-wip', draft:'dot-draft', deprecated:'dot-deprecated' };
-var TYPE_LABEL   = { skill:'Skill', plugin:'Plugin', agent:'Agent', memory:'Memory', mcp:'MCP', api:'API', arch:'Arch', infra:'Infra', orch:'Orch', snippet:'Snippet' };
+var TYPE_LABEL   = { skill:'Skill', plugin:'Plugin', agent:'Agent', memory:'Memory', mcp:'MCP', api:'API', arch:'Arch', infra:'Infra', orch:'Orch', snippet:'Snippet', set:'Set' };
 
 var COMPONENTS = [];
 var OUTDATED_IDS = new Set();
@@ -162,7 +162,7 @@ function libFiltered() {
     });
 }
 
-var TYPE_ORDER = ['skill','agent','mcp','memory','plugin','api','arch','infra','orch','snippet'];
+var TYPE_ORDER = ['set','skill','agent','mcp','memory','plugin','api','arch','infra','orch','snippet'];
 
 function hlNode(text, q) {
   var frag = document.createDocumentFragment();
@@ -206,7 +206,7 @@ function renderSidebarNav() {
 var TYPE_COLOR = {
   skill:'#22c55e', agent:'#fb923c', mcp:'#60a5fa', memory:'#c084fc',
   plugin:'#f472b6', api:'#06b6d4', arch:'#f43f5e', infra:'#a8a29e',
-  orch:'#84cc16', snippet:'#f472b6'
+  orch:'#84cc16', snippet:'#f472b6', set:'#e2b714'
 };
 
 function renderLib() {
@@ -253,6 +253,12 @@ function renderLib() {
     var tdName = document.createElement('td');
     tdName.className = 'tt-name';
     tdName.appendChild(hlNode(c.name, libSearch));
+    if (c.type === 'set' && Array.isArray(c.skills)) {
+      var setBadge = document.createElement('span');
+      setBadge.className = 'tt-set-badge';
+      setBadge.textContent = c.skills.length + ' skills';
+      tdName.appendChild(setBadge);
+    }
     if (OUTDATED_IDS.has(c.id)) {
       var upd = document.createElement('span'); upd.className = 'tt-update-dot'; upd.title = 'Update beschikbaar';
       tdName.appendChild(upd);
@@ -333,6 +339,44 @@ function libSelectRow(id) {
     var chip=document.createElement('span'); chip.className='tag-chip'; chip.textContent=t; dt.appendChild(chip);
   });
   $('drawer-path').textContent=c.path;
+
+  // Set: toon memberlijst + selecteer-alles knop
+  var setSection = $('drawer-set-section');
+  if (setSection) setSection.remove();
+  if (c.type === 'set' && Array.isArray(c.skills) && c.skills.length) {
+    var ss = document.createElement('div');
+    ss.id = 'drawer-set-section';
+    ss.style.cssText = 'display:flex;flex-direction:column;gap:8px;padding-top:8px;border-top:1px solid var(--border)';
+    var sTitle = document.createElement('div');
+    sTitle.style.cssText = 'font-size:11px;color:var(--text4);text-transform:uppercase;letter-spacing:.05em';
+    sTitle.textContent = 'Skills in deze set (' + c.skills.length + ')';
+    ss.appendChild(sTitle);
+    var skillList = document.createElement('div');
+    skillList.style.cssText = 'display:flex;flex-wrap:wrap;gap:4px';
+    c.skills.forEach(function(sid) {
+      var chip = document.createElement('span');
+      chip.className = 'tag-chip';
+      chip.style.cursor = 'pointer';
+      chip.textContent = sid;
+      chip.title = 'Klik om naar skill te gaan';
+      chip.addEventListener('click', function() { libSelectRow(sid); });
+      skillList.appendChild(chip);
+    });
+    ss.appendChild(skillList);
+    var selAllBtn = document.createElement('button');
+    selAllBtn.className = 'sel-btn';
+    selAllBtn.style.cssText = 'margin-top:4px;width:fit-content;font-size:11px';
+    selAllBtn.textContent = '☑ Selecteer alle skills in set';
+    selAllBtn.addEventListener('click', function() {
+      c.skills.forEach(function(sid) { libChecked.add(sid); });
+      updateSelBar(); renderLib();
+    });
+    ss.appendChild(selAllBtn);
+    var drawerDesc = $('drawer-desc');
+    if (drawerDesc && drawerDesc.parentNode) {
+      drawerDesc.parentNode.insertBefore(ss, drawerDesc.nextSibling);
+    }
+  }
 
   // Inhoud laden voor skill, agent, memory (tekstbestanden)
   var contentTypes = ['skill','agent','memory'];
@@ -468,6 +512,20 @@ $('check-all').addEventListener('click', function(e) {
 
 $('sel-clear').addEventListener('click', function() {
   libChecked.clear(); updateSelBar(); renderLib();
+});
+
+$('sel-install').addEventListener('click', function() {
+  var ids = Array.from(libChecked).join(' ');
+  var cmd = 'python3 ~/Claude/Library/library-fetch.py --install ' + ids;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(cmd).then(function() {
+      var btn = $('sel-install');
+      btn.textContent = '✓ Gekopieerd!';
+      setTimeout(function() { btn.textContent = '📋 Copy install command'; }, 2000);
+    });
+  } else {
+    prompt('Kopieer dit commando:', cmd);
+  }
 });
 
 $('sel-download').addEventListener('click', function() {
