@@ -206,28 +206,6 @@ body {
 }
 .filter-clear-btn:hover { color: var(--primary); border-color: var(--primary); }
 
-.sort-wrap {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
-  font-family: var(--mono);
-  color: var(--text3);
-  margin-left: auto;
-}
-
-.sort-wrap select {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  color: var(--text2);
-  font-family: var(--mono);
-  font-size: 11px;
-  padding: 4px 8px;
-  outline: none;
-  cursor: pointer;
-}
-
 /* ── CARD GRID ───────────────────────────────────── */
 /* Terminal Table layout */
 .tt-wrap { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
@@ -304,7 +282,7 @@ body {
   background: transparent;
   border: 1px solid var(--border2);
   border-radius: 3px;
-  color: var(--text4);
+  color: var(--text2);
   cursor: pointer;
   font-size: 11px;
   padding: 4px 7px;
@@ -621,47 +599,10 @@ mark.hl { background: rgba(249,115,22,0.18); color: var(--primary-h); font-style
 }
 
 
-.skills-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-.table-wrap { overflow-x: auto; overflow-y: auto; flex: 1; }
-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-
-thead th {
-  font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--text4);
-  font-weight: 700;
-  text-align: left;
-  padding: 8px 16px;
-  border-bottom: 1px solid var(--border);
-  background: var(--surface);
-  cursor: pointer;
-  user-select: none;
-  white-space: nowrap;
-  transition: color 0.15s;
-}
-
-thead th:hover { color: var(--text3); }
-thead th.sorted { color: var(--primary); }
-thead th .si { margin-left: 4px; opacity: 0.5; }
-thead th.sorted .si { opacity: 1; }
-
 .col-name { width: 30%; }
 .col-version { width: 10%; }
 .col-status { width: 14%; }
 .col-updated { width: 13%; }
-
-tbody tr { border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.08s; }
-tbody tr:hover { background: var(--surface2); }
-tbody tr.selected { background: var(--primary3); border-left: 2px solid var(--primary); }
-tbody tr:last-child { border-bottom: none; }
-tbody td { padding: 10px 16px; vertical-align: middle; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-.td-name { font-size: 12px; font-weight: 600; color: var(--text); }
-.td-path { font-family: var(--mono); font-size: 9px; color: var(--text4); margin-top: 3px; overflow: hidden; text-overflow: ellipsis; }
-.updated-cell { font-family: var(--mono); font-size: 10px; color: var(--text4); }
-.version-cell { font-family: var(--mono); font-size: 10px; color: var(--text3); }
 
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
@@ -1343,3 +1284,57 @@ tbody td { padding: 10px 16px; vertical-align: middle; overflow: hidden; text-ov
   color: var(--text4);
   line-height: 1.5;
 }
+
+/* ── FOCUS VISIBLE ── */
+.nav-btn:focus-visible,
+.sel-btn:focus-visible,
+.sel-clear:focus-visible,
+.sets-sel-clear:focus-visible,
+.drawer-close:focus-visible,
+.drawer-action-btn:focus-visible,
+.find-skill-btn:focus-visible,
+.set-action-btn:focus-visible,
+.ck-btn:focus-visible,
+.finder-close:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* ── AUTH MODAL LAYOUT ── */
+.ck-settings-box {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ck-settings-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  font-family: var(--sans);
+}
+.ck-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text4);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 4px;
+}
+.ck-input {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 7px 10px;
+  outline: none;
+  width: 100%;
+}
+.ck-input:focus { border-color: var(--primary); }
+.ck-settings-actions { display: flex; gap: 8px; }
