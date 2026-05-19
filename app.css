@@ -889,9 +889,11 @@ tbody td { padding: 10px 16px; vertical-align: middle; overflow: hidden; text-ov
 /* ── SETS VIEW ─────────────────────────────────────────────── */
 .sets-view {
   flex-direction: column;
-  overflow-y: auto;
   padding: 32px 40px;
   gap: 0;
+}
+.view.sets-view {
+  overflow-y: auto;
 }
 .sets-header {
   margin-bottom: 28px;
