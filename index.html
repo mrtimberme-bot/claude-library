@@ -143,10 +143,16 @@
 <div class="view sets-view" id="view-sets">
   <div class="sets-header">
     <div class="sets-header-title">Skill Sets</div>
-    <div class="sets-header-sub">Curated bundels — installeer een complete set met één commando</div>
+    <div class="sets-header-sub">Curated bundels — selecteer meerdere sets, skills worden automatisch gededupliceerd</div>
   </div>
   <div class="sets-grid" id="sets-grid">
     <div class="ck-empty" style="padding:40px">Laden...</div>
+  </div>
+  <div class="sets-sel-bar" id="sets-sel-bar" style="display:none">
+    <span class="sets-sel-info" id="sets-sel-info"></span>
+    <button class="set-action-btn primary" id="sets-sel-install">📋 Copy install command</button>
+    <button class="set-action-btn" id="sets-sel-library">☑ Selecteer in Library</button>
+    <button class="sets-sel-clear" id="sets-sel-clear">✕</button>
   </div>
 </div>
 
