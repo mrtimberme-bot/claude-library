@@ -1959,8 +1959,30 @@
       "app-store-readiness",
       "app-store-review-compliance",
       "app-store-connect-automation",
+      "testflight-manager",
       "post-launch"
     ]
+  },
+  {
+    "id": "testflight-manager",
+    "name": "TestFlight Manager",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "TestFlight beheer vanuit Claude Code — upload builds, voeg testers toe en check beta-status. Gebruikt Fastlane pilot + App Store Connect API. Sub-commando's: /testflight-upload, /testflight-add, /testflight-status.",
+    "usage": "Trigger: \"upload naar testflight\", \"voeg tester toe\", \"testflight status\", \"/testflight-upload\", \"/testflight-add\", \"/testflight-status\"",
+    "tags": [
+      "ios",
+      "testflight",
+      "app-store",
+      "testing",
+      "fastlane",
+      "beta",
+      "distribution"
+    ],
+    "author": "timothystekkinger",
+    "updated": "2026-05-19",
+    "path": "skills/testflight-manager/SKILL.md"
   },
   {
     "id": "competitor-intelligence",
