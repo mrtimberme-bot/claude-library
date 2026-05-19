@@ -1695,5 +1695,138 @@
     "author": "designrique",
     "updated": "2026-05-19",
     "path": "skills/ai-graphic-design/SKILL.md"
+  },
+  {
+    "id": "diary",
+    "name": "Diary",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Session journaling — schrijft aan het einde van een sessie wat er gedaan is voor toekomstige recall. PreCompact hook slaat automatisch een dagboekentry op vóór context-compaction.",
+    "usage": "Trigger: \"save diary\", \"log session\", \"wrapping up\", \"wat hebben we gedaan\". Schrijft naar memory/sessions/.",
+    "tags": [
+      "memory",
+      "journal",
+      "session",
+      "productivity",
+      "workflow"
+    ],
+    "author": "cwinvestments",
+    "updated": "2026-05-19",
+    "path": "skills/diary/SKILL.md"
+  },
+  {
+    "id": "short-term-memory",
+    "name": "Short-term Memory",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Onderhoudt current-context.md in de projectroot — gelezen vóór en bijgewerkt ná elke response. Bewaart momentum, beslissingen en next steps over compaction heen.",
+    "usage": "Actief houden via READ→WORK→UPDATE cyclus. Trigger: \"where were we\", \"resume context\". Bestand: PROJECT_DIR/current-context.md.",
+    "tags": [
+      "memory",
+      "context",
+      "session",
+      "working-memory",
+      "productivity"
+    ],
+    "author": "Malaiac",
+    "updated": "2026-05-19",
+    "path": "skills/short-term-memory/SKILL.md"
+  },
+  {
+    "id": "project-state",
+    "name": "Project State",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Levend projectpositie-document — \"where was I\". Wordt bijgewerkt bij sessiestart en einde. Anders dan handoff: state is altijd actueel, geen eenmalig snapshot.",
+    "usage": "Trigger: \"update state\", \"project state\", \"where was I\", \"save state\". Schrijft naar .claude/state.md.",
+    "tags": [
+      "memory",
+      "state",
+      "session",
+      "context",
+      "productivity"
+    ],
+    "author": "cwinvestments",
+    "updated": "2026-05-19",
+    "path": "skills/project-state/SKILL.md"
+  },
+  {
+    "id": "claude-reflect",
+    "name": "Claude Reflect",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Zelflerend systeem: hooks detecteren correctiepatronen (\"no, use X\", \"actually...\") en queuen ze. /reflect laat gebruiker de queue reviewen en promoveert learnings naar CLAUDE.md.",
+    "usage": "Automatisch actief via hooks. Handmatig: /reflect, /reflect --scan-history, /view-queue, /skip-reflect.",
+    "tags": [
+      "memory",
+      "learning",
+      "claude-md",
+      "corrections",
+      "self-improvement"
+    ],
+    "author": "BayramAnnakov",
+    "updated": "2026-05-19",
+    "path": "skills/claude-reflect/SKILL.md"
+  },
+  {
+    "id": "research-skill",
+    "name": "Research Store",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Persistente project-scoped onderzoeksopslag in .research/INDEX.md + per-topic bestanden. Zoekt altijd eerst in archief vóór nieuwe research. Survives /compact. Gitignored voor privacy.",
+    "usage": "Trigger: \"research X\", \"/research <topic>\". Indexeert bevindingen cumulatief over sessies heen.",
+    "tags": [
+      "memory",
+      "research",
+      "knowledge",
+      "persist",
+      "productivity"
+    ],
+    "author": "hec-ovi",
+    "updated": "2026-05-19",
+    "path": "skills/research-skill/SKILL.md"
+  },
+  {
+    "id": "compact-guard",
+    "name": "Compact Guard",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Bewaart kritieke state vóór /compact en herstelt daarna. Kent Claude Code-interne limieten: max 5 files (5K tokens elk, 50K totaal). Pre-compact checklist + microcompact strategie.",
+    "usage": "Trigger: \"headroom\", vóór /compact, wanneer auto-compact warning verschijnt. Slaat task, files, decisions, blockers op.",
+    "tags": [
+      "memory",
+      "context",
+      "compaction",
+      "productivity",
+      "workflow"
+    ],
+    "author": "rohitg00",
+    "updated": "2026-05-19",
+    "path": "skills/compact-guard/SKILL.md"
+  },
+  {
+    "id": "learn-rule",
+    "name": "Learn Rule",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Legt gecategoriseerde leerregels vast als [LEARN] entries — mistake + correction + category. Wiki-scope voorkomt cross-project vervuiling. Persistent in CLAUDE.md of project memory.",
+    "usage": "Trigger: \"remember this\", \"add to rules\", \"don't do that again\", \"learn from this\". Wacht op user-akkoord voor opslaan.",
+    "tags": [
+      "memory",
+      "learning",
+      "claude-md",
+      "rules",
+      "corrections"
+    ],
+    "author": "rohitg00",
+    "updated": "2026-05-19",
+    "path": "skills/learn-rule/SKILL.md"
   }
 ]
