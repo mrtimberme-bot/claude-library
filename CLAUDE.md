@@ -37,6 +37,14 @@ GITHUB_TOKEN=ghp_jouwtoken claude
 
 **Verwijder nooit skills** uit `Library/skills/`, `~/.claude/skills/`, of `components.json` zonder expliciete toestemming van de gebruiker. Toevoegen en syncen mag altijd; verwijderen alleen als de gebruiker dit expliciet bevestigt.
 
+**iOS Golden Set (ios-golden) — herbeoordelingsregel:**
+Na elke nieuwe skill-import controleer je altijd of de nieuwe skills thuishoren in de `ios-golden` set. Criteria voor toevoeging:
+- De skill heeft `ios`, `swift`, `swiftui`, `xcode`, `tvos`, `visionos` of `apple` in de tags
+- De skill is relevant voor één van de iOS lifecycle fases: setup, development, testing, UI/design, features, privacy/security, build/CI-CD, App Store, of post-launch
+- De skill is nog niet opgenomen in de set
+
+Werk `ios-golden` bij in `components.json` en push naar GitHub na de beoordeling.
+
 ## Build na merge
 
 Na elke merge naar de `main` branch voer je altijd een build uit:
