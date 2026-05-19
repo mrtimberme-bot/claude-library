@@ -1383,5 +1383,33 @@
       "app-intents-expert",
       "apple-foundation-models"
     ]
+  },
+  {
+    "id": "web-app",
+    "name": "Web App",
+    "type": "set",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Volledige web app stack — frontend design, UI craft, research, documentatie en security.",
+    "usage": "Gebruik bij web app development: python3 library-fetch.py --set web-app",
+    "tags": [
+      "web",
+      "frontend",
+      "html",
+      "css",
+      "set"
+    ],
+    "author": "timothystekkinger",
+    "updated": "2026-05-19",
+    "path": null,
+    "skills": [
+      "ui-design-craft",
+      "frontend-skill",
+      "deep-research",
+      "security-auditor",
+      "parallel-code-review",
+      "pdf-skill",
+      "docx-skill"
+    ]
   }
 ]
