@@ -1096,6 +1096,153 @@ $('btn-update-skill').addEventListener('click', function(){
 });
 
 
+/* ── SKILL FINDER ── */
+var STOPWORDS = new Set(['de','het','een','van','in','op','voor','met','aan','als','dat','die','dit','bij','ook','maar','dan','wat','hoe','kan','ik','je','mijn','naar','wil','maak','add','the','a','an','for','with','to','of','and','or','is','are','that','this','it','my','i','want','need','how','when','use','make','create','build','get','set','write','code','app','skill']);
+
+function scoreSkill(skill, queryWords, queryFull) {
+  var score = 0;
+  var fields = [
+    { text: (skill.name || ''), weight: 4 },
+    { text: (skill.id || '').replace(/-/g, ' '), weight: 3 },
+    { text: (skill.tags || []).join(' '), weight: 3 },
+    { text: (skill.desc || ''), weight: 2 },
+    { text: (skill.usage || ''), weight: 1 }
+  ];
+  fields.forEach(function(f) {
+    var t = f.text.toLowerCase();
+    if (queryFull.length > 3 && t.includes(queryFull)) score += f.weight * 6;
+    queryWords.forEach(function(w) { if (t.includes(w)) score += f.weight; });
+  });
+  return score;
+}
+
+function finderTokenize(q) {
+  return q.toLowerCase()
+    .replace(/[^\w\s]/g, ' ')
+    .split(/\s+/)
+    .filter(function(w) { return w.length > 2 && !STOPWORDS.has(w); });
+}
+
+function finderHighlightTags(tags, words) {
+  var wrap = document.createElement('div');
+  wrap.className = 'finder-card-tags';
+  (tags || []).slice(0, 8).forEach(function(tag) {
+    var span = document.createElement('span');
+    var hit = words.some(function(w) { return tag.toLowerCase().includes(w); });
+    span.className = 'finder-tag' + (hit ? ' hit' : '');
+    span.textContent = tag;
+    wrap.appendChild(span);
+  });
+  return wrap;
+}
+
+function renderFinderResults(q) {
+  var el = $('finder-results');
+  el.textContent = '';
+  var query = q.trim().toLowerCase();
+  if (query.length < 3) {
+    var hint = document.createElement('div');
+    hint.className = 'finder-hint';
+    hint.textContent = 'Typ minimaal 3 tekens...';
+    el.appendChild(hint);
+    return;
+  }
+  var words = finderTokenize(query);
+  var candidates = COMPONENTS.filter(function(c) { return c.type !== 'set'; });
+  var scored = candidates.map(function(c) {
+    return { skill: c, score: scoreSkill(c, words, query) };
+  }).filter(function(x) { return x.score > 0; });
+  scored.sort(function(a, b) { return b.score - a.score; });
+  var top = scored.slice(0, 7);
+  if (top.length === 0) {
+    var noRes = document.createElement('div');
+    noRes.className = 'finder-hint';
+    noRes.textContent = 'Geen matches gevonden — probeer andere woorden.';
+    el.appendChild(noRes);
+    return;
+  }
+  var maxScore = top[0].score;
+  top.forEach(function(item, i) {
+    var c = item.skill;
+    var card = document.createElement('div');
+    card.className = 'finder-card';
+    (function(id) {
+      card.addEventListener('click', function() {
+        $('finder-overlay').classList.add('hidden');
+        switchMode('library');
+        setTimeout(function() { drawerOpen(id); }, 80);
+      });
+    })(c.id);
+
+    var rank = document.createElement('div');
+    rank.className = 'finder-rank';
+    rank.textContent = '#' + (i + 1);
+
+    var body = document.createElement('div');
+    body.className = 'finder-body';
+
+    var name = document.createElement('div');
+    name.className = 'finder-card-name';
+    name.textContent = c.name;
+
+    var desc = document.createElement('div');
+    desc.className = 'finder-card-desc';
+    desc.textContent = c.desc || '';
+
+    body.appendChild(name);
+    body.appendChild(desc);
+    body.appendChild(finderHighlightTags(c.tags, words));
+
+    var scoreWrap = document.createElement('div');
+    scoreWrap.className = 'finder-score-wrap';
+    var pct = Math.round((item.score / maxScore) * 100);
+    var bar = document.createElement('div');
+    bar.className = 'finder-score-bar';
+    var fill = document.createElement('div');
+    fill.className = 'finder-score-fill';
+    fill.style.width = pct + '%';
+    bar.appendChild(fill);
+    var lbl = document.createElement('div');
+    lbl.className = 'finder-score-label';
+    lbl.textContent = pct + '%';
+    scoreWrap.appendChild(bar);
+    scoreWrap.appendChild(lbl);
+
+    card.appendChild(rank);
+    card.appendChild(body);
+    card.appendChild(scoreWrap);
+    el.appendChild(card);
+  });
+}
+
+(function() {
+  var overlay = $('finder-overlay');
+  var input = $('finder-input');
+  var debounceT;
+
+  $('btn-find-skill').addEventListener('click', function() {
+    overlay.classList.remove('hidden');
+    setTimeout(function() { input.focus(); }, 50);
+  });
+
+  $('finder-close').addEventListener('click', function() {
+    overlay.classList.add('hidden');
+  });
+
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) overlay.classList.add('hidden');
+  });
+
+  input.addEventListener('input', function() {
+    clearTimeout(debounceT);
+    debounceT = setTimeout(function() { renderFinderResults(input.value); }, 120);
+  });
+
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') overlay.classList.add('hidden');
+  });
+})();
+
 /* ── TOAST ── */
 function showToast(msg, isError) {
   var toast=document.getElementById('lib-toast');
