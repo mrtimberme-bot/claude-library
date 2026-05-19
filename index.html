@@ -18,6 +18,7 @@
   <div class="topbar-nav">
     <button class="nav-btn active" id="nav-library">Library</button>
     <button class="nav-btn" id="nav-sets">Sets</button>
+    <button class="nav-btn" id="nav-guide">Handleiding</button>
     <button class="nav-btn" id="nav-cockpit">Cockpit</button>
   </div>
   <div class="topbar-right" id="topbar-right">
@@ -156,6 +157,166 @@
     <button class="set-action-btn primary" id="sets-sel-install">📋 Copy install command</button>
     <button class="set-action-btn" id="sets-sel-library">☑ Selecteer in Library</button>
     <button class="sets-sel-clear" id="sets-sel-clear">✕</button>
+  </div>
+</div>
+
+<!-- HANDLEIDING VIEW -->
+<div class="view guide-view" id="view-guide">
+  <div class="guide-scroll">
+    <div class="guide-hero">
+      <div class="guide-hero-label">Handleiding</div>
+      <div class="guide-hero-title">Start iOS project</div>
+      <div class="guide-hero-sub">Van nul naar een volledig geconfigureerd iOS project met de golden skillset — in één commando.</div>
+    </div>
+
+    <div class="guide-sections">
+
+      <!-- STAP 1 -->
+      <div class="guide-section">
+        <div class="guide-step-num">01</div>
+        <div class="guide-step-body">
+          <div class="guide-step-title">Installeer de golden skillset globaal</div>
+          <div class="guide-step-desc">Installeer alle 46 iOS skills naar <code>~/.claude/skills/</code> zodat Claude ze in elke sessie beschikbaar heeft.</div>
+          <pre class="guide-code">python3 ~/Claude/Library/library-fetch.py --set ios-golden</pre>
+          <div class="guide-step-note">Dit installeert alle skills uit de ios-golden set: setup, architecture, UI, testing, CI/CD en App Store — de complete iOS lifecycle.</div>
+        </div>
+      </div>
+
+      <!-- STAP 2 -->
+      <div class="guide-section">
+        <div class="guide-step-num">02</div>
+        <div class="guide-step-body">
+          <div class="guide-step-title">Maak een nieuw Xcode-project aan</div>
+          <div class="guide-step-desc">Maak een projectmap aan, initialiseer git, en stel Tuist in.</div>
+          <pre class="guide-code">mkdir -p ~/Projects/MijnApp &amp;&amp; cd ~/Projects/MijnApp
+git init
+tuist init --name MijnApp --platform iOS</pre>
+        </div>
+      </div>
+
+      <!-- STAP 3 -->
+      <div class="guide-section">
+        <div class="guide-step-num">03</div>
+        <div class="guide-step-body">
+          <div class="guide-step-title">Maak een lokale skill-snapshot in het project</div>
+          <div class="guide-step-desc">Kopieer de golden skills naar <code>.claude/skills/</code> in het project. Dit is een momentopname die meegaat in git — ook als de library later groeit blijft je project reproduceerbaar.</div>
+          <pre class="guide-code">mkdir -p .claude/skills
+python3 ~/Claude/Library/library-fetch.py --set ios-golden --output .claude/skills/</pre>
+        </div>
+      </div>
+
+      <!-- STAP 4 -->
+      <div class="guide-section">
+        <div class="guide-step-num">04</div>
+        <div class="guide-step-body">
+          <div class="guide-step-title">Schrijf CLAUDE.md met skill-index</div>
+          <div class="guide-step-desc">Maak een <code>CLAUDE.md</code> in de projectroot. Claude leest dit bij elke sessie en weet direct welke skills beschikbaar zijn en voor welke fase.</div>
+          <pre class="guide-code"># MijnApp — CLAUDE.md
+
+## Skills (ios-golden)
+
+### Fase 1 · Setup &amp; architectuur
+ios-baseline, ios-blok-workflow, swift-architecture, tuist-expert, swift-api-design-guidelines
+
+### Fase 2 · Development
+swift-concurrency-expert, swift-reviewer, swift-formatstyle, swiftdata-expert, core-data-expert, swiftdata-cloudkit
+
+### Fase 3 · Testing &amp; debugging
+swift-testing-expert, ios-testing, debug-detective, instruments-profiling, swiftui-performance-audit
+
+### Fase 4 · UI / Design
+hig-compliance, swiftui-design-principles, swiftui-liquid-glass, figma-to-swiftui
+ui-design-craft, theme-designer, motion-designer, haptics-designer, ux-designer, onboarding-designer
+apple-accessibility-enhanced, focus-engine-tvos
+
+### Fase 5 · Features
+push-notifications-expert, widgetkit-liveactivities, app-intents-expert, apple-foundation-models, storekit-iap, localization-manager
+
+### Fase 6 · Privacy &amp; security
+privacy-manifest, security-auditor
+
+### Fase 7 · Build &amp; CI/CD
+xcode-simulator-expert, ios-build-verify, ios-cicd
+
+### Fase 8 · App Store
+app-store-readiness, app-store-review-compliance, app-store-connect-automation
+
+### Fase 9 · Post-launch
+post-launch
+
+## Skills updaten
+python3 ~/Claude/Library/library-fetch.py --set ios-golden --output .claude/skills/</pre>
+        </div>
+      </div>
+
+      <!-- STAP 5 -->
+      <div class="guide-section">
+        <div class="guide-step-num">05</div>
+        <div class="guide-step-body">
+          <div class="guide-step-title">Voeg een startup-hook toe</div>
+          <div class="guide-step-desc">De hook controleert bij elke nieuwe sessie automatisch of er skill-updates beschikbaar zijn. Maak <code>.claude/settings.json</code> aan:</div>
+          <pre class="guide-code">{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/Claude/Library/library-fetch.py --check-updates ios-golden 2&gt;/dev/null || true"
+          }
+        ]
+      }
+    ]
+  }
+}</pre>
+          <div class="guide-step-note">Claude ontvangt de hook-output als context en meldt updates aan jou. Typ dan <code>ja</code> om bij te werken.</div>
+        </div>
+      </div>
+
+      <!-- STAP 6 -->
+      <div class="guide-section">
+        <div class="guide-step-num">06</div>
+        <div class="guide-step-body">
+          <div class="guide-step-title">Voeg /check-skills toe als slash command</div>
+          <div class="guide-step-desc">Maak <code>.claude/commands/check-skills.md</code> aan voor een handmatige update-check op elk moment:</div>
+          <pre class="guide-code">mkdir -p .claude/commands
+# Maak .claude/commands/check-skills.md aan met:
+# Voer uit: python3 ~/Claude/Library/library-fetch.py --check-updates ios-golden
+# Toon welke skills up-to-date zijn en welke updates hebben.
+# Vraag of ik wil bijwerken.</pre>
+          <div class="guide-step-note">Gebruik met <code>/check-skills</code> in elke Claude Code sessie in dit project.</div>
+        </div>
+      </div>
+
+      <!-- STAP 7 -->
+      <div class="guide-section">
+        <div class="guide-step-num">07</div>
+        <div class="guide-step-body">
+          <div class="guide-step-title">Eerste commit</div>
+          <div class="guide-step-desc">Commit alles inclusief de skill-snapshot.</div>
+          <pre class="guide-code">git add -A
+git commit -m "chore: init project met ios-golden skillset"</pre>
+        </div>
+      </div>
+
+      <!-- GOLDEN SET OVERVIEW -->
+      <div class="guide-overview">
+        <div class="guide-overview-title">ios-golden — 46 skills · 9 fases</div>
+        <div class="guide-phases">
+          <div class="guide-phase"><span class="guide-phase-num">F1</span><span class="guide-phase-label">Setup</span><span class="guide-phase-skills">ios-baseline · ios-blok-workflow · swift-architecture · tuist-expert · swift-api-design-guidelines</span></div>
+          <div class="guide-phase"><span class="guide-phase-num">F2</span><span class="guide-phase-label">Development</span><span class="guide-phase-skills">swift-concurrency-expert · swift-reviewer · swift-formatstyle · swiftdata-expert · core-data-expert · swiftdata-cloudkit</span></div>
+          <div class="guide-phase"><span class="guide-phase-num">F3</span><span class="guide-phase-label">Testing</span><span class="guide-phase-skills">swift-testing-expert · ios-testing · debug-detective · diagnose · instruments-profiling · swiftui-performance-audit · parallel-code-review</span></div>
+          <div class="guide-phase"><span class="guide-phase-num">F4</span><span class="guide-phase-label">UI / Design</span><span class="guide-phase-skills">hig-compliance · swiftui-design-principles · swiftui-liquid-glass · ui-design-craft · figma-to-swiftui · theme-designer · motion-designer · haptics-designer · ux-designer · onboarding-designer · accessibility-auditor · apple-accessibility-enhanced · focus-engine-tvos</span></div>
+          <div class="guide-phase"><span class="guide-phase-num">F5</span><span class="guide-phase-label">Features</span><span class="guide-phase-skills">push-notifications-expert · widgetkit-liveactivities · app-intents-expert · apple-foundation-models · storekit-iap · localization-manager</span></div>
+          <div class="guide-phase"><span class="guide-phase-num">F6</span><span class="guide-phase-label">Privacy &amp; security</span><span class="guide-phase-skills">privacy-manifest · security-auditor</span></div>
+          <div class="guide-phase"><span class="guide-phase-num">F7</span><span class="guide-phase-label">Build &amp; CI/CD</span><span class="guide-phase-skills">xcode-simulator-expert · ios-build-verify · ios-cicd</span></div>
+          <div class="guide-phase"><span class="guide-phase-num">F8</span><span class="guide-phase-label">App Store</span><span class="guide-phase-skills">app-store-readiness · app-store-review-compliance · app-store-connect-automation</span></div>
+          <div class="guide-phase"><span class="guide-phase-num">F9</span><span class="guide-phase-label">Post-launch</span><span class="guide-phase-skills">post-launch</span></div>
+        </div>
+      </div>
+
+    </div>
   </div>
 </div>
 
