@@ -1411,5 +1411,43 @@
       "pdf-skill",
       "docx-skill"
     ]
+  },
+  {
+    "id": "sod",
+    "name": "Start of Day",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Dagelijkse briefing — git context, open PRs, CI status, daily log, aanbeveling voor vandaag.",
+    "usage": "Trigger: '/sod', 'start of day', 'begin van de dag', 'wat staat er vandaag op de planning'",
+    "tags": [
+      "workflow",
+      "daily",
+      "productivity",
+      "git",
+      "ci"
+    ],
+    "author": "timothystekkinger",
+    "updated": "2026-05-19",
+    "path": "skills/sod/SKILL.md"
+  },
+  {
+    "id": "eod",
+    "name": "End of Day",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Dag afsluiten — uncommitted werk committen, backup push, daily log bijwerken, notificatie sturen.",
+    "usage": "Trigger: '/eod', 'end of day', 'dag afsluiten', 'klaar voor vandaag'",
+    "tags": [
+      "workflow",
+      "daily",
+      "productivity",
+      "git",
+      "log"
+    ],
+    "author": "timothystekkinger",
+    "updated": "2026-05-19",
+    "path": "skills/eod/SKILL.md"
   }
 ]
