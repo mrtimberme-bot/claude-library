@@ -1912,6 +1912,7 @@
     "updated": "2026-05-19",
     "path": null,
     "skills": [
+      "app-name-validator",
       "competitor-intelligence",
       "deep-research",
       "ios-baseline",
@@ -1962,6 +1963,27 @@
       "testflight-manager",
       "post-launch"
     ]
+  },
+  {
+    "id": "app-name-validator",
+    "name": "App Name Validator",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Valideert een iOS app-naam vóór ontwikkeling op App Store beschikbaarheid, trademark, domein en Bundle ID. Legt de goedgekeurde naam vast in app-manifest.json en CLAUDE.md. Gebruik als eerste stap bij elk nieuw app-project.",
+    "usage": "Trigger: \"/app-name-validator [naam]\", \"nieuwe app\", \"ik wil een app maken\", \"valideer app naam\"",
+    "tags": [
+      "ios",
+      "app-store",
+      "naming",
+      "trademark",
+      "domain",
+      "pre-development",
+      "setup"
+    ],
+    "author": "timothystekkinger",
+    "updated": "2026-05-19",
+    "path": "skills/app-name-validator/SKILL.md"
   },
   {
     "id": "testflight-manager",
