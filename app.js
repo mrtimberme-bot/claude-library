@@ -87,7 +87,7 @@ if (window.location.hash === '#cockpit') { switchMode('cockpit'); }
 
 function switchMode(mode) {
   currentMode = mode;
-  ['library','sets','cockpit'].forEach(function(m) {
+  ['library','sets','guide','cockpit'].forEach(function(m) {
     var view = $('view-'+m), nav = $('nav-'+m);
     if (view) view.classList.toggle('active', m===mode);
     if (nav)  nav.classList.toggle('active', m===mode);
@@ -137,6 +137,7 @@ function switchMode(mode) {
 
 $('nav-library').addEventListener('click', function(){ switchMode('library'); });
 $('nav-sets').addEventListener('click',    function(){ switchMode('sets'); });
+$('nav-guide').addEventListener('click',   function(){ switchMode('guide'); });
 $('nav-cockpit').addEventListener('click', function(){ switchMode('cockpit'); });
 
 /* ── SETS VIEW ── */
