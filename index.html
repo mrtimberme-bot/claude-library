@@ -39,6 +39,7 @@
       <select class="filter-select" id="filter-tag"><option value="">Alle tags</option></select>
       <select class="filter-select" id="filter-owner"><option value="">Alle owners</option></select>
       <button class="filter-clear-btn" id="filter-clear" style="display:none">✕ Wis filters</button>
+      <button class="find-skill-btn" id="btn-find-skill">✦ Vind skill</button>
       <select id="sort-select" style="display:none">
         <option value="name">naam</option>
         <option value="updated">bijgewerkt</option>
@@ -284,6 +285,22 @@
     <div class="ck-settings-actions" style="margin-top:16px">
       <button id="auth-modal-confirm" class="ck-btn primary">Ontgrendelen</button>
       <button id="auth-modal-cancel" class="ck-btn secondary">Annuleren</button>
+    </div>
+  </div>
+</div>
+
+<!-- SKILL FINDER MODAL -->
+<div id="finder-overlay" class="ck-overlay hidden" style="z-index:9000;align-items:flex-start;padding-top:80px">
+  <div class="finder-modal">
+    <div class="finder-header">
+      <div class="finder-title">✦ Vind de juiste skill</div>
+      <button class="finder-close" id="finder-close">✕</button>
+    </div>
+    <div class="finder-input-wrap">
+      <textarea id="finder-input" placeholder="Beschrijf wat je nodig hebt... bijv. &quot;ik wil async Swift code schrijven met actors&quot; of &quot;dark mode toevoegen aan mijn web app&quot;" rows="3"></textarea>
+    </div>
+    <div class="finder-results" id="finder-results">
+      <div class="finder-hint">Typ een omschrijving — resultaten verschijnen direct</div>
     </div>
   </div>
 </div>
