@@ -385,6 +385,76 @@ def cmd_suggest(claude_md_path: str, components: list):
     print(file=sys.stderr)
     cmd_load(selected_ids, components)
 
+# ── INSTALLATIE ──────────────────────────────────────────────────────────────
+
+CLAUDE_SKILLS = Path.home() / ".claude" / "skills"
+
+def cmd_install(ids: list, components: list) -> int:
+    """Installeert skills permanent naar ~/.claude/skills/<id>/SKILL.md"""
+    index = {c["id"]: c for c in components}
+    installed = 0
+
+    for cid in ids:
+        comp = index.get(cid)
+        if not comp:
+            matches = [c for c in components if cid.lower() in c["id"]]
+            if matches:
+                comp = matches[0]
+                print(cl(YELLOW, f"  '{cid}' → '{comp['id']}' gebruikt"), file=sys.stderr)
+            else:
+                print(cl(RED, f"  '{cid}' niet gevonden"), file=sys.stderr)
+                continue
+
+        if comp.get("type") not in ("skill",):
+            print(cl(YELLOW, f"  '{cid}' is geen skill (type: {comp.get('type')}) — overgeslagen"), file=sys.stderr)
+            continue
+
+        print(dim(f"  Ophalen: {comp['name']}..."), end="\r", file=sys.stderr)
+        content = fetch_component_content(comp)
+        if not content:
+            print(cl(RED, f"  '{cid}' — geen inhoud gevonden               "), file=sys.stderr)
+            continue
+
+        if not safety_check(content, comp["id"]):
+            continue
+
+        dest = CLAUDE_SKILLS / comp["id"]
+        dest.mkdir(parents=True, exist_ok=True)
+        (dest / "SKILL.md").write_text(content, encoding="utf-8")
+        print(f"  {cl(GREEN,'✓')} {bold(comp['name']):<36} → {dest}/SKILL.md", file=sys.stderr)
+        installed += 1
+
+    if installed:
+        print(f"\n  {cl(GREEN, bold(str(installed)))} skill(s) geïnstalleerd in {CLAUDE_SKILLS}\n", file=sys.stderr)
+    return installed
+
+
+def cmd_set(set_id: str, components: list):
+    """Installeert alle skills uit een named set."""
+    index = {c["id"]: c for c in components}
+    s = index.get(set_id)
+    if not s:
+        matches = [c for c in components if c.get("type") == "set" and set_id.lower() in c["id"]]
+        if matches:
+            s = matches[0]
+            print(cl(YELLOW, f"  '{set_id}' → '{s['id']}' gebruikt"), file=sys.stderr)
+        else:
+            sets = [c["id"] for c in components if c.get("type") == "set"]
+            print(cl(RED, f"  Set '{set_id}' niet gevonden"), file=sys.stderr)
+            if sets:
+                print(f"  Beschikbare sets: {', '.join(sets)}", file=sys.stderr)
+            sys.exit(1)
+
+    if s.get("type") != "set":
+        print(cl(RED, f"  '{set_id}' is geen set (type: {s.get('type')})"), file=sys.stderr)
+        sys.exit(1)
+
+    skill_ids = s.get("skills", [])
+    print(f"\n  {bold('Set:')} {s['name']} — {s.get('desc','')}\n"
+          f"  {len(skill_ids)} skills te installeren...\n", file=sys.stderr)
+    cmd_install(skill_ids, components)
+
+
 # ── MAIN ──────────────────────────────────────────────────────────────────────
 
 def main():
@@ -409,6 +479,10 @@ def main():
                         help=f"Laad componenten voor context-type: {', '.join(sorted(CONTEXT_MAP.keys()))}")
     parser.add_argument("--suggest", metavar="CLAUDE.MD",
                         help="Analyseer CLAUDE.md en suggereer passende componenten")
+    parser.add_argument("--install", nargs="+", metavar="ID",
+                        help="Installeer skill(s) permanent naar ~/.claude/skills/")
+    parser.add_argument("--set",     metavar="SET_ID",
+                        help="Installeer alle skills uit een set (bijv. ios-foundation)")
     parser.add_argument("--repo",    metavar="USER/REPO",
                         help="Andere library repo")
     parser.add_argument("--branch",  metavar="BRANCH",
@@ -427,6 +501,8 @@ def main():
 
     if   args.list:     cmd_list(components)
     elif args.load:     cmd_load(args.load, components)
+    elif args.install:  cmd_install(args.install, components)
+    elif args.set:      cmd_set(args.set, components)
     elif args.for_type: cmd_for(args.for_type, components)
     elif args.suggest:  cmd_suggest(args.suggest, components)
     else:               parser.print_help()
