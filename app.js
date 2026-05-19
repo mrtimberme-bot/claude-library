@@ -1,8 +1,6 @@
 var $ = function(id) { return document.getElementById(id); };
 
 var STATUS_LABEL = { active:'Actief', wip:'In progress', draft:'Draft', deprecated:'Offline' };
-var STATUS_CLASS = { active:'st-active', wip:'st-wip', draft:'st-draft', deprecated:'st-deprecated' };
-var DOT_CLASS    = { active:'dot-active', wip:'dot-wip', draft:'dot-draft', deprecated:'dot-deprecated' };
 var TYPE_LABEL   = { skill:'Skill', plugin:'Plugin', agent:'Agent', memory:'Memory', mcp:'MCP', api:'API', arch:'Arch', infra:'Infra', orch:'Orch', snippet:'Snippet', set:'Set' };
 
 var COMPONENTS = [];
@@ -332,13 +330,6 @@ var libFilter = 'all', libSearch = '', libSort = 'name', libSortDir = 1, libSele
 var libTagFilter = '', libOwnerFilter = '';
 var libChecked = new Set();
 
-function mkEl(tag, cls, text) {
-  var el = document.createElement(tag);
-  if (cls) el.className = cls;
-  if (text !== undefined) el.textContent = text;
-  return el;
-}
-
 function libFiltered() {
   return COMPONENTS
     .filter(function(c){ return libFilter==='all' || c.type===libFilter; })
@@ -585,13 +576,14 @@ function libSelectRow(id) {
   if (c.path && contentTypes.indexOf(c.type) !== -1) {
     contentSection.style.display = 'flex';
     contentEl.textContent = 'Laden…';
+    var fetchId = c.id;
     fetch(RAW_BASE + c.path)
       .then(function(r) {
         if (!r.ok) throw new Error('HTTP ' + r.status);
         return r.text();
       })
-      .then(function(txt) { contentEl.textContent = txt; })
-      .catch(function(e) { contentEl.textContent = '(kon bestand niet laden: ' + e.message + ')'; });
+      .then(function(txt) { if (drawerCurrentId === fetchId) contentEl.textContent = txt; })
+      .catch(function(e) { if (drawerCurrentId === fetchId) contentEl.textContent = '(kon bestand niet laden: ' + e.message + ')'; });
   } else {
     contentSection.style.display = 'none';
     contentEl.textContent = '';
@@ -635,7 +627,7 @@ function drawerRenderSnippet(c) {
     var url = c.files[t];
     if (!url) { $('snip-code-'+t).textContent = '(geen bestand)'; return; }
     fetch(url)
-      .then(function(r){ return r.text(); })
+      .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
       .then(function(txt){ $('snip-code-'+t).textContent = txt; })
       .catch(function(){ $('snip-code-'+t).textContent = '(kon bestand niet laden)'; });
   });
@@ -867,24 +859,31 @@ function ckLoadComponents() {
   ckApiFetch('/components',{auth:false})
     .then(function(data){ ckComponents=data; ckRenderComponents(); })
     .catch(function(e){
-      list.innerHTML='<div class="ck-empty" style="color:var(--red)">Fout: '+e.message+'</div>';
+      list.textContent='';
+      var err=document.createElement('div'); err.className='ck-empty'; err.style.color='var(--red)';
+      err.textContent='Fout: '+e.message; list.appendChild(err);
     });
 }
 
 function ckRenderComponents() {
   var list=$('ck-component-list');
-  list.innerHTML='';
-  if (!ckComponents.length){ list.innerHTML='<div class="ck-empty">Geen modules gevonden.</div>'; return; }
+  list.textContent='';
+  if (!ckComponents.length){
+    var empty=document.createElement('div'); empty.className='ck-empty'; empty.textContent='Geen modules gevonden.';
+    list.appendChild(empty); return;
+  }
   ckComponents.forEach(function(c,i){
     var card=document.createElement('div');
     card.className='ck-card';
-    var dot=c.status==='active'?'ck-dot-active':'ck-dot-inactive';
-    card.innerHTML=
-      '<div class="ck-card-top">'+
-        '<span class="ck-card-name"><span class="ck-dot '+dot+'"></span>'+c.name+'</span>'+
-        '<span class="type-badge">'+(TYPE_LABEL[c.type]||c.type)+'</span>'+
-      '</div>'+
-      '<div class="ck-card-desc">'+c.desc+'</div>';
+    var top=document.createElement('div'); top.className='ck-card-top';
+    var nameSp=document.createElement('span'); nameSp.className='ck-card-name';
+    var dotSp=document.createElement('span'); dotSp.className='ck-dot '+(c.status==='active'?'ck-dot-active':'ck-dot-inactive');
+    nameSp.appendChild(dotSp);
+    nameSp.appendChild(document.createTextNode(c.name));
+    var badge=document.createElement('span'); badge.className='type-badge'; badge.textContent=TYPE_LABEL[c.type]||c.type;
+    top.appendChild(nameSp); top.appendChild(badge);
+    var desc=document.createElement('div'); desc.className='ck-card-desc'; desc.textContent=c.desc;
+    card.appendChild(top); card.appendChild(desc);
     card.addEventListener('click',(function(idx){ return function(){ ckSelectComponent(idx); }; })(i));
     list.appendChild(card);
   });
@@ -1036,8 +1035,6 @@ function ckShowUploadResult(ok,text){
 /* ── SKILL ANALYSER ── */
 var drawerCurrentId = null;
 
-var drawerCurrentId = null;
-
 $('btn-rescan-imported').addEventListener('click', function(){
   requireAuth(function() {
   var c = COMPONENTS.find(function(x){ return x.id === drawerCurrentId; });
@@ -1171,7 +1168,7 @@ function renderFinderResults(q) {
       card.addEventListener('click', function() {
         $('finder-overlay').classList.add('hidden');
         switchMode('library');
-        setTimeout(function() { drawerOpen(id); }, 80);
+        setTimeout(function() { libSelectRow(id); }, 80);
       });
     })(c.id);
 
