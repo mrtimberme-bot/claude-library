@@ -300,10 +300,240 @@ git commit -m "chore: init project met ios-golden skillset"</pre>
         </div>
       </div>
 
+      <!-- LIFECYCLE FLOW -->
+      <div class="guide-lifecycle">
+        <div class="guide-lifecycle-header">
+          <div class="guide-lifecycle-title">ios-golden lifecycle — F0 t/m F9</div>
+          <div class="guide-lifecycle-sub">Welke skills activeer je wanneer — van marktonderzoek tot post-launch onderhoud</div>
+        </div>
+
+        <div class="guide-flow">
+
+          <div class="guide-flow-card" data-phase="pre">
+            <div class="guide-flow-left">
+              <div class="guide-flow-badge">F0</div>
+              <div class="guide-flow-line"></div>
+            </div>
+            <div class="guide-flow-body">
+              <div class="guide-flow-name">Pre-development</div>
+              <div class="guide-flow-desc">Breng de markt en concurrenten in kaart voordat je één regel code schrijft. Valideer het concept en identificeer feature gaps.</div>
+              <div class="guide-flow-skills">
+                <span class="guide-flow-skill">competitor-intelligence</span>
+                <span class="guide-flow-skill">deep-research</span>
+              </div>
+              <div class="guide-flow-triggers">
+                <code>/competitor-intelligence [app naam]</code>
+                <code>/deep-research [marktonderwerp]</code>
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-flow-card" data-phase="build">
+            <div class="guide-flow-left">
+              <div class="guide-flow-badge">F1</div>
+              <div class="guide-flow-line"></div>
+            </div>
+            <div class="guide-flow-body">
+              <div class="guide-flow-name">Setup &amp; architectuur</div>
+              <div class="guide-flow-desc">Project fundament leggen — mapstructuur, Tuist, architectuurkeuzes en baseline werkwijze vastleggen.</div>
+              <div class="guide-flow-skills">
+                <span class="guide-flow-skill">ios-baseline</span>
+                <span class="guide-flow-skill">swift-architecture</span>
+                <span class="guide-flow-skill">tuist-expert</span>
+                <span class="guide-flow-skill">ios-blok-workflow</span>
+                <span class="guide-flow-skill">swift-api-design-guidelines</span>
+              </div>
+              <div class="guide-flow-triggers">
+                <code>tuist init --name [app] --platform iOS</code>
+                <code>/ios-baseline</code>
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-flow-card" data-phase="build">
+            <div class="guide-flow-left">
+              <div class="guide-flow-badge">F2</div>
+              <div class="guide-flow-line"></div>
+            </div>
+            <div class="guide-flow-body">
+              <div class="guide-flow-name">Development</div>
+              <div class="guide-flow-desc">Features bouwen — Swift, SwiftUI, data-laag, concurrency. Activeer skills op het moment dat je die domein raakt.</div>
+              <div class="guide-flow-skills">
+                <span class="guide-flow-skill">swift-concurrency-expert</span>
+                <span class="guide-flow-skill">swiftdata-expert</span>
+                <span class="guide-flow-skill">swift-reviewer</span>
+                <span class="guide-flow-skill">swift-formatstyle</span>
+                <span class="guide-flow-skill">core-data-expert</span>
+                <span class="guide-flow-skill">swiftdata-cloudkit</span>
+              </div>
+              <div class="guide-flow-triggers">
+                <code>/start-feature [naam]</code>
+                <code>/swift-reviewer</code>
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-flow-card" data-phase="quality">
+            <div class="guide-flow-left">
+              <div class="guide-flow-badge">F3</div>
+              <div class="guide-flow-line"></div>
+            </div>
+            <div class="guide-flow-body">
+              <div class="guide-flow-name">Testing &amp; debugging</div>
+              <div class="guide-flow-desc">Kwaliteit borgen — schrijf tests parallel aan features, profileer vroeg, gebruik parallel-code-review vóór elke PR.</div>
+              <div class="guide-flow-skills">
+                <span class="guide-flow-skill">swift-testing-expert</span>
+                <span class="guide-flow-skill">debug-detective</span>
+                <span class="guide-flow-skill">instruments-profiling</span>
+                <span class="guide-flow-skill">swiftui-performance-audit</span>
+                <span class="guide-flow-skill">parallel-code-review</span>
+                <span class="guide-flow-skill">ios-testing</span>
+                <span class="guide-flow-skill">diagnose</span>
+              </div>
+              <div class="guide-flow-triggers">
+                <code>/parallel-code-review</code>
+                <code>/debug-detective</code>
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-flow-card" data-phase="build">
+            <div class="guide-flow-left">
+              <div class="guide-flow-badge">F4</div>
+              <div class="guide-flow-line"></div>
+            </div>
+            <div class="guide-flow-body">
+              <div class="guide-flow-name">UI / Design</div>
+              <div class="guide-flow-desc">Interface polijsten — HIG compliance, SwiftUI patronen, animaties, accessibility. Activeer bij elke UI-feature.</div>
+              <div class="guide-flow-skills">
+                <span class="guide-flow-skill">hig-compliance</span>
+                <span class="guide-flow-skill">swiftui-design-principles</span>
+                <span class="guide-flow-skill">swiftui-liquid-glass</span>
+                <span class="guide-flow-skill">figma-to-swiftui</span>
+                <span class="guide-flow-skill">ux-designer</span>
+                <span class="guide-flow-skill">theme-designer</span>
+                <span class="guide-flow-skill">motion-designer</span>
+                <span class="guide-flow-skill">haptics-designer</span>
+                <span class="guide-flow-skill">onboarding-designer</span>
+                <span class="guide-flow-skill">accessibility-auditor</span>
+                <span class="guide-flow-skill">apple-accessibility-enhanced</span>
+                <span class="guide-flow-skill">ui-design-craft</span>
+                <span class="guide-flow-skill">focus-engine-tvos</span>
+              </div>
+              <div class="guide-flow-triggers">
+                <code>/hig-compliance</code>
+                <code>/accessibility-auditor</code>
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-flow-card" data-phase="build">
+            <div class="guide-flow-left">
+              <div class="guide-flow-badge">F5</div>
+              <div class="guide-flow-line"></div>
+            </div>
+            <div class="guide-flow-body">
+              <div class="guide-flow-name">Platform features</div>
+              <div class="guide-flow-desc">Apple platform integraties — notificaties, widgets, IAP, App Intents, Foundation Models, lokalisatie. Per feature apart activeren.</div>
+              <div class="guide-flow-skills">
+                <span class="guide-flow-skill">push-notifications-expert</span>
+                <span class="guide-flow-skill">widgetkit-liveactivities</span>
+                <span class="guide-flow-skill">storekit-iap</span>
+                <span class="guide-flow-skill">app-intents-expert</span>
+                <span class="guide-flow-skill">apple-foundation-models</span>
+                <span class="guide-flow-skill">localization-manager</span>
+              </div>
+              <div class="guide-flow-triggers">
+                <code>/push-notifications-expert</code>
+                <code>/storekit-iap</code>
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-flow-card" data-phase="quality">
+            <div class="guide-flow-left">
+              <div class="guide-flow-badge">F6</div>
+              <div class="guide-flow-line"></div>
+            </div>
+            <div class="guide-flow-body">
+              <div class="guide-flow-name">Privacy &amp; security</div>
+              <div class="guide-flow-desc">Verplichte compliance vóór App Store submission. Privacy Manifest aanmaken, security audit uitvoeren.</div>
+              <div class="guide-flow-skills">
+                <span class="guide-flow-skill">privacy-manifest</span>
+                <span class="guide-flow-skill">security-auditor</span>
+              </div>
+              <div class="guide-flow-triggers">
+                <code>/privacy-manifest</code>
+                <code>/security-auditor</code>
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-flow-card" data-phase="build">
+            <div class="guide-flow-left">
+              <div class="guide-flow-badge">F7</div>
+              <div class="guide-flow-line"></div>
+            </div>
+            <div class="guide-flow-body">
+              <div class="guide-flow-name">Build &amp; CI/CD</div>
+              <div class="guide-flow-desc">Automatiseer de pipeline — Xcode build scripts, simulator testing, CI/CD configuratie voor TestFlight deploys.</div>
+              <div class="guide-flow-skills">
+                <span class="guide-flow-skill">xcode-simulator-expert</span>
+                <span class="guide-flow-skill">ios-build-verify</span>
+                <span class="guide-flow-skill">ios-cicd</span>
+              </div>
+              <div class="guide-flow-triggers">
+                <code>/ios-build-verify</code>
+                <code>/ios-cicd</code>
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-flow-card" data-phase="launch">
+            <div class="guide-flow-left">
+              <div class="guide-flow-badge">F8</div>
+              <div class="guide-flow-line"></div>
+            </div>
+            <div class="guide-flow-body">
+              <div class="guide-flow-name">App Store</div>
+              <div class="guide-flow-desc">Submission-klaar maken — review compliance check, store listing optimaliseren, App Store Connect automatiseren.</div>
+              <div class="guide-flow-skills">
+                <span class="guide-flow-skill">app-store-readiness</span>
+                <span class="guide-flow-skill">app-store-review-compliance</span>
+                <span class="guide-flow-skill">app-store-connect-automation</span>
+              </div>
+              <div class="guide-flow-triggers">
+                <code>/app-store-readiness</code>
+                <code>/ship</code>
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-flow-card guide-flow-card-last" data-phase="launch">
+            <div class="guide-flow-left">
+              <div class="guide-flow-badge">F9</div>
+            </div>
+            <div class="guide-flow-body">
+              <div class="guide-flow-name">Post-launch</div>
+              <div class="guide-flow-desc">Na lancering — monitoring, crashrapportage, gebruikersfeedback analyseren, update cycle starten. Dan terug naar F0 voor de volgende versie.</div>
+              <div class="guide-flow-skills">
+                <span class="guide-flow-skill">post-launch</span>
+              </div>
+              <div class="guide-flow-triggers">
+                <code>/post-launch</code>
+                <code>/competitor-intelligence [v2 research]</code>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
       <!-- GOLDEN SET OVERVIEW -->
       <div class="guide-overview">
-        <div class="guide-overview-title">ios-golden — 46 skills · 9 fases</div>
+        <div class="guide-overview-title">ios-golden — 48 skills · 10 fases</div>
         <div class="guide-phases">
+          <div class="guide-phase"><span class="guide-phase-num">F0</span><span class="guide-phase-label">Pre-development</span><span class="guide-phase-skills">competitor-intelligence · deep-research</span></div>
           <div class="guide-phase"><span class="guide-phase-num">F1</span><span class="guide-phase-label">Setup</span><span class="guide-phase-skills">ios-baseline · ios-blok-workflow · swift-architecture · tuist-expert · swift-api-design-guidelines</span></div>
           <div class="guide-phase"><span class="guide-phase-num">F2</span><span class="guide-phase-label">Development</span><span class="guide-phase-skills">swift-concurrency-expert · swift-reviewer · swift-formatstyle · swiftdata-expert · core-data-expert · swiftdata-cloudkit</span></div>
           <div class="guide-phase"><span class="guide-phase-num">F3</span><span class="guide-phase-label">Testing</span><span class="guide-phase-skills">swift-testing-expert · ios-testing · debug-detective · diagnose · instruments-profiling · swiftui-performance-audit · parallel-code-review</span></div>
