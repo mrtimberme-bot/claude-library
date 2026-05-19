@@ -1828,5 +1828,66 @@
     "author": "rohitg00",
     "updated": "2026-05-19",
     "path": "skills/learn-rule/SKILL.md"
+  },
+  {
+    "id": "web-design",
+    "name": "Web Design",
+    "type": "set",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Compleet web design pakket — van design tokens en typografie tot dark mode, responsive layout, data visualisatie en AI-gestuurde brand assets.",
+    "usage": "Gebruik bij het bouwen of redesignen van web apps, dashboards, SaaS-producten. Dekt de volledige designstack.",
+    "tags": [
+      "design",
+      "web",
+      "ui",
+      "ux",
+      "css",
+      "tokens",
+      "responsive"
+    ],
+    "author": "timothystekkinger",
+    "updated": "2026-05-19",
+    "path": null,
+    "skills": [
+      "ui-ux-pro-max",
+      "interface-design",
+      "design-system",
+      "typography-expert",
+      "color-system",
+      "dark-mode-design",
+      "responsive-design",
+      "data-visualization",
+      "ai-graphic-design",
+      "material-3"
+    ]
+  },
+  {
+    "id": "memory-system",
+    "name": "Memory System",
+    "type": "set",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Persistent geheugen over sessies heen — van werkgeheugen (current-context) tot sessiejournaal, projectstate, zelflerend correctiesysteem, onderzoeksarchief en compaction-bescherming.",
+    "usage": "Gebruik bij elk project om context niet te verliezen. Dekt de volledige memory stack: werkgeheugen → sessie → langetermijn.",
+    "tags": [
+      "memory",
+      "context",
+      "session",
+      "productivity",
+      "learning"
+    ],
+    "author": "timothystekkinger",
+    "updated": "2026-05-19",
+    "path": null,
+    "skills": [
+      "short-term-memory",
+      "project-state",
+      "diary",
+      "compact-guard",
+      "claude-reflect",
+      "learn-rule",
+      "research-skill"
+    ]
   }
 ]
