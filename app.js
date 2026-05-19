@@ -11,6 +11,16 @@ var OUTDATED_IDS = new Set();
 var currentMode = 'library';
 var cockpitInit = false;
 
+var SET_COLORS = {
+  'ios-foundation':  '#22c55e',
+  'ios-advanced':    '#60a5fa',
+  'ios-release':     '#fb923c',
+  'ios-design':      '#c084fc',
+  'ios-monetization':'#f59e0b',
+  'web-app':         '#06b6d4',
+  'default':         '#e2b714'
+};
+
 var AUTH_UNLOCKED = !!localStorage.getItem('libraryToken');
 
 function requireAuth(fn) {
@@ -75,10 +85,12 @@ if (window.location.hash === '#cockpit') { switchMode('cockpit'); }
 
 function switchMode(mode) {
   currentMode = mode;
-  ['library','cockpit'].forEach(function(m) {
-    $('view-'+m).classList.toggle('active', m===mode);
-    $('nav-'+m).classList.toggle('active', m===mode);
+  ['library','sets','cockpit'].forEach(function(m) {
+    var view = $('view-'+m), nav = $('nav-'+m);
+    if (view) view.classList.toggle('active', m===mode);
+    if (nav)  nav.classList.toggle('active', m===mode);
   });
+  if (mode === 'sets') renderSets();
   var right = $('topbar-right');
   if (mode === 'cockpit') {
     right.innerHTML = '';
@@ -122,7 +134,114 @@ function switchMode(mode) {
 }
 
 $('nav-library').addEventListener('click', function(){ switchMode('library'); });
+$('nav-sets').addEventListener('click',    function(){ switchMode('sets'); });
 $('nav-cockpit').addEventListener('click', function(){ switchMode('cockpit'); });
+
+/* ── SETS VIEW ── */
+function hexToRgba(hex, alpha) {
+  var r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return 'rgba('+r+','+g+','+b+','+alpha+')';
+}
+
+function renderSets() {
+  var grid = $('sets-grid');
+  var sets = COMPONENTS.filter(function(c){ return c.type === 'set'; });
+  grid.textContent = '';
+
+  if (!sets.length) {
+    var empty = document.createElement('div');
+    empty.className = 'ck-empty';
+    empty.style.padding = '40px';
+    empty.textContent = 'Geen sets gevonden.';
+    grid.appendChild(empty);
+    return;
+  }
+
+  sets.forEach(function(s) {
+    var color = SET_COLORS[s.id] || SET_COLORS['default'];
+    var skillIds = s.skills || [];
+
+    var card = document.createElement('div');
+    card.className = 'set-card';
+
+    var accent = document.createElement('div');
+    accent.className = 'set-card-accent';
+    accent.style.background = color;
+    card.appendChild(accent);
+
+    var body = document.createElement('div');
+    body.className = 'set-card-body';
+
+    var top = document.createElement('div');
+    top.className = 'set-card-top';
+    var nameEl = document.createElement('div');
+    nameEl.className = 'set-card-name';
+    nameEl.textContent = s.name;
+    var countEl = document.createElement('div');
+    countEl.className = 'set-card-count';
+    countEl.style.background = hexToRgba(color, 0.12);
+    countEl.style.color = color;
+    countEl.textContent = skillIds.length + ' skills';
+    top.appendChild(nameEl);
+    top.appendChild(countEl);
+    body.appendChild(top);
+
+    var descEl = document.createElement('div');
+    descEl.className = 'set-card-desc';
+    descEl.textContent = s.desc || '';
+    body.appendChild(descEl);
+
+    var chips = document.createElement('div');
+    chips.className = 'set-card-skills';
+    skillIds.forEach(function(sid) {
+      var chip = document.createElement('span');
+      chip.className = 'set-skill-chip';
+      chip.textContent = sid;
+      chip.title = 'Bekijk in Library';
+      chip.addEventListener('click', (function(id){ return function() {
+        switchMode('library');
+        setTimeout(function(){ libSelectRow(id); }, 50);
+      }; })(sid));
+      chips.appendChild(chip);
+    });
+    body.appendChild(chips);
+    card.appendChild(body);
+
+    var footer = document.createElement('div');
+    footer.className = 'set-card-footer';
+
+    var installBtn = document.createElement('button');
+    installBtn.className = 'set-action-btn primary';
+    installBtn.textContent = '📋 Copy install command';
+    installBtn.addEventListener('click', (function(setId, btn){ return function() {
+      var cmd = 'python3 ~/Claude/Library/library-fetch.py --set ' + setId;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(cmd).then(function() {
+          btn.textContent = '✓ Gekopieerd!';
+          setTimeout(function(){ btn.textContent = '📋 Copy install command'; }, 2000);
+        });
+      } else {
+        prompt('Kopieer dit commando:', cmd);
+      }
+    }; })(s.id, installBtn));
+
+    var selectBtn = document.createElement('button');
+    selectBtn.className = 'set-action-btn';
+    selectBtn.textContent = '☑ Selecteer in Library';
+    selectBtn.addEventListener('click', (function(ids){ return function() {
+      ids.forEach(function(sid){ libChecked.add(sid); });
+      switchMode('library');
+      updateSelBar();
+      renderLib();
+    }; })(skillIds.slice()));
+
+    footer.appendChild(installBtn);
+    footer.appendChild(selectBtn);
+    card.appendChild(footer);
+
+    grid.appendChild(card);
+  });
+}
 
 
 var RAW_BASE = 'https://raw.githubusercontent.com/mrtimberme-bot/claude-library/main/';
