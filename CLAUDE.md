@@ -33,6 +33,19 @@ GITHUB_TOKEN=ghp_jouwtoken claude
 | CONTRIBUTING.md | Bijdragegids voor externe makers |
 | .github/workflows/validate.yml | GitHub Actions validatie |
 
+## Regels voor skills
+
+**Verwijder nooit skills** uit `Library/skills/`, `~/.claude/skills/`, of `components.json` zonder expliciete toestemming van de gebruiker. Toevoegen en syncen mag altijd; verwijderen alleen als de gebruiker dit expliciet bevestigt.
+
+## Build na merge
+
+Na elke merge naar de `main` branch voer je altijd een build uit:
+```bash
+npx wrangler deploy
+```
+
+Dit zorgt dat de live worker gesynchroniseerd blijft met de GitHub-bronbestanden.
+
 ## Na de setup
 
 Gebruik vanuit elk project:
