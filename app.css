@@ -361,6 +361,18 @@ body {
   vertical-align: middle;
 }
 
+.tt-set-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 10px;
+  background: rgba(226,183,20,0.12);
+  color: #e2b714;
+  font-size: 10px;
+  font-family: var(--mono);
+  vertical-align: middle;
+}
+
 .type-badge {
   font-family: var(--mono);
   font-size: 9px;
