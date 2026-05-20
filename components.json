@@ -2025,5 +2025,28 @@
     "author": "timothystekkinger",
     "updated": "2026-05-19",
     "path": "skills/competitor-intelligence/SKILL.md"
+  },
+  {
+    "id": "ios-wow-designer",
+    "name": "iOS Wow Designer",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Orchestreert ui-design-craft, swiftui-liquid-glass, swiftui-design-principles, motion-designer en haptics-designer tot één 5-laags workflow voor een premium iOS screen.",
+    "usage": "Trigger: \"wow factor\", \"premium feel\", \"native iOS design\", \"looks cheap\", \"needs polish\", \"make it beautiful\", nieuw SwiftUI screen",
+    "tags": [
+      "ios",
+      "swiftui",
+      "ux",
+      "design",
+      "motion",
+      "haptics",
+      "liquid-glass",
+      "ui"
+    ],
+    "ios-golden": true,
+    "author": "Timothy Stekkinger",
+    "updated": "2026-05-20",
+    "path": "skills/ios-wow-designer/SKILL.md"
   }
 ]
