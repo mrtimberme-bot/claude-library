@@ -27,6 +27,61 @@ Orchestreert vijf gespecialiseerde design skills tot één samenhangende workflo
 
 ---
 
+## HARD-GATE: Altijd consultatiefase eerst
+
+<HARD-GATE>
+Sla NOOIT de consultatiefase over. Schrijf GEEN code, maak GEEN wijzigingen, en start NIET met de 5-laags workflow totdat de gebruiker expliciet akkoord heeft gegeven op een van de voorgestelde design opties.
+</HARD-GATE>
+
+## Fase 0 — Consultatie (verplicht, altijd eerst)
+
+Voordat je ook maar één regel code schrijft, doorloop je deze stappen in volgorde.
+
+### Stap 1: Screen context begrijpen
+
+Lees de relevante SwiftUI view file(s). Identificeer:
+- Welke content / data wordt getoond?
+- Wat zijn de interactiepunten (buttons, taps, navigation)?
+- Welke DesignTokens worden al gebruikt?
+- Wat voelt generiek of "goedkoop"?
+
+### Stap 2: Stel 3 gerichte vragen (één per keer)
+
+Vraag nooit meer dan één vraag per bericht. Typische vragen:
+
+1. **Toon** — "Welke sfeer past bij dit scherm: rustig & vertrouwend, energiek & motiverend, of premium & minimalisch?"
+2. **Gebruikersmoment** — "Wanneer ziet de gebruiker dit scherm? (bijv. dagelijks dashboard, eenmalige setup, beloning na actie)"
+3. **Differentiator** — "Wat moet de gebruiker onthouden als hij dit scherm wegklikt?"
+
+Pas de vragen aan op wat je al weet vanuit de code.
+
+### Stap 3: Presenteer 2–3 concrete design voorstellen
+
+Presenteer voorstellen als duidelijk genummerde opties, elk met:
+- **Naam** (bijv. "Optie A — Aurora Gradient Hero")
+- **Aesthetisch anker** uit de tabel hieronder
+- **Wat er concreet anders wordt** (max 4 bulletpoints, visueel beschreven)
+- **Trade-off** — wat lever je in of win je?
+
+Voorbeeld formaat:
+```
+**Optie A — Aurora Gradient Hero**
+Anker: Aurora Maximalist
+• Hero card met radial mesh gradient (brand → transparant) rechtsboven
+• Voertuignaam in 32pt bold rounded, wit op donker
+• 3 stat pills (kWh / km / connector) in glass-achtige capsules
+• Entree-animatie: slide-in van onderaf met spring-bounce
+Trade-off: visueel impactvol, vraagt wel een donkere achtergrond
+```
+
+**Wacht op akkoord.** Zeg expliciet: *"Welke optie spreekt je aan, of wil je elementen combineren?"*
+
+### Stap 4: Bevestig keuze en start pas dan
+
+Zodra de gebruiker een keuze bevestigt (optie A/B/C, combinatie, of eigen richting), ga je verder naar de 5-laags workflow. Vat de gekozen richting in één zin samen zodat de gebruiker weet wat er gebouwd wordt.
+
+---
+
 ## De 5-Laags Workflow
 
 Doorloop alle vijf lagen in volgorde. Sla geen laag over — elke laag bouwt op de vorige.
