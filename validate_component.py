@@ -131,7 +131,7 @@ def check_encoding(content: str, result: ValidationResult):
     if ratio > 0.3:
         result.warn(f"Hoog percentage non-ASCII tekens ({ratio:.0%}) — controleer op obfuscatie")
     # Check op zero-width characters (onzichtbare tekst)
-    zero_width = re.findall(r'[​‌‍﻿⁠]', content)
+    zero_width = re.findall(r'[\u200b\u200c\u200d\ufeff\u2060]', content)
     if zero_width:
         result.error(f"Zero-width (onzichtbare) tekens gevonden — mogelijke verborgen instructies")
 
