@@ -1921,11 +1921,15 @@
       "tuist-expert",
       "swift-api-design-guidelines",
       "swift-concurrency-expert",
+      "combine-framework",
       "swift-reviewer",
       "swift-formatstyle",
+      "swiftlint-swiftformat",
       "swiftdata-expert",
       "core-data-expert",
       "swiftdata-cloudkit",
+      "urlsession-networking",
+      "cloudkit-sharing",
       "swift-testing-expert",
       "ios-testing",
       "debug-detective",
@@ -1948,20 +1952,28 @@
       "focus-engine-tvos",
       "push-notifications-expert",
       "widgetkit-liveactivities",
+      "sharplay-groupactivities",
       "app-intents-expert",
+      "watchos-connectivity",
       "apple-foundation-models",
       "storekit-iap",
+      "background-tasks-bgtaskscheduler",
+      "analytics-telemetry",
       "localization-manager",
       "privacy-manifest",
       "security-auditor",
+      "dependency-sbom-audit",
       "xcode-simulator-expert",
       "ios-build-verify",
       "ios-cicd",
+      "xcode-cloud",
       "app-store-readiness",
       "app-store-review-compliance",
       "app-store-connect-automation",
       "testflight-manager",
+      "changelog-release-notes",
       "post-launch",
+      "app-clips",
       "business-plan",
       "ios-micro-change",
       "apple-mapkit",
@@ -2202,5 +2214,275 @@
     "author": "yoanbernabeu",
     "updated": "2026-07-05",
     "path": "skills/supabase-security-audit/SKILL.md"
+  },
+  {
+    "id": "urlsession-networking",
+    "name": "URLSession Networking",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Use when building, reviewing, or debugging a Swift URLSession networking layer: request builders, Codable decoding/error handling, retry/backoff, response caching, auth token injection/refresh, background sessions, or making network code testable with async/await.",
+    "usage": "Use when building, reviewing, or debugging a Swift URLSession networking layer: request builders, Codable decoding/error handling, retry/backoff, response caching, auth token injection/refresh, background sessions, or making network code testable with async/await.",
+    "tags": [
+      "ios",
+      "swift",
+      "networking",
+      "urlsession",
+      "async-await"
+    ],
+    "author": "claude",
+    "updated": "2026-07-05",
+    "path": "skills/urlsession-networking/SKILL.md"
+  },
+  {
+    "id": "swiftlint-swiftformat",
+    "name": "SwiftLint & SwiftFormat",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Use when setting up or debugging Swift code style tooling — authoring .swiftlint.yml or .swiftformat config, writing custom SwiftLint rules, gating CI on lint/format violations, wiring pre-commit hooks, or resolving conflicts where SwiftLint and SwiftFormat disagree on formatting.",
+    "usage": "Use when setting up or debugging Swift code style tooling — authoring .swiftlint.yml or .swiftformat config, writing custom SwiftLint rules, gating CI on lint/format violations, wiring pre-commit hooks, or resolving conflicts where SwiftLint and SwiftFormat disagree on formatting.",
+    "tags": [
+      "ios",
+      "swift",
+      "swiftlint",
+      "swiftformat",
+      "ci"
+    ],
+    "author": "claude",
+    "updated": "2026-07-05",
+    "path": "skills/swiftlint-swiftformat/SKILL.md"
+  },
+  {
+    "id": "analytics-telemetry",
+    "name": "Analytics & Telemetry",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Use when adding analytics or telemetry to an iOS app — choosing between TelemetryDeck, PostHog, or a custom event pipeline, designing an event taxonomy, naming events/properties, avoiding PII leakage, updating the App Store privacy nutrition label, or setting up sampling/batching for cost control.",
+    "usage": "Use when adding analytics or telemetry to an iOS app — choosing between TelemetryDeck, PostHog, or a custom event pipeline, designing an event taxonomy, naming events/properties, avoiding PII leakage, updating the App Store privacy nutrition label, or setting up sampling/batching for cost control.",
+    "tags": [
+      "ios",
+      "analytics",
+      "telemetry",
+      "privacy"
+    ],
+    "author": "claude",
+    "updated": "2026-07-05",
+    "path": "skills/analytics-telemetry/SKILL.md"
+  },
+  {
+    "id": "background-tasks-bgtaskscheduler",
+    "name": "Background Tasks (BGTaskScheduler)",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Use when implementing or debugging iOS background work with BGTaskScheduler — choosing BGAppRefreshTask vs BGProcessingTask, registering task identifiers, scheduling/rescheduling, testing tasks in the simulator, handling expiration handlers, or diagnosing App Store rejections tied to background modes and battery drain.",
+    "usage": "Use when implementing or debugging iOS background work with BGTaskScheduler — choosing BGAppRefreshTask vs BGProcessingTask, registering task identifiers, scheduling/rescheduling, testing tasks in the simulator, handling expiration handlers, or diagnosing App Store rejections tied to background modes and battery drain.",
+    "tags": [
+      "ios",
+      "swift",
+      "bgtaskscheduler",
+      "background-tasks"
+    ],
+    "author": "claude",
+    "updated": "2026-07-05",
+    "path": "skills/background-tasks-bgtaskscheduler/SKILL.md"
+  },
+  {
+    "id": "mcp-server-builder",
+    "name": "MCP Server Builder",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Use when designing, building, reviewing, or debugging a Model Context Protocol (MCP) server — writing tool schemas for LLM agents, choosing stdio vs HTTP/SSE transport, adding auth, shaping error responses, or deciding between tool/resource/prompt primitives.",
+    "usage": "Use when designing, building, reviewing, or debugging a Model Context Protocol (MCP) server — writing tool schemas for LLM agents, choosing stdio vs HTTP/SSE transport, adding auth, shaping error responses, or deciding between tool/resource/prompt primitives.",
+    "tags": [
+      "mcp",
+      "llm-tools",
+      "agents",
+      "backend"
+    ],
+    "author": "claude",
+    "updated": "2026-07-05",
+    "path": "skills/mcp-server-builder/SKILL.md"
+  },
+  {
+    "id": "watchos-connectivity",
+    "name": "watchOS Connectivity",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Use when building or debugging watchOS apps that sync with an iPhone or run standalone: WatchConnectivity (WCSession, sendMessage, transferUserInfo, updateApplicationContext, transferFile), reachability/pairing checks, companion vs standalone design, ClockKit/WidgetKit complications, budget issues.",
+    "usage": "Use when building or debugging watchOS apps that sync with an iPhone or run standalone: WatchConnectivity (WCSession, sendMessage, transferUserInfo, updateApplicationContext, transferFile), reachability/pairing checks, companion vs standalone design, ClockKit/WidgetKit complications, budget issues.",
+    "tags": [
+      "ios",
+      "watchos",
+      "watchconnectivity",
+      "complications"
+    ],
+    "author": "claude",
+    "updated": "2026-07-05",
+    "path": "skills/watchos-connectivity/SKILL.md"
+  },
+  {
+    "id": "xcode-cloud",
+    "name": "Xcode Cloud",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Use when configuring Xcode Cloud workflows, writing ci_scripts (ci_post_clone.sh, ci_pre_xcodebuild.sh, ci_post_xcodebuild.sh), setting environment variables or start conditions (branch/tag/PR), or deciding between Xcode Cloud and GitHub Actions for Apple CI/CD.",
+    "usage": "Use when configuring Xcode Cloud workflows, writing ci_scripts (ci_post_clone.sh, ci_pre_xcodebuild.sh, ci_post_xcodebuild.sh), setting environment variables or start conditions (branch/tag/PR), or deciding between Xcode Cloud and GitHub Actions for Apple CI/CD.",
+    "tags": [
+      "ios",
+      "xcode-cloud",
+      "ci-cd"
+    ],
+    "author": "claude",
+    "updated": "2026-07-05",
+    "path": "skills/xcode-cloud/SKILL.md"
+  },
+  {
+    "id": "changelog-release-notes",
+    "name": "Changelog & Release Notes",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Use when cutting a release, writing App Store \"What's New\" release notes, or generating a changelog from git commits/PRs — covers conventional-commit parsing, translating engineering commits into user-facing copy, App Store character limits, localization, and syncing CHANGELOG.md with released versions.",
+    "usage": "Use when cutting a release, writing App Store \"What's New\" release notes, or generating a changelog from git commits/PRs — covers conventional-commit parsing, translating engineering commits into user-facing copy, App Store character limits, localization, and syncing CHANGELOG.md with released versions.",
+    "tags": [
+      "release",
+      "changelog",
+      "app-store",
+      "git"
+    ],
+    "author": "claude",
+    "updated": "2026-07-05",
+    "path": "skills/changelog-release-notes/SKILL.md"
+  },
+  {
+    "id": "dependency-sbom-audit",
+    "name": "Dependency & SBOM Audit",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Use when auditing Swift Package Manager dependencies for supply-chain risk — adding a new SPM package, generating an SBOM, checking for known CVEs, reviewing version pinning strategy, spotting abandoned/unmaintained packages, or doing a pre-release dependency review.",
+    "usage": "Use when auditing Swift Package Manager dependencies for supply-chain risk — adding a new SPM package, generating an SBOM, checking for known CVEs, reviewing version pinning strategy, spotting abandoned/unmaintained packages, or doing a pre-release dependency review.",
+    "tags": [
+      "ios",
+      "swift",
+      "spm",
+      "supply-chain",
+      "security"
+    ],
+    "author": "claude",
+    "updated": "2026-07-05",
+    "path": "skills/dependency-sbom-audit/SKILL.md"
+  },
+  {
+    "id": "cloudkit-sharing",
+    "name": "CloudKit Sharing",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Use when implementing collaborative or shared CloudKit records — CKShare, CKShareParticipant, zone-based sharing, or any hand-rolled CloudKit (CKRecord-level) sync without an ORM like SwiftData/Core Data.",
+    "usage": "Use when implementing collaborative or shared CloudKit records — CKShare, CKShareParticipant, zone-based sharing, or any hand-rolled CloudKit (CKRecord-level) sync without an ORM like SwiftData/Core Data.",
+    "tags": [
+      "ios",
+      "cloudkit",
+      "ckshare",
+      "sync"
+    ],
+    "author": "claude",
+    "updated": "2026-07-05",
+    "path": "skills/cloudkit-sharing/SKILL.md"
+  },
+  {
+    "id": "server-side-swift-vapor",
+    "name": "Server-Side Swift (Vapor)",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Use when building a custom backend API in server-side Swift — Vapor or Hummingbird routing, Fluent ORM models/migrations, auth/CORS middleware, async/await request handlers, or deploying a Swift server to Linux/Docker. Also use when deciding whether a custom backend is justified vs a BaaS.",
+    "usage": "Use when building a custom backend API in server-side Swift — Vapor or Hummingbird routing, Fluent ORM models/migrations, auth/CORS middleware, async/await request handlers, or deploying a Swift server to Linux/Docker. Also use when deciding whether a custom backend is justified vs a BaaS.",
+    "tags": [
+      "swift",
+      "vapor",
+      "backend",
+      "server-side-swift"
+    ],
+    "author": "claude",
+    "updated": "2026-07-05",
+    "path": "skills/server-side-swift-vapor/SKILL.md"
+  },
+  {
+    "id": "combine-framework",
+    "name": "Combine Framework",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Use when working with Combine publishers/subscribers, @Published properties, sink/assign, ObservableObject view models, or legacy/hybrid Swift codebases with existing reactive pipelines that still rely on Combine rather than async/await.",
+    "usage": "Use when working with Combine publishers/subscribers, @Published properties, sink/assign, ObservableObject view models, or legacy/hybrid Swift codebases with existing reactive pipelines that still rely on Combine rather than async/await.",
+    "tags": [
+      "ios",
+      "swift",
+      "combine",
+      "reactive"
+    ],
+    "author": "claude",
+    "updated": "2026-07-05",
+    "path": "skills/combine-framework/SKILL.md"
+  },
+  {
+    "id": "webapp-testing-playwright",
+    "name": "Web App Testing (Playwright)",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Use when writing, reviewing, or debugging browser automation tests for web surfaces (marketing sites, admin panels, dashboards) alongside an iOS product — covers Playwright locators, page objects, auth/session reuse, visual regression, flaky tests, and headless CI runs.",
+    "usage": "Use when writing, reviewing, or debugging browser automation tests for web surfaces (marketing sites, admin panels, dashboards) alongside an iOS product — covers Playwright locators, page objects, auth/session reuse, visual regression, flaky tests, and headless CI runs.",
+    "tags": [
+      "testing",
+      "playwright",
+      "e2e",
+      "web"
+    ],
+    "author": "claude",
+    "updated": "2026-07-05",
+    "path": "skills/webapp-testing-playwright/SKILL.md"
+  },
+  {
+    "id": "app-clips",
+    "name": "App Clips",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Use when building or reviewing an App Clip — App Clip size budget, invocation methods (App Clip Codes, NFC, QR, Safari App Clip links, Maps/Messages), local vs advertised experiences in App Store Connect, sharing code with the full app, or the App Clip-to-full-app upgrade path.",
+    "usage": "Use when building or reviewing an App Clip — App Clip size budget, invocation methods (App Clip Codes, NFC, QR, Safari App Clip links, Maps/Messages), local vs advertised experiences in App Store Connect, sharing code with the full app, or the App Clip-to-full-app upgrade path.",
+    "tags": [
+      "ios",
+      "app-clips",
+      "app-store"
+    ],
+    "author": "claude",
+    "updated": "2026-07-05",
+    "path": "skills/app-clips/SKILL.md"
+  },
+  {
+    "id": "sharplay-groupactivities",
+    "name": "SharePlay & Group Activities",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Use when implementing SharePlay or the GroupActivities framework — defining a GroupActivity type, starting/joining a GroupSession, syncing state across participants, coordinating playback for media apps, or testing multi-participant SharePlay sessions.",
+    "usage": "Use when implementing SharePlay or the GroupActivities framework — defining a GroupActivity type, starting/joining a GroupSession, syncing state across participants, coordinating playback for media apps, or testing multi-participant SharePlay sessions.",
+    "tags": [
+      "ios",
+      "shareplay",
+      "groupactivities"
+    ],
+    "author": "claude",
+    "updated": "2026-07-05",
+    "path": "skills/sharplay-groupactivities/SKILL.md"
   }
 ]
