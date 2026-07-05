@@ -1145,8 +1145,8 @@
     "name": "Diagnose",
     "type": "skill",
     "status": "active",
-    "version": "v1.0",
-    "desc": "Systematisch debuggen en root-cause analyse. Trigger: 'diagnose', 'wat is er mis', 'debug this'.",
+    "version": "v1.1",
+    "desc": "Disciplined diagnosis loop voor moeilijke bugs en performance regressions. Kern: bouw eerst een 'tight, red-capable' feedback loop (snel, deterministisch, agent-runnable), dan pas hypotheses. Incl. HITL-loop script.",
     "usage": "Systematisch debuggen en root-cause analyse. Trigger: 'diagnose', 'wat is er mis', 'debug this'.",
     "tags": [
       "debugging",
@@ -1155,24 +1155,24 @@
       "engineering"
     ],
     "author": "mattpocock",
-    "updated": "2026-05-19",
+    "updated": "2026-07-05",
     "path": "skills/diagnose/SKILL.md"
   },
   {
     "id": "caveman",
-    "name": "Caveman Debug",
+    "name": "Caveman",
     "type": "skill",
     "status": "active",
     "version": "v1.0",
-    "desc": "Simpele caveman-debug aanpak: console.log/print alles. Trigger: 'caveman', 'log everything'.",
-    "usage": "Simpele caveman-debug aanpak: console.log/print alles. Trigger: 'caveman', 'log everything'.",
+    "desc": "Ultra-gecomprimeerde communicatie-mode: ~75% minder tokens door filler, lidwoorden en beleefdheden te schrappen met behoud van technische precisie. Trigger: 'caveman mode', 'be brief', '/caveman'.",
+    "usage": "Activeer bij lange werksessies om tokens te besparen. Automatische uitzondering voor security-waarschuwingen en destructieve acties. Uit met 'stop caveman'.",
     "tags": [
-      "debugging",
-      "logging",
+      "communication",
+      "token-efficiency",
       "productivity"
     ],
     "author": "mattpocock",
-    "updated": "2026-05-19",
+    "updated": "2026-07-05",
     "path": "skills/caveman/SKILL.md"
   },
   {
@@ -1180,7 +1180,7 @@
     "name": "Handoff",
     "type": "skill",
     "status": "active",
-    "version": "v1.0",
+    "version": "v1.1",
     "desc": "Gestructureerde handoff naar volgende sessie of collega. Trigger: 'handoff', 'samenvatting voor morgen'.",
     "usage": "Gestructureerde handoff naar volgende sessie of collega. Trigger: 'handoff', 'samenvatting voor morgen'.",
     "tags": [
@@ -1189,7 +1189,7 @@
       "handoff"
     ],
     "author": "mattpocock",
-    "updated": "2026-05-19",
+    "updated": "2026-07-05",
     "path": "skills/handoff/SKILL.md"
   },
   {
@@ -1909,7 +1909,7 @@
       "full-stack"
     ],
     "author": "timothystekkinger",
-    "updated": "2026-05-19",
+    "updated": "2026-07-05",
     "path": null,
     "skills": [
       "app-name-validator",
@@ -1961,7 +1961,9 @@
       "app-store-review-compliance",
       "app-store-connect-automation",
       "testflight-manager",
-      "post-launch"
+      "post-launch",
+      "business-plan",
+      "ios-micro-change"
     ]
   },
   {
@@ -2048,5 +2050,60 @@
     "author": "Timothy Stekkinger",
     "updated": "2026-05-20",
     "path": "skills/ios-wow-designer/SKILL.md"
+  },
+  {
+    "id": "ponytail",
+    "name": "Ponytail",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Lazy senior dev mode: YAGNI, stdlib eerst, geen ongevraagde abstracties, kortste werkende diff. De 'simplicity ladder' met 7 treden en drie intensiteiten (lite/full/ultra). Zuster-skill van caveman (die regelt prose, ponytail regelt code).",
+    "usage": "Activeer bij code schrijven/refactoren/reviewen om over-engineering te voorkomen. '/ponytail lite|full|ultra' voor intensiteit, 'stop ponytail' om uit te zetten.",
+    "tags": [
+      "code-quality",
+      "yagni",
+      "simplicity",
+      "productivity"
+    ],
+    "author": "DietrichGebert",
+    "updated": "2026-07-05",
+    "path": "skills/ponytail/SKILL.md"
+  },
+  {
+    "id": "business-plan",
+    "name": "Business Plan",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Schrijft een volledig business plan voor een iOS app: marktanalyse, business model canvas, monetisatiestrategie, go-to-market plan en financieel model. Output naar docs/business-plan/.",
+    "usage": "Gebruik bij nieuwe app lancering, investor pitch voorbereiding of strategische richting vastleggen. Leest bestaande projectdocs als context.",
+    "tags": [
+      "ios",
+      "business",
+      "strategy",
+      "monetization",
+      "pre-development"
+    ],
+    "author": "timothystekkinger",
+    "updated": "2026-07-05",
+    "path": "skills/business-plan/SKILL.md"
+  },
+  {
+    "id": "ios-micro-change",
+    "name": "iOS Micro Change",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Gerichte micro-aanpassingen aan één SwiftUI UI-element: nudge, verplaats, resize, padding — zonder volledige redesign. Trigger: 'iets hoger/lager', '5pt lager', 'kleine aanpassing'.",
+    "usage": "Gebruik voor snelle UI-tweaks tijdens iteratie op een bestaand scherm. Voorkomt dat een 5pt-verschuiving een refactor wordt.",
+    "tags": [
+      "ios",
+      "swiftui",
+      "ui",
+      "iteration"
+    ],
+    "author": "timothystekkinger",
+    "updated": "2026-07-05",
+    "path": "skills/ios-micro-change/SKILL.md"
   }
 ]
