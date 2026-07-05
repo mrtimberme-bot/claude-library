@@ -1963,7 +1963,11 @@
       "testflight-manager",
       "post-launch",
       "business-plan",
-      "ios-micro-change"
+      "ios-micro-change",
+      "apple-mapkit",
+      "apple-core-ml",
+      "app-growth",
+      "app-legal-docs"
     ]
   },
   {
@@ -2105,5 +2109,98 @@
     "author": "timothystekkinger",
     "updated": "2026-07-05",
     "path": "skills/ios-micro-change/SKILL.md"
+  },
+  {
+    "id": "apple-mapkit",
+    "name": "Apple MapKit",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "MapKit en GeoToolbox patronen: PlaceDescriptor, geocoding/reverse-geocoding, cross-service place-identifiers. Bevat sub-skill geotoolbox.",
+    "usage": "Gebruik bij features met kaarten, locaties of place-data (Apple Maps + externe services).",
+    "tags": [
+      "ios",
+      "mapkit",
+      "location",
+      "apple"
+    ],
+    "author": "rshankras",
+    "updated": "2026-07-05",
+    "path": "skills/apple-mapkit/SKILL.md"
+  },
+  {
+    "id": "apple-core-ml",
+    "name": "Apple Core ML",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "On-device ML patronen en templates met Core ML: model-integratie, performance-overwegingen, conversiepatronen.",
+    "usage": "Gebruik bij on-device machine learning features (los van Apple Intelligence/Foundation Models).",
+    "tags": [
+      "ios",
+      "coreml",
+      "machine-learning",
+      "apple"
+    ],
+    "author": "rshankras",
+    "updated": "2026-07-05",
+    "path": "skills/apple-core-ml/SKILL.md"
+  },
+  {
+    "id": "app-growth",
+    "name": "App Growth",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Growth voor indie developers: analytics-interpretatie, press/media outreach, community building, indie business ops, store-signals. 5 sub-skills.",
+    "usage": "Gebruik bij post-launch groei-vragen: metrics begrijpen, pers krijgen, community bouwen, indie-business runnen.",
+    "tags": [
+      "ios",
+      "growth",
+      "analytics",
+      "indie",
+      "post-launch"
+    ],
+    "author": "rshankras",
+    "updated": "2026-07-05",
+    "path": "skills/app-growth/SKILL.md"
+  },
+  {
+    "id": "app-legal-docs",
+    "name": "App Legal Docs",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Genereert privacy policy, ToS en EULA op maat van de data-praktijken van de app, incl. GDPR/CCPA/DPDP-teksten. LET OP: documentgeneratie, geen juridisch advies — laat output controleren door een jurist voor publicatie.",
+    "usage": "Gebruik bij het opstellen of bijwerken van juridische documenten voor App Store submissie of na toevoegen van tracking/analytics/ads.",
+    "tags": [
+      "ios",
+      "legal",
+      "privacy",
+      "compliance",
+      "app-store"
+    ],
+    "author": "rshankras",
+    "updated": "2026-07-05",
+    "path": "skills/app-legal-docs/SKILL.md"
+  },
+  {
+    "id": "supabase-security-audit",
+    "name": "Supabase Security Audit",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "24 agent-skills voor security-audit van Supabase-apps: RLS-misconfiguraties, key-extractie, storage-audit, auth-config, IDOR-detectie. Orchestratie-skill (supabase-pentest) plus 23 sub-skills per aanvalsvector.",
+    "usage": "Gebruik bij apps met Supabase-backend, vóór productie-launch of als periodieke security-audit naast security-auditor.",
+    "tags": [
+      "supabase",
+      "security",
+      "backend",
+      "rls",
+      "audit"
+    ],
+    "author": "yoanbernabeu",
+    "updated": "2026-07-05",
+    "path": "skills/supabase-security-audit/SKILL.md"
   }
 ]
