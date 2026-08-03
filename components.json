@@ -2484,5 +2484,25 @@
     "author": "claude",
     "updated": "2026-07-05",
     "path": "skills/sharplay-groupactivities/SKILL.md"
+  },
+  {
+    "id": "competitor-research",
+    "name": "Competitor Research",
+    "type": "skill",
+    "status": "active",
+    "version": "v1.0",
+    "desc": "Volledige competitor-analyse: top-50 landscape scan, brede scan, diepte-analyse met review mining, feature-matrix met Kano + ICE, perceptual map en positionering. Update-mode voor maandelijkse pulse check.",
+    "usage": "Trigger: \"/competitor-research [scope]\" of \"/competitor-research update\" voor de maandelijkse check",
+    "tags": [
+      "research",
+      "competitive-analysis",
+      "kano",
+      "ice-scoring",
+      "positioning",
+      "app-store"
+    ],
+    "author": "timothystekkinger",
+    "updated": "2026-08-01",
+    "path": "skills/competitor-intelligence/SKILL.md"
   }
 ]
